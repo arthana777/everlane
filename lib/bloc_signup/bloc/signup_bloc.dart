@@ -1,4 +1,3 @@
-
 import 'package:everlane/bloc_signup/bloc/signup_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,16 +10,18 @@ class RegistrationBloc extends Bloc<SignupEvent, SignupState> {
   RegistrationBloc(this.signupRepository) : super(RegistrationInitial()) {
     on<RegisterUser>((event, emit) async {
       emit(RegistrationLoading());
-      try {
-        final data = await signupRepository.registerUser(event.user);
-        if (data == "success") {
-          emit(RegistrationSuccess());
-        } else {
-          emit(RegistrationFailed(toString()));
-        }
-      } catch (e) {
-        emit(RegistrationFailed(e.toString()));
+      // try {
+      final data = await signupRepository.registerUser(event.user);
+
+      if (data == "Success") {
+        emit(RegistrationSuccess(data));
+      } else {
+        
+        emit(RegistrationFailed(data));
       }
+      // } catch (e) {
+      //   emit(RegistrationFailed("faileddd"));
+      // }
     });
   }
 }

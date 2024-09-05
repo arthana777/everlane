@@ -1,4 +1,3 @@
-import 'package:everlane/Home/homescreen.dart';
 import 'package:everlane/bloc/change_password/bloc/change_password_bloc.dart';
 import 'package:everlane/bloc/change_password/bloc/change_password_event.dart';
 import 'package:everlane/bloc/change_password/bloc/change_password_state.dart';
@@ -238,7 +237,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             padding: EdgeInsets.only(
                                 bottom:
                                     MediaQuery.of(context).viewInsets.bottom),
-                            child: SizedBox(
+                             child: SizedBox(
                               height: 250.h,
                               child: Padding(
                                 padding: const EdgeInsets.only(

@@ -14,10 +14,10 @@ class ForgotPasswordLoading extends ForgotPasswordState {}
 class ForgotPasswordSuccess extends ForgotPasswordState {}
 
 class ForgotPasswordFailure extends ForgotPasswordState {
-  final String error;
+  final String message;
 
-  const ForgotPasswordFailure({required this.error});
+  const ForgotPasswordFailure({required this.message});
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => [message];
 }

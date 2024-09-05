@@ -11,15 +11,23 @@ class RegistrationInitial extends SignupState {}
 
 class RegistrationLoading extends SignupState {}
 
-class RegistrationSuccess extends SignupState {}
+class RegistrationSuccess extends SignupState {
+String message;
 
-class RegistrationFailed extends SignupState {
-  final String error;
-
-  const RegistrationFailed(this.error);
+   RegistrationSuccess(this.message);
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => [message];
+
+}
+
+class RegistrationFailed extends SignupState {
+  String? message;
+
+   RegistrationFailed(this.message);
+
+  @override
+  List<Object> get props => [message!];
 }
 
 

@@ -1,12 +1,10 @@
 
 import 'dart:io';
-
 import 'package:everlane/splash/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
 import 'bloc/address/address_bloc.dart';
 import 'bloc/cart/cart_bloc.dart';
 import 'bloc/category_bloc.dart';

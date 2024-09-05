@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:everlane/data/models/forgot_model.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../models/forgot_model.dart';
 
 class ForgotPasswordService {
   final String baseUrl = 'https://18.143.206.136/api/forgot-password/';
@@ -32,11 +31,11 @@ class ForgotPasswordService {
         ),
         data: jsonEncode(ForgotModel(username: username).toJson()),
       );
-      print("Data Received Get : ${response.data}");
-      print("Token: $token");
-      print("Response Status: ${response.statusCode}");
+    print("Data Received Get : ${response.data}");
+    print("Token: $token");
+    print("Response Status: ${response.statusCode}");
       if (response.statusCode == 200) {
-        return response.data['message'] ?? "Data updated successfully!";
+        return response.data['data'] ?? "Data updated successfully!";
       } else {
         return "Failed to update data: ${response.statusCode}";
       }
