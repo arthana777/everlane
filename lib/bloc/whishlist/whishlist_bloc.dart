@@ -15,7 +15,7 @@ class WhishlistBloc extends Bloc<WishlistEvent, WishlistState> {
         final whilistitems = await wishlistdatasource.addToWishlist(event.productId);
         print("object${whilistitems}");
         if(whilistitems=="success"){
-          emit(addtoWishlistSuccess());
+          emit(addtoWishlistSuccess(event.productId));
         }
         else{
           emit(addtoWishlistFailure(whilistitems));

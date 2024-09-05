@@ -105,7 +105,7 @@ class _DisasterListState extends State<DisasterList> {
                       padding: EdgeInsets.all(16),
                       height: 200.h,
                       decoration: BoxDecoration(
-                          color: isSelected? Color(0xff40b3ff).withOpacity(0.2): Colors.white,
+                          color:  Colors.white,
                         border: Border.all(color: isSelected?Color(0xff40b3ff):Colors.black26),
                         borderRadius: BorderRadius.circular(10.r),
                       ),

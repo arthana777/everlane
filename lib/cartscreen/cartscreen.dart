@@ -188,6 +188,7 @@ class _CartScreenState extends State<CartScreen> {
                   padding:  EdgeInsets.symmetric(vertical: 300.h),
                   child: CustomCircularProgressIndicator(),
                 ):Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
@@ -209,6 +210,7 @@ class _CartScreenState extends State<CartScreen> {
                           child: CartItemCard(
                             ontapremove: (){
                               setState(() {
+
                               });
                               BlocProvider.of<CartBloc>(context)
                                   .add(RemovefromCart(item.id),
@@ -243,9 +245,13 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 SizedBox(height: 20.h),
                 Padding(
+                  padding:  EdgeInsets.only(left: 20.w),
+                  child: Text("Cart summary",style: CustomFont().subtitleText,),
+                ),
+                Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.w),
                   child:  carts.any((cart) => cart.items.isNotEmpty)?Container(
-                    height: 150.h,
+                    height: 50.h,
                     width: 450.w,
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -255,13 +261,33 @@ class _CartScreenState extends State<CartScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child:
-                      Column(
+                      Row(
                         children: [
-                          _buildRow(context, "Delivery", "0.0"),
-                          SizedBox(height: 10.h),
-                          _buildRow(context, "Discount", "00"),
-                          SizedBox(height: 10.h),
-                          _buildRow(context, "Total", carts.isNotEmpty ? carts[0].totalPrice ??'' : '0.0',),
+                          SizedBox(
+                            width: 100.w,
+                            child: Text(
+                              "Total",
+                              style: CustomFont().bodyText,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20.w,
+                            child: Text(
+                              ":",
+                              style: CustomFont().subtitleText,
+                            ),
+                          ),
+                          SizedBox(width: 10.w),
+                          SizedBox(
+                            width: 100.w,
+                            child: Text(
+                              carts.isNotEmpty ? carts[0].totalPrice ??'' : '0.0',
+                              style: CustomFont().bodyText,
+                            ),
+                          ),
+                          // _buildRow(context, "Discount", "00"),
+                          // SizedBox(height: 10.h),
+                          // _buildRow(context, "Total", carts.isNotEmpty ? carts[0].totalPrice ??'' : '0.0',),
                         ],
                       ),
                     ),

@@ -17,7 +17,8 @@ class addtoWishlistLoading extends WishlistState {}
 
 class addtoWishlistSuccess extends WishlistState {
   // late final List whishlists;
-  // addtoWishlistSuccess( this.whishlists);
+  final int addedProductId;
+  addtoWishlistSuccess( this.addedProductId);
 }
 
 class addtoWishlistFailure extends WishlistState {

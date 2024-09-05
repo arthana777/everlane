@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 import '../../bloc/product/product_bloc.dart';
@@ -97,52 +98,47 @@ class _SeasongridviewState extends State<Seasongridview> {
             BlocListener<WhishlistBloc, WishlistState>(
               listener: (context, state) {
                 print(state);
-                if (state is addtoWishlistLoading) {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) =>
-                        Center(child: CircularProgressIndicator()),
-                  );
+                if (state is addtoWishlistLoading || state is RemoviewishlistLoading) {
+                  setState(() {
+                    isLoading = false;
+                  });
                 } else if (state is addtoWishlistSuccess) {
                   print("adding to whislisttt");
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content:
-                            Text('Product added to wishlist successfully!')),
-                  );
+                  setState(() {
+                    wishlistProductIds.add(state.addedProductId);
+                    isLoading=false;
+                  });
+
                   BlocProvider.of<WhishlistBloc>(context)
                       .add(RetrieveWhishlist());
                 } else if (state is addtoWishlistFailure) {
                   // Dismiss loading indicator and show error message
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.error)),
-                  );
+                  setState(() {
+                    isLoading = false;
+                  });
                 } else if (state is WishlistSuccess) {
                   // loading=false;
                   whishlist = state.whishlists;
+                  wishlistProductIds = whishlist.map((item) => item.product??0).toList();
                   //wishlistProductIds = whishlist.map((item) => item.product).toList();
-                  for (var i = 0; i < whishlist.length; i++) {
-                    wishlistProductIds.add(whishlist[i].product??0);
-                  }
+                  // for (var i = 0; i < whishlist.length; i++) {
+                  //   wishlistProductIds.add(whishlist[i].product??0);
+                  // }
                   print(whishlist.length);
                   print(whishlist[0]);
                   print("oooooooooooooooo");
                   setState(() {});
                 } else if (state is RemoveWishlistSuccess) {
                   setState(() {
-                    whishlist.removeWhere(
-                        (item) => item.id == state.removedProductId);
+                    wishlistProductIds.remove(state.removedProductId);
+                    isLoading = false;
+                    //whishlist.removeWhere((item) => item.id == state.removedProductId);
                   });
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Item deleted successfully')),
-                  );
+
                 } else if (state is RemoveWishlistFailure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.error)),
-                  );
+                  setState(() {
+                    isLoading = false;
+                  });
                 }
               },
             ),

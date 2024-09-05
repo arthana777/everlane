@@ -1,23 +1,19 @@
-import 'package:everlane/btm_navigation/btm_navigation.dart';
-import 'package:everlane/checkout/address_creation.dart';
-import 'package:everlane/profile/profile.dart';
+
 import 'package:everlane/whishlist/whishlistitem.dart';
 import 'package:everlane/widgets/customappbar.dart';
-import 'package:everlane/widgets/customcolor.dart';
 import 'package:everlane/widgets/customfont.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-
 import '../bloc/whishlist/whishlist_bloc.dart';
 import '../bloc/whishlist/whishlist_event.dart';
 import '../bloc/whishlist/whishlist_state.dart';
-import '../data/models/product_model.dart';
 import '../data/models/whishlistmodel.dart';
 import '../data/navigation_provider/navigation_provider.dart';
-import '../domain/entities/product_entity.dart';
+
 
 class Whishlist extends StatefulWidget {
   const Whishlist({super.key});
@@ -28,6 +24,7 @@ class Whishlist extends StatefulWidget {
 
 class _WhishlistState extends State<Whishlist> {
   List<WhislistProduct>whishlist = [];
+  List<int> wishlistProductIds = [];
 
 
   @override
@@ -35,7 +32,7 @@ class _WhishlistState extends State<Whishlist> {
     BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist());
     super.initState();
   }
-  bool loading=true;
+  bool loading=false;
   @override
   Widget build(BuildContext context) {
 
@@ -51,12 +48,6 @@ class _WhishlistState extends State<Whishlist> {
                   Provider.of<NavigationProvider>(context, listen: false);
                   navigationProvider.updateScreenIndex(0);
                   Navigator.pop(context);
-
-                  // Navigator.pushAndRemoveUntil(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => BtmNavigation()),
-                  //       (Route<dynamic> route) => false,
-                  // );
                 },
                 child: Icon(Icons.arrow_back),
               ),
@@ -66,37 +57,50 @@ class _WhishlistState extends State<Whishlist> {
             BlocListener<WhishlistBloc, WishlistState>(
                 listener: (context, state) {
               print("pppppppppp$state");
-              if (state is WishlistLoading) {
+              if (state is WishlistLoading||state is RemoviewishlistLoading) {
 
                 setState(() {
-                  loading=true;
+                  loading=false;
                 });
                 // Show loading indicator
 
               } else if (state is WishlistSuccess) {
-                loading=false;
-                whishlist = state.whishlists;
-                print(whishlist.length);
-                print(whishlist[0]);
-                print("oooooooooooooooo");
-                setState(() {
 
+                setState(() {
+                  loading=false;
+                  whishlist = state.whishlists;
+                  wishlistProductIds = whishlist.map((item) => item.product??0).toList();
                 });
 
               }
+
               else if (state is WishlistFailure) {
                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.error)),
-                );
+
               }
-               if(state is RemoveWishlistSuccess){
-                 setState(() {
-                   whishlist.removeWhere((item) => item.product == state.removedProductId);
-                 });
-                 ScaffoldMessenger.of(context).showSnackBar(
-                   SnackBar(content: Text('Item deleted successfully')),
-                 );
+              else if(state is RemoveWishlistSuccess){
+                // setState(() {
+                //   whishlist.removeWhere((item) => item.product == state.removedProductId);
+                // });
+                whishlist.removeWhere(
+                        (item) => item.product == state.removedProductId);
+                wishlistProductIds.remove(state.removedProductId);
+                loading = false;
+                Fluttertoast.showToast(
+                  msg: "product removed Successfully",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  backgroundColor: Colors.white,
+                  textColor: Colors.black,
+                  fontSize: 16.0,
+                );
+                print("Item removed, updated wishlist: $whishlist");
+
+              }
+              else if (state is RemoveWishlistFailure) {
+                setState(() {
+                  loading = false;
+                });
               }
               }),
           ],
@@ -104,8 +108,11 @@ class _WhishlistState extends State<Whishlist> {
             scrollDirection: Axis.vertical,
             child: Column(
               children: [
-              loading==true?Center(child: CircularProgressIndicator()):SizedBox(
-                  child:whishlist.isEmpty?Center(child: Text("Add Products to wishlist",style: CustomFont().subtitleText,),): ListView.builder(
+              loading?Center(child: CircularProgressIndicator()):SizedBox(
+                  child:whishlist.isEmpty?Padding(
+                    padding:  EdgeInsets.symmetric(horizontal: 130.w,vertical: 300.h),
+                    child: Text('" wishlist empty "',style: CustomFont().subtitleText,),
+                  ): ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: whishlist.length,
@@ -113,9 +120,24 @@ class _WhishlistState extends State<Whishlist> {
                       padding: const EdgeInsets.all(8.0),
                       child: WhishlistItem(
                         removeonTap: (){
-                        BlocProvider.of<WhishlistBloc>(context)
-                               .add(Removefromwishlist(whishlist[index].product??0),
-                        );
+                          setState(() {
+                            wishlistProductIds.remove(
+                                whishlist[index].product ?? 0);
+                            whishlist.removeAt(index);
+                            Fluttertoast.showToast(
+                              msg: "product removed Successfully",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: Colors.white,
+                              textColor: Colors.black,
+                              fontSize: 16.0,
+                            );
+                          });
+                          BlocProvider.of<WhishlistBloc>(context)
+                              .add(Removefromwishlist(whishlist[index].product??0),
+                          );
+
+
                       },
                         text: whishlist[index].name??'',
                         image: whishlist[index].image??"",

@@ -1,4 +1,5 @@
 
+import 'package:everlane/widgets/customfont.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -67,6 +68,9 @@ class Searchscreen extends StatelessWidget {
                 //   return Center(child: CircularProgressIndicator());
                 // }
                 if (state is SearchLoaded) {
+                  if(state.keyword.isEmpty){
+                    return Expanded(child: Center(child: Text('" No products found "',style: CustomFont().subtitleText,),));
+                  }
                   return Expanded(
                     child: GridView.builder(
                         shrinkWrap: true,
@@ -116,7 +120,7 @@ class Searchscreen extends StatelessWidget {
                 } else if (state is SearchError) {
                   return Center(child: Text(state.message));
                 } else {
-                  return Center(child: Text('Search for products'));
+                  return Center(child: Text('" Search for products "',style: CustomFont().subtitleText,));
                 }
               },
             ),
