@@ -11,13 +11,14 @@ import 'package:provider/provider.dart';
 
 
 import '../bloc/address/address_bloc.dart';
+import '../data/models/userprofile.dart';
 import '../data/navigation_provider/navigation_provider.dart';
 import '../widgets/customcolor.dart';
 import '../widgets/cutsofield_address.dart';
 
 class DisasterRegistration extends StatefulWidget {
-  DisasterRegistration({super.key});
-
+  DisasterRegistration({super.key, this.userProfile});
+  final  Userprofile? userProfile;
   @override
   State<DisasterRegistration> createState() => _DisasterRegistrationState();
 }
@@ -43,7 +44,54 @@ class _DisasterRegistrationState extends State<DisasterRegistration> {
 
   final _formKey = GlobalKey<FormState>();
   String? selectedDisasterType;
+  bool isNameFilled = false;
+  bool isLocationFilled = false;
+  bool isAadharFilled = false;
+  bool isLandmarkFilled = false;
+  bool isDescriptionFilled = false;
+  bool isButtonEnabled = false;
 
+
+  void _validateForm() {
+    setState(() {
+      isButtonEnabled = nameController.text.isNotEmpty &&
+          locationController.text.isNotEmpty &&
+          disatertypeController.text.isNotEmpty &&
+          adharController.text.isNotEmpty &&
+          adharController.text.length == 12 && // Ensure Aadhar is 12 digits
+          landmarkController.text.isNotEmpty &&
+          descriptionController.text.isNotEmpty &&
+          requiredWomenDressesController.text.isNotEmpty &&
+          requiredMenDressesController.text.isNotEmpty &&
+          requiredKidsDressesController.text.isNotEmpty;
+    });
+  }
+  @override
+  void initState() {
+    nameController.addListener(_validateForm);
+    locationController.addListener(_validateForm);
+    disatertypeController.addListener(_validateForm);
+    adharController.addListener(_validateForm);
+    landmarkController.addListener(_validateForm);
+    descriptionController.addListener(_validateForm);
+    requiredWomenDressesController.addListener(_validateForm);
+    requiredMenDressesController.addListener(_validateForm);
+    requiredKidsDressesController.addListener(_validateForm);
+    super.initState();
+  }
+  @override
+  void dispose() {
+    nameController.dispose();
+    locationController.dispose();
+    disatertypeController.dispose();
+    adharController.dispose();
+    landmarkController.dispose();
+    descriptionController.dispose();
+    requiredWomenDressesController.dispose();
+    requiredMenDressesController.dispose();
+    requiredKidsDressesController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -51,8 +99,8 @@ class _DisasterRegistrationState extends State<DisasterRegistration> {
       backgroundColor: Color(0xFFEFEFEF),
       floatingActionButton: FloatingActionButton.extended(
         elevation: 0,
-        backgroundColor: CustomColor.primaryColor,
-        onPressed: () {
+        backgroundColor: isButtonEnabled ? CustomColor.primaryColor : Color(0xFF973d93).withOpacity(0.5),
+        onPressed: isButtonEnabled ?() {
     if (_formKey.currentState?.validate() ?? false) {
     context.read<AddressBloc>().add(DisasterReg(
     name: nameController.text,
@@ -85,6 +133,7 @@ class _DisasterRegistrationState extends State<DisasterRegistration> {
     requiredKidsDressesController.clear();
     setState(() {
     selectedDisasterType = null;
+    isButtonEnabled = false;
     });
     }
     else {
@@ -98,14 +147,12 @@ class _DisasterRegistrationState extends State<DisasterRegistration> {
         fontSize: 16.0,
       );
     }
-        },
+        }:null,
 
         label: Container(
           height: 30.h,
           width: 150.w,
-          decoration: BoxDecoration(
-            color: CustomColor.primaryColor,
-          ),
+
           child: Center(
             child: Text("Register", style: CustomFont().buttontext),
           ),
@@ -131,7 +178,14 @@ class _DisasterRegistrationState extends State<DisasterRegistration> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AdrressCustomField(hinttext: 'Name',
+                // Text(
+                //   "${widget.userProfile?.username ?? 'N/A'}",
+                //   style: CustomFont().subtitleText,
+                // ),
+                AdrressCustomField(
+                  hinttext: widget.userProfile?.username?.isNotEmpty == true
+                      ? widget.userProfile?.username
+                      : 'Name',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your name';
@@ -142,25 +196,33 @@ class _DisasterRegistrationState extends State<DisasterRegistration> {
                 SizedBox(height: 15.h,),
                 AdrressCustomField(hinttext: 'Place of Disaster',controller: nameController,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter Place of Disaster';
+                    if (isLocationFilled || (value != null && value.isNotEmpty)) {
+                      isLocationFilled = true; // Mark as filled
+                      return null;
                     }
-                    return null;
+                    return 'Please enter Place of Disaster';
                   },),
                 SizedBox(height: 15.h,),
                 AdrressCustomField(hinttext: 'location',controller: locationController,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter location';
+                    if (isLocationFilled || (value != null && value.isNotEmpty)) {
+                      isLocationFilled = true; // Mark as filled
+                      return null;
                     }
-                    return null;
+                    return 'Please enter location';
                   },
                 ),
                 SizedBox(height: 15.h,),
-                AdrressCustomField(hinttext: 'Gov id',controller: adharController,
+                AdrressCustomField(
+                  inputType: TextInputType.number,
+                  hinttext: 'Adhar id',controller: adharController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter valid Gov Id';
+                      return 'Please enter valid Aadhar Id';
+                    } else if (value.length != 12) {
+                      return 'Aadhar number must be exactly 12 digits';
+                    } else if (!RegExp(r'^\d+$').hasMatch(value)) {
+                      return 'Aadhar number should only contain digits';
                     }
                     return null;
                   },
@@ -168,19 +230,23 @@ class _DisasterRegistrationState extends State<DisasterRegistration> {
                 SizedBox(height: 15.h,),
                 AdrressCustomField(hinttext: 'Landmark',controller: landmarkController,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter landmark';
+                    if (isLandmarkFilled || (value != null && value.isNotEmpty)) {
+                      isLandmarkFilled = true; // Mark as filled
+                      return null;
                     }
-                    return null;
-                  },),
+                    return 'Please enter landmark';
+                  },
+                ),
                 SizedBox(height: 15.h,),
                 AdrressCustomField(hinttext: 'Description',heigth: 100.h,controller: descriptionController,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter Description';
+                    if (isDescriptionFilled || (value != null && value.isNotEmpty)) {
+                      isDescriptionFilled = true; // Mark as filled
+                      return null;
                     }
-                    return null;
-                  },),
+                    return 'Please enter Description';
+                  },
+                ),
                 SizedBox(height: 25.h,),
                 Text("Type of Disaster",style: CustomFont().subtitleText,),
                 SizedBox(height: 15.h,),
@@ -193,16 +259,6 @@ class _DisasterRegistrationState extends State<DisasterRegistration> {
                     return null;
                   },
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //   children: [
-                //     CustomAdressSelection(text: 'Flood',),
-                //     CustomAdressSelection(text: 'Earthquake',),
-                //     CustomAdressSelection(text: 'LandSlide',),
-                //     CustomAdressSelection(text: 'other',),
-                //   ],
-                // ),
-
                 SizedBox(height: 15.h,),
                 Text("Requirements",style: CustomFont().subtitleText,),
                 AdrressCustomField(hinttext: ' No of women clothes',inputType: TextInputType.number,controller: requiredWomenDressesController,

@@ -6,17 +6,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
+import '../bloc/cart/cart_bloc.dart';
 import '../bloc/product/product_bloc.dart';
 import '../bloc/whishlist/whishlist_bloc.dart';
 import '../bloc/whishlist/whishlist_event.dart';
 import '../bloc/whishlist/whishlist_state.dart';
+import '../cartscreen/cartscreen.dart';
+import '../data/models/cartmodel.dart';
 import '../data/models/product_model.dart';
 import '../data/models/whishlistmodel.dart';
 import '../domain/entities/category_entity.dart';
 import '../productgrid/product_card.dart';
 import '../widgets/customcircularindicator.dart';
+import '../widgets/customcolor.dart';
 
 class CategoryGridview extends StatefulWidget {
   final String subcategoryName;
@@ -31,6 +38,7 @@ class CategoryGridview extends StatefulWidget {
 class _CategoryGridviewState extends State<CategoryGridview> {
   List<Product> filtercategories = [];
   List<Product> products = [];
+  List<Cart> carts = [];
   List<WhislistProduct> whishlist = [];
   List<int> wishlistProductIds = [];
   List<CategoryEntity> subcategories = [];
@@ -55,6 +63,52 @@ class _CategoryGridviewState extends State<CategoryGridview> {
                Navigator.pop(context);
               },
               child: Icon(Icons.arrow_back)),
+          action: [
+            Stack(
+              children: [
+                Container(
+                  height: 100.h,
+                  width: 100.w,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen()));
+                    },
+                    icon: Icon(Icons.shopping_cart_outlined, size: 30.sp),
+                  ),
+                ),
+                BlocBuilder<CartBloc, CartState>(
+                  builder: (context, state) {
+                    int cartItemCount = 0;
+                    if (state is CartLoaded) {
+                      carts = state.carts;
+                      state.carts.forEach((cart) {
+                        cartItemCount=cart.items.length;
+                        print("Cart ID: ${cart.id}, Items: ${cart.items.length}");
+                      });
+                    }
+                    return Positioned(
+                      right: 35.w,
+                      top: 15.h,
+                      child: Container(
+                        height: 20.h,
+                        width: 20.w,
+                        decoration: BoxDecoration(
+                          color: CustomColor.primaryColor,
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: Center(
+                          child: Text(
+                            cartItemCount.toString(),
+                            style: GoogleFonts.poppins(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ],
           text:  widget.subcategoryName,)),
         body: MultiBlocListener(
           listeners: [
@@ -88,30 +142,32 @@ class _CategoryGridviewState extends State<CategoryGridview> {
             BlocListener<WhishlistBloc, WishlistState>(
               listener: (context, state) {
                 print(state);
-                if (state is addtoWishlistLoading) {
-                  // setState(() {
-                  //   isLoading=true;
-                  // });
-                } else if (state is addtoWishlistSuccess) {
+                if (state is addtoWishlistLoading || state is RemoviewishlistLoading) {
+                  setState(() {
+                    isLoading = true;
+                  });
+                }
+                else if (state is addtoWishlistSuccess) {
                   print("adding to whislisttt");
                  // Navigator.pop(context);
-                 //  setState(() {
-                 //    isLoading=false;
-                 //  });
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content: Text('Product added to wishlist successfully!')),
-                  );
+
+                  setState(() {
+                    wishlistProductIds.add(state.addedProductId);
+                    isLoading=false;
+                  });
+
                   BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist());
                 } else if (state is addtoWishlistFailure) {
                   // Dismiss loading indicator and show error message
                  // Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.error)),
-                  );
+
+                  setState(() {
+                    isLoading = false;
+                  });
                 }
                 else if (state is WishlistSuccess) {
                   // loading=false;
+                  setState((){});
                   whishlist = state.whishlists;
                   wishlistProductIds = whishlist.map((item) => item.product??0).toList();
                   // for(var i=0;i<=whishlist.length;i++){
@@ -121,29 +177,36 @@ class _CategoryGridviewState extends State<CategoryGridview> {
                   print(whishlist[0]);
                   print("oooooooooooooooo");
                   setState(() {
-
+                    isLoading = false;
                   });
 
                 }
                 else if (state is RemoveWishlistSuccess) {
+
                   setState(() {
-                    whishlist.removeWhere((item) => item.id == state.removedProductId);
+                    wishlistProductIds.remove(state.removedProductId);
+                    isLoading = false;
+                    //whishlist.removeWhere((item) => item.id == state.removedProductId);
                   });
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Item deleted successfully')),
-                  );
-                } else if (state is RemoveWishlistFailure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.error)),
-                  );
+
+                }
+                else if (state is RemoveWishlistFailure) {
+                  setState(() {
+                    isLoading = false;
+                  });
                 }
               },
             ),
           ],
-          child: Padding(
+          child: isLoading
+              ? Center(
+            child: LoadingAnimationWidget.prograssiveDots(
+              color: Colors.purple,
+              size: 50.w,
+            ),
+          ): Padding(
             padding:  EdgeInsets.symmetric(horizontal: 10.w),
-            child: isLoading
-                ? CustomCircularProgressIndicator():GridView.builder(
+            child: GridView.builder(
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   childAspectRatio: 0.62,
@@ -167,21 +230,20 @@ class _CategoryGridviewState extends State<CategoryGridview> {
                       },
                       child: ProductCard(
                         ontap: () {
-                          print("wishlist length${whishlist.length}");
                           setState(() {
                             if  (wishlistProductIds.contains(filtercategories[index]?.id) ){
                               print("remove${filtercategories[index]?.id}");
                               BlocProvider.of<WhishlistBloc>(context)
-                                  .add(Removefromwishlist(whishlist[index].product??0),
+                                  .add(Removefromwishlist(filtercategories[index].id ?? 0),
                               );
                               wishlistProductIds.remove(filtercategories[index]?.id??0);
-                                setState(() {
-                                  isLoading=false;
-                                });
+                                // setState(() {
+                                //   isLoading=false;
+                                // });
                             }else{
-                              setState(() {
-                                isLoading=false;
-                              });
+                              // setState(() {
+                              //   isLoading=false;
+                              // });
                               print("added${filtercategories[index]?.id}");
                               BlocProvider.of<WhishlistBloc>(context)
                                   .add(AddToWishlist(filtercategories[index]?.id ?? 0));

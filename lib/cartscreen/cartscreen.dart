@@ -116,9 +116,7 @@ class _CartScreenState extends State<CartScreen> {
                 }
                 else if (state is CartError) {
                   setState(() {});
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.message)),
-                  );
+                
                 }
                 else if(state is RemoveCartSuccess){
                   setState(() {
@@ -127,9 +125,7 @@ class _CartScreenState extends State<CartScreen> {
                     });
                    // carts.removeWhere((item) => item.product == state.removedProductId);
                   });
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Item deleted successfully')),
-                  );
+                
                 }
               },
             ),
@@ -145,18 +141,11 @@ class _CartScreenState extends State<CartScreen> {
                     isLoading=false;
                   });
                   print("adding to whislisttt");
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content:
-                        Text('Product added to wishlist successfully!')),
-                  );
+                 
                   //BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist());
                 } else if (state is addtoWishlistFailure) {
                   Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.error)),
-                  );
+                  
                 } else if (state is WishlistSuccess) {
                   // loading=false;
                   whishlist = state.whishlists;
@@ -170,13 +159,9 @@ class _CartScreenState extends State<CartScreen> {
                     whishlist.removeWhere(
                             (item) => item.id == state.removedProductId);
                   });
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Item deleted successfully')),
-                  );
+                
                 } else if (state is RemoveWishlistFailure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.error)),
-                  );
+                  
                 }
               },
             ),
@@ -188,6 +173,7 @@ class _CartScreenState extends State<CartScreen> {
                   padding:  EdgeInsets.symmetric(vertical: 300.h),
                   child: CustomCircularProgressIndicator(),
                 ):Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
@@ -209,6 +195,7 @@ class _CartScreenState extends State<CartScreen> {
                           child: CartItemCard(
                             ontapremove: (){
                               setState(() {
+
                               });
                               BlocProvider.of<CartBloc>(context)
                                   .add(RemovefromCart(item.id),
@@ -243,9 +230,13 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 SizedBox(height: 20.h),
                 Padding(
+                  padding:  EdgeInsets.only(left: 20.w),
+                  child: carts.any((cart) => cart.items.isNotEmpty)?Text("Cart summary",style: CustomFont().subtitleText,):null,
+                ),
+                Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.w),
                   child:  carts.any((cart) => cart.items.isNotEmpty)?Container(
-                    height: 150.h,
+                    height: 50.h,
                     width: 450.w,
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -255,18 +246,39 @@ class _CartScreenState extends State<CartScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child:
-                      Column(
+                      Row(
                         children: [
-                          _buildRow(context, "Delivery", "0.0"),
-                          SizedBox(height: 10.h),
-                          _buildRow(context, "Discount", "00"),
-                          SizedBox(height: 10.h),
-                          _buildRow(context, "Total", carts.isNotEmpty ? carts[0].totalPrice ??'' : '0.0',),
+                          SizedBox(
+                            width: 100.w,
+                            child: Text(
+                              "Total",
+                              style: CustomFont().bodyText,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20.w,
+                            child: Text(
+                              ":",
+                              style: CustomFont().subtitleText,
+                            ),
+                          ),
+                          SizedBox(width: 10.w),
+                          SizedBox(
+                            width: 100.w,
+                            child: Text(
+                              carts.isNotEmpty ? carts[0].totalPrice ??'' : '0.0',
+                              style: CustomFont().bodyText,
+                            ),
+                          ),
+                          // _buildRow(context, "Discount", "00"),
+                          // SizedBox(height: 10.h),
+                          // _buildRow(context, "Total", carts.isNotEmpty ? carts[0].totalPrice ??'' : '0.0',),
                         ],
                       ),
                     ),
                   ):null
                 ),
+                SizedBox(height: 80.h,),
               ],
             ),
           ),
@@ -275,34 +287,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget _buildRow(BuildContext context, String label, String value) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 100.w,
-          child: Text(
-            label,
-            style: CustomFont().bodyText,
-          ),
-        ),
-        SizedBox(
-          width: 20.w,
-          child: Text(
-            ":",
-            style: CustomFont().subtitleText,
-          ),
-        ),
-        SizedBox(width: 10.w),
-        SizedBox(
-          width: 100.w,
-          child: Text(
-            value,
-            style: CustomFont().bodyText,
-          ),
-        ),
-      ],
-    );
-  }
+
 
 
 }

@@ -134,7 +134,7 @@ class CartDatasource{
 
 
 
-  Future<String> placeOrder(String method, String orderType, int addressId) async {
+  Future<String> placeOrder(String method, String orderType, int addressId,int disasterid,int pickupid) async {
     print("Address ID: $addressId");
 
     final String? token = await getToken();
@@ -153,6 +153,8 @@ class CartDatasource{
           'payment_method': method,
           'order_type': orderType,
           'address_id': addressId,
+          'disaster_id':disasterid,
+          'pickup_location_id': pickupid
         }),
       );
 
