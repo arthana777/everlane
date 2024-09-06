@@ -1,50 +1,48 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:everlane/data/models/forgot_model.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgotPasswordService {
   final String baseUrl = 'https://18.143.206.136/api/forgot-password/';
 
+  Dio user = Dio();
+  Future<void> saveToken(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('auth_token', token);
+  }
+
   Future<String?> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('auth_token');
   }
 
-  Dio user = Dio();
-
   Future<String> forgotPassword(String username) async {
-    try {
-      String? token = await getToken();
-      if (token == null) {
-        return "Authorization token not found.";
-      }
+    String? token = await getToken();
 
+    print("${token}");
+
+    try {
       final response = await user.post(
-        baseUrl,
+        "https://18.143.206.136/api/forgot-password/",
+        data:{'username':username},
         options: Options(
           headers: {
-            'Authorization': 'Token $token',
             'Content-Type': 'application/json',
           },
         ),
-        data: jsonEncode(ForgotModel(username: username).toJson()),
       );
-    print("Data Received Get : ${response.data}");
-    print("Token: $token");
-    print("Response Status: ${response.statusCode}");
+      print("${token}");
+      print("hhhh");
+      print("response${response}");
+      print("response${response.data}");
       if (response.statusCode == 200) {
-        return response.data['data'] ?? "Data updated successfully!";
+        return response.data['message'];
       } else {
-        return "Failed to update data: ${response.statusCode}";
+        return "Failed to Update";
       }
-    } on DioException catch (e) {
-      // Handle Dio-specific errors
-      return "Request failed: ${e.response?.statusCode ?? 'unknown status code'}";
     } catch (e) {
-      // Handle other errors
-      return "An error occurred: $e";
+      print("exxccccceeepp $e");
+      return "Something went wrong";
     }
   }
 }

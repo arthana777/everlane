@@ -42,7 +42,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 5, right: 5).r,
+      padding: const EdgeInsets.only(left: 0, right: 0).r,
       child: TextFormField(
         focusNode: widget.focusNode,
         onFieldSubmitted: widget.onFieldSubmitted,

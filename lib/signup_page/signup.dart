@@ -301,78 +301,72 @@ class _SiginupState extends State<Siginup> {
                           },
                         ),
                         SizedBox(height: 10.h),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5, right: 5).r,
-                          child: TextFormField(
-                            textCapitalization: TextCapitalization.words,
-                            keyboardType: TextInputType.emailAddress,
-                            focusNode: fieldSix,
-                            onFieldSubmitted: (value) {
-                              FocusScope.of(context).requestFocus(fieldSeven);
-                            },
-                            controller: passController,
-                            obscureText: _obscurePassword,
-                            decoration: InputDecoration(
-                              hintStyle: CustomFont().hintText,
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                                borderRadius: BorderRadius.circular(8).w,
-                              ),
-                              fillColor: const Color(0xFFFFFFFF),
-                              filled: true,
-                              contentPadding:
-                                  const EdgeInsets.only(left: 10, top: 15).r,
-                              hintText: 'Password',
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _obscurePassword
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _obscurePassword = !_obscurePassword;
-                                  });
-                                },
-                              ),
+                        TextFormField(
+                          textCapitalization: TextCapitalization.words,
+                          keyboardType: TextInputType.emailAddress,
+                          focusNode: fieldSix,
+                          onFieldSubmitted: (value) {
+                            FocusScope.of(context).requestFocus(fieldSeven);
+                          },
+                          controller: passController,
+                          obscureText: _obscurePassword,
+                          decoration: InputDecoration(
+                            hintStyle: CustomFont().hintText,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(8).w,
                             ),
-                            validator: _validatePassword,
+                            fillColor: const Color(0xFFFFFFFF),
+                            filled: true,
+                            contentPadding:
+                                const EdgeInsets.only(left: 10, top: 15).r,
+                            hintText: 'Password',
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
+                            ),
                           ),
+                          validator: _validatePassword,
                         ),
                         SizedBox(height: 10.h),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5, right: 5).r,
-                          child: TextFormField(
-                            textCapitalization: TextCapitalization.words,
-                            keyboardType: TextInputType.emailAddress,
-                            focusNode: fieldSeven,
-                            controller: confirmpassController,
-                            obscureText: _obscureConfirmPassword,
-                            decoration: InputDecoration(
-                              hintStyle: CustomFont().hintText,
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                                borderRadius: BorderRadius.circular(8).r,
-                              ),
-                              fillColor: Colors.white,
-                              filled: true,
-                              contentPadding:
-                                  const EdgeInsets.only(left: 10, top: 10).r,
-                              hintText: 'Confirm Password',
-                              suffixIcon: IconButton(
-                                icon: Icon(_obscureConfirmPassword
-                                    ? Icons.visibility
-                                    : Icons.visibility_off),
-                                onPressed: () {
-                                  setState(() {
-                                    _obscureConfirmPassword =
-                                        !_obscureConfirmPassword;
-                                  });
-                                },
-                              ),
+                        TextFormField(
+                          textCapitalization: TextCapitalization.words,
+                          keyboardType: TextInputType.emailAddress,
+                          focusNode: fieldSeven,
+                          controller: confirmpassController,
+                          obscureText: _obscureConfirmPassword,
+                          decoration: InputDecoration(
+                            hintStyle: CustomFont().hintText,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(8).r,
                             ),
-                            validator: _validateConfirmPassword,
+                            fillColor: Colors.white,
+                            filled: true,
+                            contentPadding:
+                                const EdgeInsets.only(left: 10, top: 10).r,
+                            hintText: 'Confirm Password',
+                            suffixIcon: IconButton(
+                              icon: Icon(_obscureConfirmPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _obscureConfirmPassword =
+                                      !_obscureConfirmPassword;
+                                });
+                              },
+                            ),
                           ),
+                          validator: _validateConfirmPassword,
                         ),
                         SizedBox(height: 35.h),
                         BlocConsumer<RegistrationBloc, SignupState>(
