@@ -51,7 +51,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 context.read<NotificationBloc>().add(FetchNotifications());
               } else if (state is DeletNotificationError) {
                 Fluttertoast.showToast(
-                  backgroundColor: Colors.green,
+                  backgroundColor: Colors.red,
                   gravity: ToastGravity.BOTTOM,
                   textColor: Colors.white,
                   msg: "Error: ${state.message}",
@@ -129,6 +129,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   );
                 },
               );
+            } else if (state is NotificationEmpty) {
+              return const Center(child: Text("No notifications available"));
             } else if (state is NotificationError) {
               return Center(child: Text('Error: ${state.message}'));
             } else {

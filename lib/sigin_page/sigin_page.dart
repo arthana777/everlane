@@ -67,9 +67,6 @@ class _SiginPageState extends State<SiginPage> {
     if (value == null || value.isEmpty) {
       return 'Please enter your password';
     }
-    if (value.length < 8) {
-      return 'Password must be at least 8 characters long';
-    }
     return null;
   }
 
@@ -330,8 +327,8 @@ class _SiginPageState extends State<SiginPage> {
                                                         child: ElevatedButton(
                                                           style: ElevatedButton
                                                               .styleFrom(
-                                                            fixedSize:
-                                                                Size(350.w, 48.h),
+                                                            fixedSize: Size(
+                                                                350.w, 48.h),
                                                             backgroundColor:
                                                                 CustomColor
                                                                     .primaryColor,

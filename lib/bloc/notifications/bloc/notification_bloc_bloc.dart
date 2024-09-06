@@ -1,4 +1,3 @@
-
 import 'package:everlane/bloc/notifications/bloc/notification_bloc_event.dart';
 import 'package:everlane/bloc/notifications/bloc/notification_bloc_state.dart';
 import 'package:everlane/data/datasources/notification_service.dart';
@@ -13,9 +12,18 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       emit(NotificationLoading());
       try {
         final notifications = await notificationService.fetchNotifications();
-        emit(NotificationLoaded(notifications: notifications));
+
+        if (notifications.isEmpty) {
+          emit(NotificationEmpty());
+        } else {
+          emit(NotificationLoaded(notifications: notifications));
+        }
       } catch (e) {
-        emit(NotificationError(message: e.toString()));
+        if (e.toString().contains("No Notification Found")) {
+          emit(NotificationEmpty());
+        } else {
+          emit(NotificationError(message: e.toString()));
+        }
       }
     });
   }
