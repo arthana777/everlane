@@ -47,13 +47,7 @@ class Searchscreen extends StatelessWidget {
             AdrressCustomField(
               hinttext: 'Search here',
               suffixIcon: Icon(Icons.search_rounded),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black45,
-                  offset: Offset(0, 1),
-                  blurRadius: 1.0,
-                ),
-              ],
+
               controller: searchController,
               onchanged: (value) {
                 if (value.isNotEmpty) {

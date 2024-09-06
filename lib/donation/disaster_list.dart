@@ -54,7 +54,8 @@ class _DisasterListState extends State<DisasterList> {
                 setState(() {
                   isLoading = true; // Show loading indicator
                 });
-              } else if (state is DisasterLoaded) {
+              }
+              else if (state is DisasterLoaded) {
                 setState(() {
                   isLoading = false;
                 });

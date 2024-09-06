@@ -27,10 +27,13 @@ class RemovefromCart extends CartEvent{
 }
 class PlaceOrder extends CartEvent {
   final int deliveryAddressId;
+  final int? disasterid;
+  final int? pickupid;
+
   final String orderType;
   final String paymentMethod;
 
-  PlaceOrder({required this.deliveryAddressId, required this.orderType, required this.paymentMethod});
+  PlaceOrder( {required this.deliveryAddressId, required this.orderType, required this.paymentMethod, this.disasterid,  this.pickupid,});
 
 
   @override

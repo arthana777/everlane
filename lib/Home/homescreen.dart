@@ -229,52 +229,68 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           backgroundColor: Colors.white,
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(80.h),
-            child: CustomAppBar(
-              text: "Everlanestyle",
-              action: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Searchscreen(),
-                              ),
-                            );
-                          },
-                          child: Icon(
-                            Icons.search_rounded,
-                            size: 30.sp,
-                          )),
-                      SizedBox(
-                        width: 10.w,
-                      ),
-                      InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DonationHomeScreen(),
-                              ),
-                            );
-                          },
-                          child: Icon(
-                            Icons.handshake_outlined,
-                            size: 25.sp,
-                          ))
-                    ],
-                  ),
-                  // padding: const EdgeInsets.only(left: 15),
+          appBar: AppBar(
+            titleSpacing: 20,
+            centerTitle: false,
+            backgroundColor: Colors.white,
+            elevation: 0.0,
+            automaticallyImplyLeading: false,
+            //leading: leading,
+            leadingWidth: 20.w,
+            surfaceTintColor: Colors.white,
+            toolbarHeight: 70.h,
+            //leadingWidth: 20,
+            title: Text("Everlane Style", style: CustomFont().appbarText),
+            actions: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Searchscreen(),
+                            ),
+                          );
+                        },
+                        child: Icon(
+                          Icons.search_rounded,
+                          size: 30.sp,
+                        )),
+                    SizedBox(
+                      width: 10.w,
+                    ),
+                    InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DonationHomeScreen(),
+                            ),
+                          );
+                        },
+                        child:Container(
+                          height: 25.h,
+                          width: 25.h,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage(
+                                    'https://cdn-icons-png.flaticon.com/128/2967/2967188.png',
+                                ),
+                            fit: BoxFit.cover)
+                          ),
+                        ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+                // padding: const EdgeInsets.only(left: 15),
+              ),
+            ],
           ),
+
           body: MultiBlocListener(
               listeners: [
                 BlocListener<CategoryBloc, CategoryState>(
@@ -316,28 +332,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   listener: (context, state) {
                     print(state);
                     if (state is addtoWishlistLoading) {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (context) =>
-                            Center(child: CircularProgressIndicator()),
-                      );
+                           setState(() {
+                             isLoading=false;
+                           });
                     } else if (state is addtoWishlistSuccess) {
                       print("adding to whislisttt");
-                      Navigator.pop(context);
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(
-                      //       content:
-                      //           Text('Product added to wishlist successfully!')),
-                      // );
+                      setState(() {
+                        isLoading=false;
+                      });
                       BlocProvider.of<WhishlistBloc>(context)
                           .add(RetrieveWhishlist());
                     } else if (state is addtoWishlistFailure) {
-                      // Dismiss loading indicator and show error message
-                      Navigator.pop(context);
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(content: Text(state.error)),
-                      // );
+
+                      setState(() {
+                        isLoading=false;
+                      });
                     } else if (state is WishlistSuccess) {
                       // loading=false;
                       whishlist = state.whishlists;
@@ -345,19 +354,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       // for (var i = 0; i <= whishlist.length; i++) {
                       //   wishlistProductIds.add(whishlist[i].product??0);
                       // }
-                      setState(() {});
+                      setState(() {
+                        isLoading=false;
+                      });
                     } else if (state is RemoveWishlistSuccess) {
                       setState(() {
+                        isLoading=false;
                         whishlist.removeWhere(
                             (item) => item.id == state.removedProductId);
                       });
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(content: Text('Item deleted successfully')),
-                      // );
                     } else if (state is RemoveWishlistFailure) {
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(content: Text(state.error)),
-                      // );
+
                     }
                   },
                 ),

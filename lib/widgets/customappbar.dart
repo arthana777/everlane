@@ -15,13 +15,13 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      titleSpacing: 10,
+      titleSpacing: 5,
       centerTitle: false,
       backgroundColor: color ?? Colors.white,
       elevation: 0.0,
       automaticallyImplyLeading: false,
       leading: leading,
-      leadingWidth: 70.w,
+      leadingWidth: 50.w,
       surfaceTintColor: Colors.white,
       toolbarHeight: 70.h,
       //leadingWidth: 20,

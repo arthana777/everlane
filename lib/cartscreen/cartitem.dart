@@ -66,11 +66,11 @@ class _CartItemState extends State<CartItemCard> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      width: 200.w,
-                      child: Row(
-                        children: [
-                          Text(
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 200.w,
+                          child: Text(
                             widget.title??
                                 "",
                             style: GoogleFonts.poppins(
@@ -79,11 +79,10 @@ class _CartItemState extends State<CartItemCard> {
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12.sp)),
                           ),
-                          SizedBox(width: 30.w,),
-                          Text(widget.size??'')
-                        ],
-                      ),
-
+                        ),
+                        SizedBox(width: 30.w,),
+                        Text(widget.size??'')
+                      ],
                     ),
                     Row(
                       children: [
@@ -115,15 +114,17 @@ class _CartItemState extends State<CartItemCard> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           IconButton(onPressed: widget.increased,
-                              icon: Icon(Icons.remove)),
+                              icon: Icon(Icons.remove,size: 20.sp,)),
                           Text(
                               widget.itemcount.toString(),
                             style: CustomFont().bodyText,
                           ),
                           IconButton(onPressed: widget.decreased,
-                              icon: Icon(Icons.add)),
+                              icon: Icon(Icons.add,size: 20.sp,)),
+
                         ],
-                      )
+                      ),
+
                     ),
                   ],
                 ),

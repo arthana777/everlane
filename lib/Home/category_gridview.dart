@@ -17,11 +17,13 @@ import '../bloc/whishlist/whishlist_bloc.dart';
 import '../bloc/whishlist/whishlist_event.dart';
 import '../bloc/whishlist/whishlist_state.dart';
 import '../cartscreen/cartscreen.dart';
+import '../data/models/cartmodel.dart';
 import '../data/models/product_model.dart';
 import '../data/models/whishlistmodel.dart';
 import '../domain/entities/category_entity.dart';
 import '../productgrid/product_card.dart';
 import '../widgets/customcircularindicator.dart';
+import '../widgets/customcolor.dart';
 
 class CategoryGridview extends StatefulWidget {
   final String subcategoryName;
@@ -36,6 +38,7 @@ class CategoryGridview extends StatefulWidget {
 class _CategoryGridviewState extends State<CategoryGridview> {
   List<Product> filtercategories = [];
   List<Product> products = [];
+  List<Cart> carts = [];
   List<WhislistProduct> whishlist = [];
   List<int> wishlistProductIds = [];
   List<CategoryEntity> subcategories = [];
@@ -70,23 +73,27 @@ class _CategoryGridviewState extends State<CategoryGridview> {
                     onPressed: () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen()));
                     },
-                    icon: Icon(Icons.shopping_cart, size: 30.sp),
+                    icon: Icon(Icons.shopping_cart_outlined, size: 30.sp),
                   ),
                 ),
                 BlocBuilder<CartBloc, CartState>(
                   builder: (context, state) {
                     int cartItemCount = 0;
                     if (state is CartLoaded) {
-                      cartItemCount = state.carts.length;
+                      carts = state.carts;
+                      state.carts.forEach((cart) {
+                        cartItemCount=cart.items.length;
+                        print("Cart ID: ${cart.id}, Items: ${cart.items.length}");
+                      });
                     }
                     return Positioned(
-                      right: 40.w,
-                      top: 10.h,
+                      right: 35.w,
+                      top: 15.h,
                       child: Container(
-                        height: 18.h,
-                        width: 18.w,
+                        height: 20.h,
+                        width: 20.w,
                         decoration: BoxDecoration(
-                          color: Colors.purple.withOpacity(0.4),
+                          color: CustomColor.primaryColor,
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                         child: Center(

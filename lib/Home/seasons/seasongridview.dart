@@ -2,18 +2,23 @@ import 'package:everlane/data/models/whishlistmodel.dart';
 import 'package:everlane/data/navigation_provider/navigation_provider.dart';
 import 'package:everlane/product_detail/product_details.dart';
 import 'package:everlane/widgets/customappbar.dart';
+import 'package:everlane/widgets/customcolor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../bloc/cart/cart_bloc.dart';
 import '../../bloc/product/product_bloc.dart';
 import '../../bloc/whishlist/whishlist_bloc.dart';
 import '../../bloc/whishlist/whishlist_event.dart';
 import '../../bloc/whishlist/whishlist_state.dart';
 import '../../btm_navigation/btm_navigation.dart';
+import '../../cartscreen/cartscreen.dart';
+import '../../data/models/cartmodel.dart';
 import '../../data/models/product_model.dart';
 import '../../domain/entities/product_entity.dart';
 import '../../productgrid/product_card.dart';
@@ -33,6 +38,7 @@ class Seasongridview extends StatefulWidget {
 class _SeasongridviewState extends State<Seasongridview> {
   List<Product> seasons = [];
   List<Product> products = [];
+  List<Cart> carts = [];
   List<WhislistProduct> whishlist = [];
   List<int> wishlistProductIds = [];
   bool isLoading = true;
@@ -60,6 +66,52 @@ class _SeasongridviewState extends State<Seasongridview> {
                     Navigator.pop(context);
                   },
                   child: Icon(Icons.arrow_back)),
+              action: [
+                Stack(
+                  children: [
+                    Container(
+                      height: 100.h,
+                      width: 100.w,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen()));
+                        },
+                        icon: Icon(Icons.shopping_cart_outlined, size: 30.sp),
+                      ),
+                    ),
+                    BlocBuilder<CartBloc, CartState>(
+                      builder: (context, state) {
+                        int cartItemCount = 0;
+                        if (state is CartLoaded) {
+                          carts = state.carts;
+                          state.carts.forEach((cart) {
+                            cartItemCount=cart.items.length;
+                            print("Cart ID: ${cart.id}, Items: ${cart.items.length}");
+                          });
+                        }
+                        return Positioned(
+                          right: 35.w,
+                          top: 15.h,
+                          child: Container(
+                            height: 20.h,
+                            width: 20.w,
+                            decoration: BoxDecoration(
+                              color: CustomColor.primaryColor,
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: Center(
+                              child: Text(
+                                cartItemCount.toString(),
+                                style: GoogleFonts.poppins(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
             )),
         body: MultiBlocListener(
           listeners: [

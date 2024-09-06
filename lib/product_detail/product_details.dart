@@ -43,6 +43,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   List<int> wishlistProductIds = [];
   List<WhislistProduct> whishlist = [];
   DetailProduct? productdetail;
+  List<Cart> carts = [];
   int? isclicked;
   bool isLoading=false;
   bool isAddedToCart = false;
@@ -107,7 +108,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       });
     }
   }
-  List<Cart> carts = [];
+
   @override
   Widget build(BuildContext context) {
     // final productdetails = widget.;
@@ -191,24 +192,27 @@ class _ProductDetailsState extends State<ProductDetails> {
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen()));
                       },
-                      icon: Icon(Icons.shopping_cart, size: 30.sp),
+                      icon: Icon(Icons.shopping_cart_outlined, size: 30.sp),
                     ),
                   ),
                   BlocBuilder<CartBloc, CartState>(
                     builder: (context, state) {
                       int cartItemCount = 0;
                       if (state is CartLoaded) {
-                        cartItemCount = state.carts.length;
-                        print("cartItemCount${cartItemCount}");
+                        carts = state.carts;
+                        state.carts.forEach((cart) {
+                          cartItemCount=cart.items.length;
+                          print("Cart ID: ${cart.id}, Items: ${cart.items.length}");
+                        });
                       }
                       return Positioned(
-                        right: 40.w,
-                        top: 5.h,
+                        right: 35.w,
+                        top: 8.h,
                         child: Container(
-                          height: 15.h,
-                          width: 15.w,
+                          height: 20.h,
+                          width: 20.w,
                           decoration: BoxDecoration(
-                            color: Colors.purple.withOpacity(0.4),
+                            color: CustomColor.primaryColor,
                             borderRadius: BorderRadius.circular(10.r),
                           ),
                           child: Center(

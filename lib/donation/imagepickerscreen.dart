@@ -16,14 +16,9 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../bloc/address/address_bloc.dart';
-import '../btm_navigation/btm_navigation.dart';
-
-
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-
 import '../data/models/pickupmodel.dart';
 import '../widgets/customcircularindicator.dart';
 
@@ -381,6 +376,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("Choose Pickup location"),
+
                           DropdownButton<PickupLocation>(
                             value: selectedLocation,
                             dropdownColor: Colors.white,
@@ -388,6 +384,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                             underline: SizedBox(),
                             icon: const Icon(Icons.keyboard_arrow_down),
                             items: pickuplocations.map((PickupLocation location) {
+                              print("pickuplocations${pickuplocations}");
                               return DropdownMenuItem<PickupLocation>(
                                 value: location,
                                 child: Text(location.city),
@@ -462,13 +459,14 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                         return null;
                       },
                     ),
-                  )
+                  ),
 
 
-
+          SizedBox(height: 80.h,),
                 ],
               ),
     ),
+
           ),
         ),
       ),
