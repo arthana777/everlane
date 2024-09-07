@@ -26,7 +26,9 @@ class _AddressListState extends State<AddressList> {
   List<UserAddress>useradress=[];
   bool isLoading = true;
 @override
-
+void _selectAddress(UserAddress selectedAddress) {
+  Navigator.pop(context, selectedAddress);  // Pop back with the selected address
+}
   void initState() {
   BlocProvider.of<AddressBloc>(context).add(FetchUserAddresses());
     super.initState();
@@ -45,7 +47,7 @@ class _AddressListState extends State<AddressList> {
             onTap: (){
               // final navigationProvider = Provider.of<NavigationProvider>(context, listen: false);
               // navigationProvider.updateScreenIndex(0);
-             Navigator.pop(context);
+              // _selectAddress();
             },
             child: Icon(Icons.arrow_back)),
         text: "Select Address",
@@ -114,8 +116,7 @@ class _AddressListState extends State<AddressList> {
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween
-                          ,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

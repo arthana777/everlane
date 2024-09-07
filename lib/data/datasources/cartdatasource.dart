@@ -136,7 +136,9 @@ class CartDatasource{
 
   Future<String> placeOrder(String method, String orderType, int addressId,int disasterid,int pickupid) async {
     print("Address ID: $addressId");
-
+    print("disaster ID: $disasterid");
+    print("Addrepickupss ID: $pickupid");
+    print("ordertype ID: $orderType");
     final String? token = await getToken();
     if (token == null || token.isEmpty) {
       return "Failed: Token not found or is empty";
@@ -164,7 +166,7 @@ class CartDatasource{
         final Map<String, dynamic> decodedResponse = jsonDecode(response.body);
 
         if (decodedResponse['status'] == "success") {
-          return decodedResponse['approval_url']['pdf'] ?? "No approval URL found";
+          return decodedResponse['approval_url'] ?? "No approval URL found";
         }
         else {
           return "Failed: ${decodedResponse['message']}";

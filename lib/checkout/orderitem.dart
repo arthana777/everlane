@@ -64,14 +64,17 @@ class _CartItemState extends State<OrderItem> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.title??
-                          "Apple fifteen pro max",
-                      style: GoogleFonts.poppins(
-                          textStyle: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12.sp)),
+                    SizedBox(
+                      width:200.w,
+                      child: Text(
+                        widget.title??
+                            "Apple fifteen pro max",
+                        style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12.sp)),
+                      ),
                     ),
                     Row(
                       children: [

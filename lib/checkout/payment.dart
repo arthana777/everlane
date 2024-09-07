@@ -14,17 +14,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../bloc/address/address_bloc.dart';
 import '../bloc/cart/cart_bloc.dart';
-import '../cartscreen/cartitem.dart';
 import '../data/models/addressmodel.dart';
 import '../data/models/cartmodel.dart';
 import '../widgets/customcolor.dart';
 import 'orderitem.dart';
 
 class PaymentScreen extends StatefulWidget {
-  final UserAddress? address;
+  late final UserAddress? address;
   final Disaster? disaster;
   late final PickupLocation? pickupLocation;
   final List<PickupLocation>? pickupLocations;
@@ -51,8 +49,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
   List<PickupLocation> pickuplocations=[];
   List<Disaster> disasters=[];
 
-
-
    bool _isVisible=true;
 
    void _toggleVisibility() {
@@ -74,19 +70,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     });
   }
 
-  // void _selectOrderType(String type) {
-  //   setState(() {
-  //     if (selectedOrderType == type) {
-  //       selectedOrderType = null;
-  //     } else {
-  //       selectedOrderType = type;
-  //       // if (type == "donate") {
-  //       //   selectedPaymentMethod = "ONLINE";
-  //       //   // _isAddressSelected = true;
-  //       // }
-  //     }
-  //   });
-  // }
+
   void _selectOrderType(String type) {
     setState(() {
       if (selectedOrderType == type) {
@@ -113,6 +97,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
   }
 
+  // Function to navigate to AddressList and receive the selected address
+  Future<void> _selectAddress() async {
+    final UserAddress? selectedAddress = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddressList()), // Navigate to address list
+    );
+
+    if (selectedAddress != null) {
+      setState(() {
+        widget.address = selectedAddress; // Update the address with the selected address
+        _isAddressSelected = true;        // Update the button or any state
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -157,8 +155,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   deliveryAddressId: widget.address?.id ?? 0,
                   orderType: selectedOrderType??'',
                   paymentMethod: selectedPaymentMethod,
-                  pickupid: widget.pickupLocation?.id??0,
-                  disasterid: widget.disaster?.id??0,
+                  pickupid: selectedLocation?.id??0,
+                  disasterid: selectedDisaster?.id??0,
                 ));
               }
             } else {
@@ -499,6 +497,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 underline: SizedBox(),
                                 icon: const Icon(Icons.keyboard_arrow_down),
                                 items: disasters.map((Disaster disaster) {
+                                  print("selectedDisaster${selectedDisaster?.id}");
                                   return DropdownMenuItem<Disaster>(
                                     value: disaster,
                                     child: Text('${disaster.name}, ${disaster.location}'),
@@ -517,25 +516,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                     ],
                   ),
-                  // child: Container(
-                  //   height: 150.h,
-                  //   width: 400.w,
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.white,
-                  //     border: Border.all(color: Colors.grey.withOpacity(0.4)),
-                  //     borderRadius: BorderRadius.circular(10.r),
-                  //   ),
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.all(20.0),
-                  //     child: Column(
-                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                  //       children: [
-                  //         Text(widget.pickupLocation?.city??""),
-                  //         Text(widget.pickupLocation?.address??""),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
+
                 ),
                 SizedBox(height: 8.h,),
 

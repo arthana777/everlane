@@ -63,13 +63,9 @@ class _MyOrdersState extends State<MyOrders> {
       body: BlocListener<CartBloc, CartState>(
         listener: (context, state) {
           if (state is OrderLoading) {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) => Center(child: CircularProgressIndicator()),
-            );
+
           } else if (state is OrderLoaded) {
-            Navigator.pop(context);
+
             setState(() {
               orders = state.orders;
             });
