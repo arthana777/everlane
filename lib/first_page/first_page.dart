@@ -25,7 +25,7 @@ class FirstPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
           child: Padding(
-            padding:  EdgeInsets.only(top: 60.h, left: 20.w, right: 20.w),
+            padding: EdgeInsets.only(top: 60.h, left: 20.w, right: 20.w),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,18 +38,19 @@ class FirstPage extends StatelessWidget {
                       fontSize: 26.sp,
                       fontWeight: FontWeight.w500),
                 ),
-                 SizedBox(
+                SizedBox(
                   height: 350.h,
                 ),
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => SiginPage()),
                     );
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 5.h,horizontal: 20.w),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
                     height: 55.h,
                     width: double.infinity.w,
                     decoration: BoxDecoration(
@@ -61,13 +62,21 @@ class FirstPage extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Icon(Icons.person,size: 20.sp,color: Colors.black,),
-                        SizedBox(width: 100.w,),
+                        Icon(
+                          Icons.person,
+                          size: 20.sp,
+                          color: Colors.black,
+                        ),
+                        SizedBox(
+                          width: 100.w,
+                        ),
                         Text(
                           "Sign In ",
                           style: GoogleFonts.poppins(
                               textStyle: TextStyle(
-                                  color: Colors.black, fontSize: 18.sp, fontWeight: FontWeight.w600)),
+                                  color: Colors.black,
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w500)),
                         ),
                       ],
                     ),
@@ -75,14 +84,15 @@ class FirstPage extends StatelessWidget {
                 ),
                 SizedBox(height: 10.h),
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => Siginup()),
-                            );
+                      context,
+                      MaterialPageRoute(builder: (context) => Siginup()),
+                    );
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 5.h,horizontal: 20.w),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
                     height: 55.h,
                     // width: double.infinity.w,
                     decoration: BoxDecoration(
@@ -94,10 +104,15 @@ class FirstPage extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-
-                        Icon(Icons.call_outlined,size: 20.sp,color: Colors.white,),
-                    SizedBox(width: 100.w,),
-                    Text(
+                        Icon(
+                          Icons.call_outlined,
+                          size: 20.sp,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          width: 100.w,
+                        ),
+                        Text(
                           "Sign Up ",
                           style: CustomFont().buttontext,
                         ),

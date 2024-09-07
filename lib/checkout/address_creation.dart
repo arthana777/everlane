@@ -1,4 +1,3 @@
-
 import 'package:everlane/checkout/address_list.dart';
 import 'package:everlane/checkout/payment.dart';
 import 'package:everlane/data/navigation_provider/navigation_provider.dart';
@@ -11,7 +10,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
-
 import '../bloc/address/address_bloc.dart';
 import '../btm_navigation/btm_navigation.dart';
 import '../data/models/addressmodel.dart';
@@ -20,12 +18,14 @@ import '../widgets/customcolor.dart';
 import '../widgets/cutsofield_address.dart';
 
 class AddressScreen extends StatefulWidget {
-   AddressScreen({super.key});
+  AddressScreen({super.key});
 
   @override
   State<AddressScreen> createState() => _AddressScreenState();
 }
-List<UserAddress>useradress=[];
+
+List<UserAddress> useradress = [];
+
 class _AddressScreenState extends State<AddressScreen> {
   final TextEditingController houseNoController = TextEditingController();
 
@@ -48,8 +48,6 @@ class _AddressScreenState extends State<AddressScreen> {
   String? _passwordError;
   String _mobileErrorMessage = '';
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,39 +56,38 @@ class _AddressScreenState extends State<AddressScreen> {
         elevation: 0,
         backgroundColor: CustomColor.primaryColor,
         onPressed: () {
-    if (_formKey.currentState?.validate() ?? false) {
-    // Form is valid, proceed with action
+          if (_formKey.currentState?.validate() ?? false) {
+            // Form is valid, proceed with action
 
-          context.read<AddressBloc>().add(CreateAddress(
-            mobile: mobileController.text,
-            pincode: pinCodeController.text,
-            locality: localityController.text,
-            address: addressController.text,
-            city: cityController.text,
-            state: stateController.text,
-            landmark: landmarkController.text,
-            isDefault: true,
-            isActive: true,
-            isDeleted: false,
-          ));
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddressList(),
-            ),
-          );
-    }
-    else {
-      // Show toast if form is not valid
-      Fluttertoast.showToast(
-        msg: "Please fill out all fields.",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.white,
-        textColor: Colors.black,
-        fontSize: 16.0,
-      );
-    }
+            context.read<AddressBloc>().add(CreateAddress(
+                  mobile: mobileController.text,
+                  pincode: pinCodeController.text,
+                  locality: localityController.text,
+                  address: addressController.text,
+                  city: cityController.text,
+                  state: stateController.text,
+                  landmark: landmarkController.text,
+                  isDefault: true,
+                  isActive: true,
+                  isDeleted: false,
+                ));
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => AddressList(),
+            //   ),
+            // );
+          } else {
+            // Show toast if form is not valid
+            Fluttertoast.showToast(
+              msg: "Please fill out all fields.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.white,
+              textColor: Colors.black,
+              fontSize: 16.0,
+            );
+          }
         },
         label: Container(
           height: 30.h,
@@ -108,16 +105,19 @@ class _AddressScreenState extends State<AddressScreen> {
           color: Colors.white,
         ),
       ),
-      appBar: PreferredSize(preferredSize: Size.fromHeight(50.h), child: CustomAppBar(
-        text: "Create your Address",
-        leading: InkWell(
-            onTap: (){
-              final navigationProvider = Provider.of<NavigationProvider>(context, listen: false);
-              navigationProvider.updateScreenIndex(0);
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back)),
-      )),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50.h),
+          child: CustomAppBar(
+            text: "Create your Address",
+            leading: InkWell(
+                onTap: () {
+                  final navigationProvider =
+                      Provider.of<NavigationProvider>(context, listen: false);
+                  navigationProvider.updateScreenIndex(0);
+                  Navigator.pop(context);
+                },
+                child: Icon(Icons.arrow_back)),
+          )),
       // body: MultiBlocListener(
       //   listeners: [
       //     BlocListener<AddressBloc, AddressState>(
@@ -280,41 +280,38 @@ class _AddressScreenState extends State<AddressScreen> {
       //   ),
       // ),
 
-
       body: MultiBlocListener(
         listeners: [
           // BlocListener as you have it
-        BlocListener<AddressBloc, AddressState>(
-              listener: (context, state) {
-                print(state);
-                if (state is AddressLoading) {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) =>
-                        Center(child: CircularProgressIndicator()),
-                  );
-                } else if (state is AddressCreationSuccess) {
-                  setState(() {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text('Adress created successfully!')),
-                    );
-                  });
-
-                 // final useraddress = state.userAddresses;
-                  print("adding to addresslist");
-                } else if (state is AddressError) {
-                  // Dismiss loading indicator and show error message
+          BlocListener<AddressBloc, AddressState>(
+            listener: (context, state) {
+              print(state);
+              if (state is AddressLoading) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) =>
+                      Center(child: CircularProgressIndicator()),
+                );
+              } else if (state is AddressCreationSuccess) {
+                setState(() {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.message)),
+                    SnackBar(content: Text('Adress created successfully!')),
                   );
-                }
+                });
 
-              },
-            ),
+                // final useraddress = state.userAddresses;
+                print("adding to addresslist");
+              } else if (state is AddressError) {
+                // Dismiss loading indicator and show error message
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message)),
+                );
+              }
+            },
+          ),
         ],
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -322,7 +319,8 @@ class _AddressScreenState extends State<AddressScreen> {
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -442,7 +440,8 @@ class _AddressScreenState extends State<AddressScreen> {
                           onchanged: (value) {
                             setState(() {
                               if (value.length > 8) {
-                                _mobileErrorMessage = 'Phone number cannot be more than 8 digits';
+                                _mobileErrorMessage =
+                                    'Phone number cannot be more than 8 digits';
                               } else {
                                 _mobileErrorMessage = '';
                               }
@@ -470,9 +469,6 @@ class _AddressScreenState extends State<AddressScreen> {
           },
         ),
       ),
-
-
-
     );
   }
 }

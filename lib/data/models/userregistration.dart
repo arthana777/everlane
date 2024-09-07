@@ -6,6 +6,7 @@ class Userregistration {
   int? mobile;
   String? password;
   String? confirmPassword;
+  String? countrycode;
 
   Userregistration(
       {this.username,
@@ -14,7 +15,8 @@ class Userregistration {
       this.email,
       this.mobile,
       this.password,
-      this.confirmPassword});
+      this.confirmPassword,
+      this.countrycode});
 
   Userregistration.fromJson(Map<String, dynamic> json) {
     username = json['username'];
@@ -24,6 +26,7 @@ class Userregistration {
     mobile = json['mobile'];
     password = json['password'];
     confirmPassword = json['confirm_password'];
+    countrycode = json['country_code'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +38,7 @@ class Userregistration {
     data['mobile'] = this.mobile;
     data['password'] = this.password;
     data['confirm_password'] = this.confirmPassword;
+    data['country_code'] = this.countrycode;
     return data;
   }
 }
