@@ -7,12 +7,22 @@ import '../widgets/custom_textbutton.dart';
 import '../widgets/customfont.dart';
 
 class CartItemCard extends StatefulWidget {
-  CartItemCard({super.key, this.ontapremove, this.image, this.title, this.price, this.itemcount, this.increased, this.decreased, this.movetowish, this.size});
-final String? image;
-final String? itemcount;
-final String? title;
-final String? size;
-final double? price;
+  CartItemCard(
+      {super.key,
+      this.ontapremove,
+      this.image,
+      this.title,
+      this.price,
+      this.itemcount,
+      this.increased,
+      this.decreased,
+      this.movetowish,
+      this.size});
+  final String? image;
+  final String? itemcount;
+  final String? title;
+  final String? size;
+  final double? price;
   final VoidCallback? ontapremove;
   final VoidCallback? movetowish;
   final VoidCallback? increased;
@@ -23,7 +33,6 @@ final double? price;
 }
 
 class _CartItemState extends State<CartItemCard> {
-
   int itemCount = 1;
   @override
   void initState() {
@@ -66,24 +75,24 @@ class _CartItemState extends State<CartItemCard> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      width: 200.w,
-                      child: Row(
-                        children: [
-                          Text(
-                            widget.title??
-                                "",
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 200.w,
+                          child: Text(
+                            widget.title ?? "",
                             style: GoogleFonts.poppins(
                                 textStyle: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12.sp)),
                           ),
-                          SizedBox(width: 30.w,),
-                          Text(widget.size??'')
-                        ],
-                      ),
-
+                        ),
+                        SizedBox(
+                          width: 20.w,
+                        ),
+                        Text(widget.size ?? '')
+                      ],
                     ),
                     Row(
                       children: [
@@ -114,16 +123,24 @@ class _CartItemState extends State<CartItemCard> {
                         //mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          IconButton(onPressed: widget.increased,
-                              icon: Icon(Icons.remove)),
+                          IconButton(
+                              onPressed: widget.increased,
+                              icon: Icon(
+                                Icons.remove,
+                                size: 20.sp,
+                              )),
                           Text(
-                              widget.itemcount.toString(),
+                            widget.itemcount.toString(),
                             style: CustomFont().bodyText,
                           ),
-                          IconButton(onPressed: widget.decreased,
-                              icon: Icon(Icons.add)),
+                          IconButton(
+                              onPressed: widget.decreased,
+                              icon: Icon(
+                                Icons.add,
+                                size: 20.sp,
+                              )),
                         ],
-                      )
+                      ),
                     ),
                   ],
                 ),
@@ -139,8 +156,7 @@ class _CartItemState extends State<CartItemCard> {
                 child: Container(
                   width: 180.w,
                   padding: EdgeInsets.all(15),
-                  child: Center(
-                      child: Text("Add to wishlist")),
+                  child: Center(child: Text("Add to wishlist")),
                 ),
               ),
               InkWell(

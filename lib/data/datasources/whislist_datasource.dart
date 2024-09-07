@@ -43,21 +43,23 @@ class WhishlistDatasource {
       print(response.body);
       if (response.statusCode == 201) {
         final decodedResponse = jsonDecode(response.body);
-        print("ytytytyt${decodedResponse}");
-        if (decodedResponse['message'] ==
-            "Product added to wishlist successfully.") {
-          // await getToken(token);
-          return "success";
+        return decodedResponse['status'];
+        // print("ytytytyt${decodedResponse}");
+        // if (decodedResponse['message'] ==
+        //     "Product added to wishlist successfully.") {
+        //   // await getToken(token);
+        //   return "success";
         }
         else {
-          return "Failed: ${decodedResponse['message']}";
+          final decodedResponse = jsonDecode(response.body);
+          return ' ${decodedResponse['status']}';
+          //return "Failed: ${decodedResponse['message']}";
         }
         // Login successful, proceed to next step
       }
-    } catch (e) {
+     catch (e) {
       return "Failed: ${e.toString()}";
     }
-    return "true";
   }
 
 
@@ -125,13 +127,13 @@ class WhishlistDatasource {
           return "success";
         }
         else {
-          return "Failed: ${decodedResponse['message']}";
+          return "${decodedResponse['message']}";
         }
         // Login successful, proceed to next step
       }
     } catch (e) {
       return "Failed: ${e.toString()}";
     }
-    return "true";
+    return "Wishlist item deleted successfully";
   }
 }

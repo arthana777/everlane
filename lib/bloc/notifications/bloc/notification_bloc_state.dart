@@ -31,7 +31,3 @@ class NotificationError extends NotificationState {
   @override
   List<Object> get props => [message];
 }
-class NotificationEmpty extends NotificationState {
-
-  
-}

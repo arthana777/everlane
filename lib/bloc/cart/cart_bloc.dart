@@ -77,12 +77,12 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       emit(palceOrderLoading());
       try {
         print("Calling placeOrder with paymentMethod: ${event.paymentMethod}, orderType: ${event.orderType}, deliveryAddressId: ${event.deliveryAddressId}");
-        final result = await cartDataSource.placeOrder(event.paymentMethod, event.orderType, event.deliveryAddressId);
+        final result = await cartDataSource.placeOrder(event.paymentMethod??"", event.orderType??'', event.deliveryAddressId??0,event.disasterid??0,event.pickupid??0);
         print("result in placeOrderBloc: $result");
         if (result.startsWith('https://')) {
           emit(PlaceOrderSuccess(approvalUrl: result));
         } else {
-          emit(placeOrdererror(message: result));
+          emit(placeOrdererror(message: result.toString()));
         }
       } catch (e) {
         print("Exception in placeOrder: $e");

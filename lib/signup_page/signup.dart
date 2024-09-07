@@ -412,7 +412,7 @@ class _SiginupState extends State<Siginup> {
                                             .r,
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        fixedSize: const Size(350, 48),
+                                        fixedSize: Size(350.w, 48.h),
                                         backgroundColor:
                                             CustomColor.primaryColor,
                                         shape: RoundedRectangleBorder(

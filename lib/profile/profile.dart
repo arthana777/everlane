@@ -399,43 +399,43 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       builder: (context) => AlertDialog(
                         backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(10).w,
                         ),
                         contentPadding: EdgeInsets.zero,
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(16.0),
+                              padding: const EdgeInsets.all(16.0).w,
                               child: Icon(
                                 Icons.logout_rounded,
                                 color: CustomColor.primaryColor,
-                                size: 60,
+                                size: 60.sp,
                               ),
                             ),
                             // Title
                             Text(
                               "Are You Sure?",
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 20.sp,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 10),
+                            SizedBox(height: 10.h),
                             // Content text
                             Text(
                               "Do you want to logout?",
                               style: TextStyle(
-                                  fontSize: 16, color: Colors.black54),
+                                  fontSize: 16.sp, color: Colors.black54),
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: 20.h),
                             Divider(height: 1, color: Colors.grey),
                             // Action buttons
                             Row(
                               children: [
                                 // No Button
                                 Expanded(
-                                  child: InkWell(
+                                  child: InkWell( 
                                     onTap: () {
                                       Navigator.of(context)
                                           .pop(); // Close dialog

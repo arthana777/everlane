@@ -21,8 +21,8 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     context.read<NotificationBloc>().add(FetchNotifications());
   }
 
@@ -48,14 +48,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   textColor: Colors.white,
                   msg: "${state.message}",
                 );
+                Future.delayed(const Duration(seconds: 1));
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   SnackBar(content: Text(state.message)),
+                // );
                 context.read<NotificationBloc>().add(FetchNotifications());
               } else if (state is DeletNotificationError) {
                 Fluttertoast.showToast(
-                  backgroundColor: Colors.red,
+                  backgroundColor: Colors.green,
                   gravity: ToastGravity.BOTTOM,
                   textColor: Colors.white,
-                  msg: "Error: ${state.message}",
+                  msg: "Error${state.message}",
                 );
+                Future.delayed(const Duration(seconds: 1));
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   SnackBar(content: Text('Error: ${state.message}')),
+                // );
               }
             },
           ),
@@ -64,6 +72,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
           builder: (context, state) {
             if (state is NotificationLoading) {
               return const Center(child: CircularProgressIndicator());
+            } else if (state is NotificationError) {
+              return const Center(
+                child: Text(""),
+              );
             } else if (state is NotificationLoaded) {
               return ListView.builder(
                 itemCount: state.notifications.length,
@@ -76,14 +88,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       motion: const ScrollMotion(),
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 10).h,
+                          padding: const EdgeInsets.only(top: 10),
                           child: Card(
                             child: SizedBox(
                               width: 60.w,
                               child: Center(
                                 child: SlidableAction(
-                                  padding: const EdgeInsets.only(top: 30).h,
-                                  borderRadius: BorderRadius.circular(10).w,
+                                  padding: EdgeInsets.only(top: 30),
+                                  borderRadius: BorderRadius.circular(10),
                                   onPressed: (context) {
                                     _deleteNotification(
                                         context, notification.id!);
@@ -101,8 +113,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ),
                     child: Card(
                       color: Colors.white,
-                      margin: EdgeInsets.symmetric(
-                          horizontal: 10.w, vertical: 10.w),
+                      margin: EdgeInsets.only(left: 10, right: 10, top: 15).w,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.0).r,
                       ),
@@ -111,13 +122,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           child: Icon(Icons.notifications, color: Colors.white),
                           backgroundColor: CustomColor.primaryColor,
                         ),
-                        title: Text(notification.verb ?? "No Title",
+                        title: Text(notification.verb ?? "No Title ",
                             style: CustomFont().titleText),
                         subtitle: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(notification.description ?? "No Description",
-                                style: CustomFont().subText),
+                            Text(
+                              notification.description ?? "No Description",
+                              style: CustomFont().subText,
+                            ),
                             SizedBox(height: 4.0.h),
                             Text(
                                 notification.formatted_timestamp ?? "date time",
@@ -129,8 +143,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   );
                 },
               );
-            } else if (state is NotificationEmpty) {
-              return const Center(child: Text("No notifications available"));
             } else if (state is NotificationError) {
               return Center(child: Text('Error: ${state.message}'));
             } else {

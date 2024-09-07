@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'image':
           //'image': "https://drive.google.com/file/d/159d9IK0BY8I_99FxxkuTzU1mpkTaf17y/view?usp=sharing",
 
-          'https://img.freepik.com/free-photo/young-adult-man-walking-city-night-generated-by-artificial-intelligence_188544-125243.jpg?ga=GA1.1.1985107230.1716028092'
+      'https://img.freepik.com/free-photo/view-snowman-with-winter-landscape-snow_23-2150635358.jpg?ga=GA1.1.1985107230.1716028092&semt=ais_hybrid'
     },
     {
       'id': '2',
@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'id': '4',
       'title': 'autumn',
       'image':
-          'https://img.freepik.com/free-photo/view-from-flat-lay-woman-style-accessories-red-knitted-sweater-checkered-flannel-shirt-denim-jeans-hat-autumn-fashion-trend-vintage-photo-camera-traveler-outfit_285396-5156.jpg?t=st=1725252126~exp=1725255726~hmac=cb6b6b8f9552e789ad78c00d429887c6f7ce8594fe9635cea61dfd9533098ca1&w=1060'
+      'https://img.freepik.com/free-photo/view-from-flat-lay-woman-style-accessories-autumn-leaves-fashion-trend-vintage-photo-camera-traveler-outfit_285396-5107.jpg?ga=GA1.1.1985107230.1716028092&semt=ais_hybrid',
     },
   ];
 
@@ -215,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             label: Container(
               height: 30.h,
-              decoration: const BoxDecoration(
+              decoration: const BoxDecoration( 
                 color: CustomColor.primaryColor,
               ),
             ),
@@ -229,52 +229,68 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           backgroundColor: Colors.white,
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(80.h),
-            child: CustomAppBar(
-              text: "Everlanestyle",
-              action: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Searchscreen(),
-                              ),
-                            );
-                          },
-                          child: Icon(
-                            Icons.search_rounded,
-                            size: 30.sp,
-                          )),
-                      SizedBox(
-                        width: 10.w,
-                      ),
-                      InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DonationHomeScreen(),
-                              ),
-                            );
-                          },
-                          child: Icon(
-                            Icons.handshake_outlined,
-                            size: 25.sp,
-                          ))
-                    ],
-                  ),
-                  // padding: const EdgeInsets.only(left: 15),
+          appBar: AppBar(
+            titleSpacing: 20,
+            centerTitle: false,
+            backgroundColor: Colors.white,
+            elevation: 0.0,
+            automaticallyImplyLeading: false,
+            //leading: leading,
+            leadingWidth: 20.w,
+            surfaceTintColor: Colors.white,
+            toolbarHeight: 70.h,
+            //leadingWidth: 20,
+            title: Text("Everlane Style", style: CustomFont().appbarText),
+            actions: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Searchscreen(),
+                            ),
+                          );
+                        },
+                        child: Icon(
+                          Icons.search_rounded,
+                          size: 30.sp,
+                        )),
+                    SizedBox(
+                      width: 10.w,
+                    ),
+                    InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DonationHomeScreen(),
+                            ),
+                          );
+                        },
+                        child:Container(
+                          height: 25.h,
+                          width: 25.h,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage(
+                                    'https://cdn-icons-png.flaticon.com/128/2967/2967188.png',
+                                ),
+                            fit: BoxFit.cover)
+                          ),
+                        ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+                // padding: const EdgeInsets.only(left: 15),
+              ),
+            ],
           ),
+
           body: MultiBlocListener(
               listeners: [
                 BlocListener<CategoryBloc, CategoryState>(
@@ -316,47 +332,39 @@ class _HomeScreenState extends State<HomeScreen> {
                   listener: (context, state) {
                     print(state);
                     if (state is addtoWishlistLoading) {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (context) =>
-                            Center(child: CircularProgressIndicator()),
-                      );
+                           setState(() {
+                             isLoading=false;
+                           });
                     } else if (state is addtoWishlistSuccess) {
                       print("adding to whislisttt");
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text(
-                                'Product added to wishlist successfully!')),
-                      );
+                      setState(() {
+                        isLoading=false;
+                      });
                       BlocProvider.of<WhishlistBloc>(context)
                           .add(RetrieveWhishlist());
                     } else if (state is addtoWishlistFailure) {
-                      // Dismiss loading indicator and show error message
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(state.error)),
-                      );
+
+                      setState(() {
+                        isLoading=false;
+                      });
                     } else if (state is WishlistSuccess) {
                       // loading=false;
                       whishlist = state.whishlists;
-                      for (var i = 0; i <= whishlist.length; i++) {
-                        wishlistProductIds.add(whishlist[i].product ?? 0);
-                      }
-                      setState(() {});
+                      wishlistProductIds = whishlist.map((item) => item.product??0).toList();
+                      // for (var i = 0; i <= whishlist.length; i++) {
+                      //   wishlistProductIds.add(whishlist[i].product??0);
+                      // }
+                      setState(() {
+                        isLoading=false;
+                      });
                     } else if (state is RemoveWishlistSuccess) {
                       setState(() {
+                        isLoading=false;
                         whishlist.removeWhere(
                             (item) => item.id == state.removedProductId);
                       });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Item deleted successfully')),
-                      );
                     } else if (state is RemoveWishlistFailure) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(state.error)),
-                      );
+
                     }
                   },
                 ),
@@ -567,12 +575,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         context)
                                                     .add(
                                                   Removefromwishlist(
-                                                      whishlist[index]
-                                                              .product ??
-                                                          0),
+                                                      products[index].id??0),
                                                 );
-                                                wishlistProductIds.remove(
-                                                    products[index]?.id ?? 0);
+                                                wishlistProductIds.remove(products[index]?.id??0);
+
                                               } else {
                                                 print(
                                                     "added${products[index]?.id}");

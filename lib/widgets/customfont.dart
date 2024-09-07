@@ -20,7 +20,7 @@ class CustomFont {
   ));
   final TextStyle buttontext = GoogleFonts.poppins(
       textStyle: TextStyle(
-          color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w600));
+          color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w600));
   final TextStyle hintText = GoogleFonts.poppins(color: Colors.black);
   final TextStyle titleText = GoogleFonts.poppins(
       textStyle: TextStyle(

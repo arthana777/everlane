@@ -253,7 +253,7 @@ class _SiginPageState extends State<SiginPage> {
                                                 Padding(
                                                   padding:
                                                       const EdgeInsets.only(
-                                                          left: 10, right: 10),
+                                                          left: 10, right: 10).r,
                                                   child: CustomTextfield(
                                                     controller:
                                                         forgotusernameController,
@@ -285,7 +285,7 @@ class _SiginPageState extends State<SiginPage> {
                                                         backgroundColor:
                                                             Colors.green,
                                                         textColor: Colors.white,
-                                                        fontSize: 16.0,
+                                                        fontSize: 16.0.sp,
                                                       );
                                                       Future.delayed(
                                                           const Duration(
@@ -302,7 +302,7 @@ class _SiginPageState extends State<SiginPage> {
                                                         backgroundColor:
                                                             Colors.red,
                                                         textColor: Colors.white,
-                                                        fontSize: 16.0,
+                                                        fontSize: 16.0.sp,
                                                       );
                                                     }
                                                   },

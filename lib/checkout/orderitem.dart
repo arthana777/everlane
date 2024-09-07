@@ -7,10 +7,11 @@ import '../widgets/custom_textbutton.dart';
 import '../widgets/customfont.dart';
 
 class OrderItem extends StatefulWidget {
-  OrderItem({super.key, this.ontapremove, this.image, this.title, this.price, this.itemcount});
+  OrderItem({super.key, this.ontapremove, this.image, this.title, this.price, this.itemcount, this.size});
   final String? image;
   final String? itemcount;
   final String? title;
+  final String? size;
   final double? price;
   final VoidCallback? ontapremove;
 
@@ -19,13 +20,7 @@ class OrderItem extends StatefulWidget {
 }
 
 class _CartItemState extends State<OrderItem> {
-  final List<String> item1 = [
-    "1",
-    '2',
-    '3',
-    '4',
-    '5',
-  ];
+
   late  String dropedownvalue1;
   @override
   void initState() {
@@ -95,31 +90,12 @@ class _CartItemState extends State<OrderItem> {
                     SizedBox(
                       height: 5.h,
                     ),
-                    Container(
-                      height: 20.h,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black26),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: DropdownButton(
-                        value: dropedownvalue1,
-                        dropdownColor: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        underline: SizedBox(),
-                        icon: const Icon(Icons.keyboard_arrow_down),
-                        items: item1.map((String item) {
-                          return DropdownMenuItem(
-                            value: item,
-                            child: Text(item),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropedownvalue1 = newValue!;
-                          });
-                        },
-                      ),
-                    ),
+                    Row(
+                      children: [
+                        Text("size :  ",style: CustomFont().bodyText,),
+                        Text(widget.size??'',style: CustomFont().subtitleText,),
+                      ],
+                    )
                   ],
                 ),
               ],

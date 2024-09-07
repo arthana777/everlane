@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:everlane/data/models/notification_model.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationService {
@@ -39,13 +40,11 @@ class NotificationService {
 
       if (response.data['status'] == 'success') {
         List<dynamic> dataList = response.data['data'];
-        // Check if data is empty
-        if (dataList.isEmpty) {
-          throw Exception('No notifications found');
-        }
-        return dataList.map((data) => NotificationModel.fromJson(data)).toList();
+        return dataList
+            .map((data) => NotificationModel.fromJson(data))
+            .toList();
       } else {
-        throw Exception('Failed to load notifications: ${response.data['message']}');
+        throw Exception('Failed to load notifications');
       }
     } catch (e) {
       throw Exception('Failed to fetch notifications: $e');
@@ -67,6 +66,10 @@ class NotificationService {
           },
         ),
       );
+      print(token);
+      print("response$response");
+      print("hhuhuhu${response.statusCode}");
+      print("bhbhb4${id}");
       if (response.statusCode == 200 && response.data['status'] == 'success') {
         return response.data['message'];
       } else {

@@ -1,5 +1,3 @@
-
-
 import 'package:everlane/checkout/address_list.dart';
 import 'package:everlane/checkout/ordersuccess.dart';
 import 'package:everlane/checkout/pickuplocations.dart';
@@ -15,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../bloc/address/address_bloc.dart';
 import '../bloc/cart/cart_bloc.dart';
 import '../cartscreen/cartitem.dart';
 import '../data/models/addressmodel.dart';
@@ -24,10 +23,18 @@ import 'orderitem.dart';
 
 class PaymentScreen extends StatefulWidget {
   final UserAddress? address;
+  final Disaster? disaster;
   late final PickupLocation? pickupLocation;
-  // late final PickupLocation? pickuplocations;
-  PaymentScreen({super.key,  this.address,  this.pickupLocation, });
+  final List<PickupLocation>? pickupLocations;
 
+  // late final PickupLocation? pickuplocations;
+  PaymentScreen({
+    super.key,
+    this.address,
+    this.pickupLocation,
+    this.pickupLocations,
+    this.disaster,
+  });
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -35,24 +42,26 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   bool _isLoading = false;
-  List<Cart> carts=[];
+  PickupLocation? selectedLocation;
+  Disaster? selectedDisaster;
+  List<Cart> carts = [];
   String selectedPaymentMethod = "ONLINE";
-  String selectedOrderType = "delivery";
-   bool isSelected=false;
-  bool _isAddressSelected = false;
+  String? selectedOrderType;
+  bool isSelected = false;
+  bool _isAddressSelected = true;
   String disasterName = '';
-
   String disasterLocation = '';
-  List<PickupLocation> pickuplocation=[];
+  List<PickupLocation> pickuplocations = [];
+  List<Disaster> disasters = [];
 
+  bool _isVisible = true;
 
-   bool _isVisible=false;
+  void _toggleVisibility() {
+    setState(() {
+      _isVisible = !_isVisible;
+    });
+  }
 
-   void _toggleVisibility() {
-     setState(() {
-       _isVisible = !_isVisible;
-     });
-   }
   void _selectPaymentMethod(String method) {
     setState(() {
       if (selectedOrderType == "donate") {
@@ -67,19 +76,29 @@ class _PaymentScreenState extends State<PaymentScreen> {
     });
   }
 
+  // void _selectOrderType(String type) {
+  //   setState(() {
+  //     if (selectedOrderType == type) {
+  //       selectedOrderType = null;
+  //     } else {
+  //       selectedOrderType = type;
+  //       // if (type == "donate") {
+  //       //   selectedPaymentMethod = "ONLINE";
+  //       //   // _isAddressSelected = true;
+  //       // }
+  //     }
+  //   });
+  // }
   void _selectOrderType(String type) {
     setState(() {
       if (selectedOrderType == type) {
-        selectedOrderType = "delivery";
+        selectedOrderType = null; // Deselect if already selected
       } else {
-        selectedOrderType = type;
-        if (type == "donate") {
-          selectedPaymentMethod = "ONLINE";
-          // _isAddressSelected = true;
-        }
+        selectedOrderType = type; // Select the tapped order type
       }
     });
   }
+
   Future<void> _selectDisasterAddress() async {
     final PickupLocation? selectedLocation = await Navigator.push(
       context,
@@ -96,39 +115,35 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
   }
 
-
   @override
   void initState() {
-  context.read<CartBloc>().add(FetchCartData());
+    context.read<CartBloc>().add(FetchCartData());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<AddressBloc>(context).add(Fetchpickuplocations());
+    });
+    BlocProvider.of<AddressBloc>(context).add(FetchDisaster());
+    selectedLocation = selectedLocation ?? widget.pickupLocations?.first;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       floatingActionButton: FloatingActionButton.extended(
         elevation: 0,
         backgroundColor: CustomColor.primaryColor,
         onPressed: () {
           if (selectedPaymentMethod.isNotEmpty) {
-            if (selectedOrderType == "donate" && widget.pickupLocation == null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Please select a pickup location')),
-              );
-            } else if (selectedOrderType == "delivery" && widget.address == null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Please select a delivery address')),
-              );
-            } else if (carts.isNotEmpty) {
+            if (carts.isNotEmpty) {
               setState(() {
                 _isLoading = true; // Set loading to true
               });
               if (selectedPaymentMethod == "COD") {
                 context.read<CartBloc>().add(PlaceOrder(
-                  deliveryAddressId: widget.address?.id ?? 0,
-                  orderType: selectedOrderType,
-                  paymentMethod: selectedPaymentMethod,
-                ));
+                      deliveryAddressId: widget.address?.id ?? 0,
+                      orderType: selectedOrderType ?? "",
+                      paymentMethod: selectedPaymentMethod,
+                    ));
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Order placed successfully!')),
                 );
@@ -139,19 +154,25 @@ class _PaymentScreenState extends State<PaymentScreen> {
               } else if (selectedPaymentMethod == "ONLINE") {
                 // Trigger the online payment processing
                 context.read<CartBloc>().add(PlaceOrder(
-                  deliveryAddressId: widget.address?.id ?? 0,
-                  orderType: selectedOrderType,
-                  paymentMethod: selectedPaymentMethod,
-                ));
+                      deliveryAddressId: widget.address?.id ?? 0,
+                      orderType: selectedOrderType ?? '',
+                      paymentMethod: selectedPaymentMethod,
+                      pickupid: widget.pickupLocation?.id ?? 0,
+                      disasterid: widget.disaster?.id ?? 0,
+                    ));
               }
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Your cart is empty. Please add items to the cart before placing an order.')),
+                SnackBar(
+                    content: Text(
+                        'Your cart is empty. Please add items to the cart before placing an order.')),
               );
             }
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Please select a payment method')),
+              SnackBar(
+                content: Text('Please select a payment method'),
+              ),
             );
           }
         },
@@ -163,7 +184,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
           ),
           child: Center(
             child: _isLoading
-                ? CircularProgressIndicator(color: Colors.white) : Text("Place Order", style: CustomFont().buttontext),
+                ? CircularProgressIndicator(color: Colors.white)
+                : Text("Place Order", style: CustomFont().buttontext),
           ),
         ),
         icon: Icon(
@@ -172,20 +194,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
           color: CustomColor.buttoniconColor,
         ),
       ),
-
-
-      backgroundColor:  Color(0xFFEFEFEF),
-      appBar: PreferredSize(preferredSize: Size.fromHeight(50), child: CustomAppBar(text: "Confirm Order",
-        leading: InkWell(
-            onTap: (){
-              // final navigationProvider = Provider.of<NavigationProvider>(context, listen: false);
-              // navigationProvider.updateScreenIndex(0);
-              Navigator.pop(
-                context,
-                MaterialPageRoute(builder: (context) => AddressList()),
-              );
-            },
-            child: Icon(Icons.arrow_back)),)),
+      backgroundColor: Color(0xFFEFEFEF),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50),
+          child: CustomAppBar(
+            text: "Confirm Order",
+            leading: InkWell(
+                onTap: () {
+                  // final navigationProvider = Provider.of<NavigationProvider>(context, listen: false);
+                  // navigationProvider.updateScreenIndex(0);
+                  Navigator.pop(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddressList()),
+                  );
+                },
+                child: Icon(Icons.arrow_back)),
+          )),
       body: MultiBlocListener(
         listeners: [
           BlocListener<CartBloc, CartState>(
@@ -197,31 +221,56 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 carts = state.carts;
                 print("Cart Loaded: ${carts.length} carts loaded.");
                 setState(() {});
-              }
-              else if (state is PlaceOrderSuccess) {
+              } else if (state is PlaceOrderSuccess) {
                 final approvalUrl = state.approvalUrl;
                 print("apprival url in place order succresss${approvalUrl}");
                 if (selectedPaymentMethod == "ONLINE" && approvalUrl != null) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => WebviewScreen(approvalUrl: approvalUrl),
+                      builder: (context) =>
+                          WebviewScreen(approvalUrl: approvalUrl),
                     ),
                   );
                 } else if (selectedPaymentMethod == "COD") {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => OrderSuccessScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => OrderSuccessScreen()),
                   );
                 }
-              }
-
-
-              else if (state is CartError) {
+              } else if (state is CartError) {
                 setState(() {});
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(state.message)),
                 );
+              }
+            },
+          ),
+          BlocListener<AddressBloc, AddressState>(
+            listener: (context, state) {
+              print(state);
+              if (state is Pickuploading) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) =>
+                      Center(child: CircularProgressIndicator()),
+                );
+              } else if (state is Pickuploaded) {
+                print(state);
+                pickuplocations = state.pickuplocations;
+                setState(() {});
+                //final useraddress = state.userAddresses;
+                print("adding to pickuplocations");
+                print(
+                    "Pickuploaded state received with ${pickuplocations.length} locations");
+              } else if (state is DisasterLoaded) {
+                setState(() {});
+                disasters = state.disaster;
+                print(disasters);
+                //final useraddress = state.userAddresses;
+                print("adding to disaster");
               }
             },
           ),
@@ -254,7 +303,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               price: item.productPrice,
                               image: item.productImage,
                               itemcount: item.quantity.toString(),
-
+                              size: item.size,
                             ),
                           );
                         }).toList(),
@@ -263,42 +312,138 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
 
                 Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: 150.w),
+                  padding: EdgeInsets.symmetric(horizontal: 150.w),
                   child: TextButton(
                     onPressed: _toggleVisibility,
-                    child: Text(_isVisible ? 'Hide' : 'View ',style: GoogleFonts.questrial(
-                        textStyle: TextStyle(
-                          color: Color(0xFF973d93),
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.bold,
-                        )),),
+                    child: Text(
+                      _isVisible ? 'Hide' : 'View ',
+                      style: GoogleFonts.questrial(
+                          textStyle: TextStyle(
+                        color: Color(0xFF973d93),
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.bold,
+                      )),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                  child: Text(
+                    "OrderType",
+                    style: CustomFont().subtitleText,
                   ),
                 ),
                 Padding(
-                  padding:  EdgeInsets.only(left: 10.w,right: 10.w),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    height: 50.h,
+                    //width: 380.w,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.black12),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Buyformyself",
+                          style: CustomFont().bodyText,
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              _selectOrderType("delivery");
+                            },
+                            icon: Icon(selectedOrderType == "delivery"
+                                ? Icons.check_circle
+                                : Icons.circle_outlined))
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    height: 50.h,
+                    //width: 380.w,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.black12),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Donate",
+                          style: CustomFont().bodyText,
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              _selectOrderType("donate");
+                            },
+                            icon: Icon(selectedOrderType == "donate"
+                                ? Icons.check_circle
+                                : Icons.circle_outlined)),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10.w, right: 10.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Delivery Address",style: CustomFont().subtitleText,),
-                      TextButton(onPressed: (){
-                        if (selectedOrderType == "delivery") {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => AddressList()),
-                          );
-                        } else if (selectedOrderType == "donate") {
-                          _selectDisasterAddress(); // Navigate to DisasterList and select disaster address
-                        }
-                      },
-                          child: Text("Choose",style: GoogleFonts.questrial(color: Colors.purple,),))],
+                      selectedOrderType == "delivery"
+                          ? Text(
+                              "Delivery Address",
+                              style: CustomFont().subtitleText,
+                            )
+                          : selectedOrderType == "donate"
+                              ? Text(
+                                  "Pickup Location",
+                                  style: CustomFont().subtitleText,
+                                )
+                              : SizedBox(),
+                      TextButton(
+                        onPressed: () {
+                          if (selectedOrderType == "delivery") {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AddressList()),
+                            );
+                          } else if (selectedOrderType == "donate") {
+                            // _selectDisasterAddress(); // Navigate to DisasterList and select disaster address
+                          }
+                        },
+                        child: selectedOrderType == "delivery"
+                            ? Text(
+                                "Choose",
+                                style: GoogleFonts.questrial(
+                                  color: Colors.purple,
+                                ),
+                              )
+                            : Text(""),
+                      )
+                    ],
                   ),
                 ),
-                SizedBox(height: 8.h,),
+                SizedBox(
+                  height: 8.h,
+                ),
                 if (selectedOrderType == "delivery")
                   Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 10.w),
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
                     child: Container(
-                      height: 150.h,
+                      height: 180.h,
                       width: 400.w,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -310,14 +455,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(widget.address?.address??""),
-                            Text(widget.address?.state??""),
-                            Text(widget.address?.city??""),
-                            Text(widget.address?.pincode??""),
-                            Text(widget.address?.mobile??""),
-                            Text(widget.address?.locality??""),
+                            Text(widget.address?.address ?? ""),
+                            Text(widget.address?.state ?? ""),
+                            Text(widget.address?.city ?? ""),
+                            Text(widget.address?.pincode ?? ""),
+                            Text(widget.address?.mobile ?? ""),
+                            Text(widget.address?.locality ?? ""),
                             //Text(widget.pickupLocation?.city??""),
-
                           ],
                         ),
                       ),
@@ -325,142 +469,192 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   )
                 else if (selectedOrderType == "donate")
                   Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 10.w),
-                    child: Container(
-                      height: 150.h,
-                      width: 400.w,
-                      decoration: BoxDecoration(
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            padding: EdgeInsets.all(12),
+                            height: 50.h,
+                            width: 400,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Choose Pickup location",
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                                DropdownButton<PickupLocation>(
+                                  value: selectedLocation,
+                                  dropdownColor: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  underline: SizedBox(),
+                                  icon: const Icon(Icons.keyboard_arrow_down),
+                                  items: pickuplocations
+                                      .map((PickupLocation location) {
+                                    print("pickuplocations${pickuplocations}");
+                                    return DropdownMenuItem<PickupLocation>(
+                                      value: location,
+                                      child: Text(
+                                          '${location.city}, ${location.address}'),
+                                    );
+                                  }).toList(),
+                                  onChanged: (PickupLocation? newValue) {
+                                    setState(() {
+                                      selectedLocation = newValue!;
+                                    });
+                                  },
+                                ),
+                              ],
+                            )),
+                      ],
+                    ),
+                  ),
+                SizedBox(
+                  height: 8.h,
+                ),
+                if (selectedOrderType == "donate")
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            padding: EdgeInsets.all(12),
+                            height: 50.h,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(" Disaster"),
+                                DropdownButton<Disaster>(
+                                  value: selectedDisaster,
+                                  dropdownColor: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  underline: SizedBox(),
+                                  icon: const Icon(Icons.keyboard_arrow_down),
+                                  items: disasters.map((Disaster disaster) {
+                                    return DropdownMenuItem<Disaster>(
+                                      value: disaster,
+                                      child: Text(
+                                          '${disaster.name}, ${disaster.location}'),
+                                    );
+                                  }).toList(),
+                                  onChanged: (Disaster? newValue) {
+                                    setState(() {
+                                      selectedDisaster = newValue!;
+                                    });
+                                  },
+                                ),
+                              ],
+                            )),
+                      ],
+                    ),
+                    // child: Container(
+                    //   height: 150.h,
+                    //   width: 400.w,
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.white,
+                    //     border: Border.all(color: Colors.grey.withOpacity(0.4)),
+                    //     borderRadius: BorderRadius.circular(10.r),
+                    //   ),
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.all(20.0),
+                    //     child: Column(
+                    //       crossAxisAlignment: CrossAxisAlignment.start,
+                    //       children: [
+                    //         Text(widget.pickupLocation?.city??""),
+                    //         Text(widget.pickupLocation?.address??""),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+                  ),
+                SizedBox(
+                  height: 8.h,
+                ),
+
+                SizedBox(
+                  height: 8.h,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                  child: Text(
+                    "Payment Method",
+                    style: CustomFont().subtitleText,
+                  ),
+                ),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    height: 50.h,
+                    //width: 380.w,
+                    decoration: BoxDecoration(
                         color: Colors.white,
-                        border: Border.all(color: Colors.grey.withOpacity(0.4)),
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-
-                            Text(widget.pickupLocation?.city??""),
-                            Text(widget.pickupLocation?.address??""),
-
-                          ],
+                        border: Border.all(color: Colors.black12),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Cash on delivery",
+                          style: CustomFont().bodyText,
                         ),
-                      ),
+                        IconButton(
+                            onPressed: () {
+                              _selectPaymentMethod("COD");
+                            },
+                            icon: Icon(selectedPaymentMethod == "COD"
+                                ? Icons.check_circle
+                                : Icons.circle_outlined))
+                      ],
                     ),
                   ),
-                SizedBox(height: 8.h,),
-
-            SizedBox(height: 8.h,),
-                Padding(
-                  padding:  EdgeInsets.only(left: 10.w,right: 10.w),
-                  child: Text("Payment Method",style: CustomFont().subtitleText,),
                 ),
-            Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
-              child: Container(
-              padding: EdgeInsets.all(10),
-              height: 50.h,
-              //width: 380.w,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black12),
-                  borderRadius: BorderRadius.all(Radius.circular(5))
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Cash on delivery",style: CustomFont().bodyText,),
-             IconButton(onPressed: (){
-               _selectPaymentMethod("COD");
-             },
-                 icon:Icon(selectedPaymentMethod == "COD" ? Icons.check_circle : Icons.circle_outlined))
-                ],
-              ),
-                  ),
-            ),
                 Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: 10.w),
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
                   child: Container(
                     padding: EdgeInsets.all(10),
                     height: 50.h,
                     //width: 380.w,
                     decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.black12),
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      color: Colors.white,
+                      border: Border.all(color: Colors.black12),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Paypal",style: CustomFont().bodyText,),
-                        IconButton(onPressed: (){
-                          _selectPaymentMethod("ONLINE");
-                        }, icon: Icon(selectedPaymentMethod == "ONLINE" ? Icons.check_circle : Icons.circle_outlined))
-                        ,
+                        Text(
+                          "Paypal",
+                          style: CustomFont().bodyText,
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              _selectPaymentMethod("ONLINE");
+                            },
+                            icon: Icon(selectedPaymentMethod == "ONLINE"
+                                ? Icons.check_circle
+                                : Icons.circle_outlined)),
                       ],
                     ),
-
-
                   ),
                 ),
-                SizedBox(height: 20.h,),
-                 Padding(
-                   padding:  EdgeInsets.only(left: 10.w,right: 10.w),
-                   child: Text("OrderType",style: CustomFont().subtitleText,),
-                 ),
-               Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    height: 50.h,
-                    //width: 380.w,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.black12),
-                        borderRadius: BorderRadius.all(Radius.circular(5))
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Buyformyself",style: CustomFont().bodyText,),
-                        IconButton(onPressed: (){
-                          _selectOrderType("delivery");
-                        }, icon:      Icon(selectedOrderType == "delivery" ? Icons.check_circle : Icons.circle_outlined))
-
-                      ],
-                    ),
-
-
-                  ),
+                SizedBox(
+                  height: 20.h,
                 ),
+
                 Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: 10.w),
+                  padding: EdgeInsets.symmetric(horizontal: 15.w),
                   child: Container(
-                    padding: EdgeInsets.all(10),
-                    height: 50.h,
-                    //width: 380.w,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.black12),
-                        borderRadius: BorderRadius.all(Radius.circular(5))
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Donate",style: CustomFont().bodyText,),
-                        IconButton(onPressed: (){
-                          _selectOrderType("donate");
-                        }, icon: Icon(selectedOrderType == "donate" ? Icons.check_circle : Icons.circle_outlined))
-                        ,
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20.h,),
-                Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: 10.w),
-                  child: Container(
-                    height: 150.h,
+                    height: 60.h,
                     width: 450.w,
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -468,18 +662,43 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       borderRadius: BorderRadius.circular(10.r),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15.w),
-                      child: Column(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Row(
                         children: [
-                          _buildRow(context, "Delivery", "0.0"),
-                          SizedBox(height: 10.h),
-                          _buildRow(context, "Discount", "00"),
-                          SizedBox(height: 10.h),
-                          _buildRow(context, "Total", carts.isNotEmpty ? carts[0].totalPrice ?? '' : '0.0',),
+                          SizedBox(
+                            width: 100.w,
+                            child: Text(
+                              "Total",
+                              style: CustomFont().bodyText,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20.w,
+                            child: Text(
+                              ":",
+                              style: CustomFont().subtitleText,
+                            ),
+                          ),
+                          SizedBox(width: 10.w),
+                          SizedBox(
+                            width: 100.w,
+                            child: Text(
+                              carts.isNotEmpty
+                                  ? carts[0].totalPrice ?? ''
+                                  : '0.0',
+                              style: CustomFont().bodyText,
+                            ),
+                          ),
+                          // _buildRow(context, "Discount", "00"),
+                          // SizedBox(height: 10.h),
+                          // _buildRow(context, "Total", carts.isNotEmpty ? carts[0].totalPrice ??'' : '0.0',),
                         ],
                       ),
                     ),
                   ),
+                ),
+                SizedBox(
+                  height: 80.h,
                 ),
               ],
             ),
@@ -489,32 +708,32 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-   Widget _buildRow(BuildContext context, String label, String value) {
-     return Row(
-       children: [
-         SizedBox(
-           width: 100.w,
-           child: Text(
-             label,
-             style: CustomFont().bodyText,
-           ),
-         ),
-         SizedBox(
-           width: 20.w,
-           child: Text(
-             ":",
-             style: CustomFont().subtitleText,
-           ),
-         ),
-         SizedBox(width: 10.w),
-         SizedBox(
-           width: 100.w,
-           child: Text(
-             value,
-             style: CustomFont().bodyText,
-           ),
-         ),
-       ],
-     );
-   }
+  Widget _buildRow(BuildContext context, String label, String value) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 100.w,
+          child: Text(
+            label,
+            style: CustomFont().bodyText,
+          ),
+        ),
+        SizedBox(
+          width: 20.w,
+          child: Text(
+            ":",
+            style: CustomFont().subtitleText,
+          ),
+        ),
+        SizedBox(width: 10.w),
+        SizedBox(
+          width: 100.w,
+          child: Text(
+            value,
+            style: CustomFont().bodyText,
+          ),
+        ),
+      ],
+    );
+  }
 }

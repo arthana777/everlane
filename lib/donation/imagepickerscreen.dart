@@ -16,24 +16,23 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../bloc/address/address_bloc.dart';
-import '../btm_navigation/btm_navigation.dart';
-
-
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-
 import '../data/models/pickupmodel.dart';
 import '../widgets/customcircularindicator.dart';
-
 
 class ImagePickerScreen extends StatefulWidget {
   final Disaster? disaster;
   final PickupLocation? pickuplocation;
   final String? location;
 
-  ImagePickerScreen({super.key,  this.disaster, this.location, this.pickuplocation,});
+  ImagePickerScreen({
+    super.key,
+    this.disaster,
+    this.location,
+    this.pickuplocation,
+  });
   @override
   _ImagePickerScreenState createState() => _ImagePickerScreenState();
 }
@@ -47,28 +46,33 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   final TextEditingController kidsController = TextEditingController();
 
   Future<void> _pickImage() async {
-    final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         images.add(File(pickedFile.path));
       });
     }
   }
+
   Future<void> _uploadFromGallery() async {
-    final List<XFile>? pickedFiles = await _picker.pickMultiImage();  // Pick multiple images
+    final List<XFile>? pickedFiles =
+        await _picker.pickMultiImage(); // Pick multiple images
     if (pickedFiles != null && pickedFiles.isNotEmpty) {
       setState(() {
-        images.addAll(pickedFiles.map((file) => File(file.path)).toList());  // Add all selected images to the list
+        images.addAll(pickedFiles
+            .map((file) => File(file.path))
+            .toList()); // Add all selected images to the list
       });
     }
   }
-
 
   void _removeImage(int index) {
     setState(() {
       images.removeAt(index);
     });
   }
+
   void _showMenu(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -76,25 +80,27 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
         return Container(
           height: 100.h,
           child:
-            // ListTile(
-            //   leading: Icon(Icons.add_a_photo),
-            //   title: Text('Add Image'),
-            //   onTap: () {
-            //     Navigator.of(context).pop();
-            //     _pickImage();
-            //   },
-            // ),
-            Center(
-              child: ListTile(
-                leading: Icon(Icons.photo_library),
-                title: Text('Upload from Gallery',style: CustomFont().subtitleText,),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  _uploadFromGallery();
-                },
+              // ListTile(
+              //   leading: Icon(Icons.add_a_photo),
+              //   title: Text('Add Image'),
+              //   onTap: () {
+              //     Navigator.of(context).pop();
+              //     _pickImage();
+              //   },
+              // ),
+              Center(
+            child: ListTile(
+              leading: Icon(Icons.photo_library),
+              title: Text(
+                'Upload from Gallery',
+                style: CustomFont().subtitleText,
               ),
+              onTap: () {
+                Navigator.of(context).pop();
+                _uploadFromGallery();
+              },
             ),
-
+          ),
         );
       },
     );
@@ -107,13 +113,12 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     'kannur',
     'malappuram',
   ];
-  late  String dropedownvalue1;
-
+  late String dropedownvalue1;
 
   @override
   void initState() {
     setState(() {
-      isLoading=false;
+      isLoading = false;
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<AddressBloc>(context).add(Fetchpickuplocations());
@@ -124,11 +129,11 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     super.initState();
   }
 
-
   Future<XFile?> compressImage(File file) async {
     try {
       final tempDir = await getTemporaryDirectory();
-      final compressedFilePath = path.join(tempDir.path, '${DateTime.now().millisecondsSinceEpoch}_compressed.jpg');
+      final compressedFilePath = path.join(tempDir.path,
+          '${DateTime.now().millisecondsSinceEpoch}_compressed.jpg');
       final compressedFile = await FlutterImageCompress.compressAndGetFile(
         file.path,
         compressedFilePath,
@@ -141,21 +146,24 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     }
   }
 
-
   void _uploadImages() {
     print(widget.disaster?.id);
     if (images.isNotEmpty) {
-
       context.read<AddressBloc>().add(uploadclothes(
-
-        disasterId: widget.disaster?.id??0,
-        //images: images,
-        images: images,
-          men: menController.text.isNotEmpty ? int.tryParse(menController.text) : null,
-          women: womenController.text.isNotEmpty ? int.tryParse(womenController.text):null,
-          kids:kidsController.text.isNotEmpty ? int.tryParse(kidsController.text):null,
-        pickup: selectedLocation?.id,
-      ));
+            disasterId: widget.disaster?.id ?? 0,
+            //images: images,
+            images: images,
+            men: menController.text.isNotEmpty
+                ? int.tryParse(menController.text)
+                : null,
+            women: womenController.text.isNotEmpty
+                ? int.tryParse(womenController.text)
+                : null,
+            kids: kidsController.text.isNotEmpty
+                ? int.tryParse(kidsController.text)
+                : null,
+            pickup: selectedLocation?.id,
+          ));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please select images')),
@@ -163,13 +171,11 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     }
   }
 
-
   final ImagePicker _picker = ImagePicker();
   final Dio _dio = Dio();
-  List<PickupLocation>pickuplocations=[];
+  List<PickupLocation> pickuplocations = [];
   PickupLocation? selectedLocation;
   //List<DropdownMenuItem<PickupLocation>>pickuplocations=[];
-
 
   @override
   Widget build(BuildContext context) {
@@ -178,8 +184,8 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
       floatingActionButton: FloatingActionButton.extended(
         elevation: 0,
         backgroundColor: CustomColor.primaryColor,
-        onPressed: (){
-          if (_formKey.currentState?.validate() ?? false){
+        onPressed: () {
+          if (_formKey.currentState?.validate() ?? false) {
             _uploadImages();
             Fluttertoast.showToast(
               msg: "uploaded succesfully.",
@@ -189,8 +195,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
               textColor: Colors.black,
               fontSize: 16.0,
             );
-          }
-          else {
+          } else {
             // Show toast if form is not valid
             Fluttertoast.showToast(
               msg: "Please fill out all fields.",
@@ -201,9 +206,6 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
               fontSize: 16.0,
             );
           }
-
-
-
         },
         label: Container(
           height: 30.h,
@@ -215,23 +217,31 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
             child: Text("Donate", style: CustomFont().buttontext),
           ),
         ),
-
       ),
-      appBar:PreferredSize(preferredSize: Size.fromHeight(80.h), child: CustomAppBar(
-        text: "Upload clothes",
-        leading: InkWell(
-            onTap: (){
-              final navigationProvider = Provider.of<NavigationProvider>(context, listen: false);
-              navigationProvider.updateScreenIndex(0);
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back)),
-      action: [
-        IconButton(onPressed: () => _showMenu(context), icon: Icon(Icons.add,size: 30.sp,))
-      ],),),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80.h),
+        child: CustomAppBar(
+          text: "Upload clothes",
+          leading: InkWell(
+              onTap: () {
+                final navigationProvider =
+                    Provider.of<NavigationProvider>(context, listen: false);
+                navigationProvider.updateScreenIndex(0);
+                Navigator.pop(context);
+              },
+              child: Icon(Icons.arrow_back)),
+          action: [
+            IconButton(
+                onPressed: () => _showMenu(context),
+                icon: Icon(
+                  Icons.add,
+                  size: 30.sp,
+                ))
+          ],
+        ),
+      ),
       body: MultiBlocListener(
         listeners: [
-
           BlocListener<AddressBloc, AddressState>(
             listener: (context, state) {
               print(state);
@@ -242,30 +252,27 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                   builder: (context) =>
                       Center(child: CircularProgressIndicator()),
                 );
-              }
-              else if (state is Pickuploaded) {
-               print(state);
+              } else if (state is Pickuploaded) {
+                print(state);
                 pickuplocations = state.pickuplocations;
-                setState(() {
-
-                });
+                setState(() {});
                 //final useraddress = state.userAddresses;
                 print("adding to pickuplocations");
-                print("Pickuploaded state received with ${pickuplocations.length} locations");
+                print(
+                    "Pickuploaded state received with ${pickuplocations.length} locations");
               }
-
             },
           ),
           BlocListener<AddressBloc, AddressState>(
             listener: (context, state) {
               print(state);
               if (state is AddressLoading) {
-               setState(() {
-                 isLoading=true;
-               });
+                setState(() {
+                  isLoading = true;
+                });
               } else if (state is uploadclothesuccess) {
                 setState(() {
-                  isLoading=false;
+                  isLoading = false;
                 });
 
                 Navigator.pop(context);
@@ -274,10 +281,9 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                 );
 
                 print("image uploading");
-              }
-              else if (state is AddressError) {
+              } else if (state is AddressError) {
                 setState(() {
-                  isLoading=false;
+                  isLoading = false;
                 });
                 // Dismiss loading indicator and show error message
                 Navigator.pop(context);
@@ -294,181 +300,250 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                 //   SnackBar(content: Text(state.message)),
                 // );
               }
-
             },
           ),
         ],
         child: Padding(
           padding: const EdgeInsets.all(5.0),
           child: SingleChildScrollView(
-            child:isLoading
-    ? Padding(
-    padding:  EdgeInsets.symmetric(vertical: 300.h),
-    child: CustomCircularProgressIndicator(),): Form(
-              key: _formKey,
-      child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: images.isEmpty
-                        ? Center(child: Text('No images selected.'))
-                        : SizedBox(
-                      height: 400.h,  // Adjust height as needed
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: images.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            width: 200.w,
-                            margin: EdgeInsets.symmetric(horizontal: 8.w),
-                            child: Stack(
-                              children: [
-                                Container(
-                                  height: 400.h,
-                                  width: double.infinity,
-                                  child: Image.file(
-                                    images[index],
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                Positioned(
-                                  right: 5.w,
-                                  top: 5.h,
-                                  child: InkWell(
-                                    onTap: () => _removeImage(index),
-                                    child: Container(
-                                      height: 20.h,
-                                      width: 20.w,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30.r),
-                                        color: Colors.white,
-                                      ),
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.delete,
-                                          size: 15.sp,
-                                          color: Colors.black,
+            child: isLoading
+                ? Padding(
+                    padding: EdgeInsets.symmetric(vertical: 300.h),
+                    child: CustomCircularProgressIndicator(),
+                  )
+                : Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                                  left: 10, right: 10, top: 10)
+                              .w,
+                          child: images.isEmpty
+                              ? GestureDetector(
+                                  onTap: () => _showMenu(context),
+                                  child: Container(
+                                    width: 400.w,
+                                    height: 150.h,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(12).w,
+                                      border: Border.all(
+                                          color: Colors.black45, width: 1),
+                                      // boxShadow: [
+                                      //   BoxShadow(
+                                      //     color: Colors.black12,
+                                      //     blurRadius: 8,
+                                      //     offset: Offset(2, 2),
+                                      //   ),
+                                      // ],
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.image,
+                                            size: 50.sp,
+                                            color: CustomColor.primaryColor,
+                                          ),
+                                          onPressed: () => _showMenu(context),
                                         ),
-                                      ),
+                                        Text(
+                                          "Drop your image here",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16.sp,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Supports: JPG, JPEG, PNG',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 12.sp,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
+                                )
+                              : SizedBox(
+                                  height: 400.h, // Adjust height as needed
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: images.length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        width: 200.w,
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 8.w),
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                              height: 400.h,
+                                              width: double.infinity,
+                                              child: Image.file(
+                                                images[index],
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            Positioned(
+                                              right: 5.w,
+                                              top: 5.h,
+                                              child: InkWell(
+                                                onTap: () =>
+                                                    _removeImage(index),
+                                                child: Container(
+                                                  height: 20.h,
+                                                  width: 20.w,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30.r),
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: Center(
+                                                    child: Icon(
+                                                      Icons.delete,
+                                                      size: 15.sp,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-              SizedBox(height: 50.h,),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, bottom: 20),
-                    child: Text("Choose pickup location", style: CustomFont().subtitleText,),
-                  ),
-
-
-                  Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 20.w),
-                    child: Container(
-                      padding: EdgeInsets.all(12),
-                      height: 50.h,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Choose Pickup location"),
-                          DropdownButton<PickupLocation>(
-                            value: selectedLocation,
-                            dropdownColor: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            underline: SizedBox(),
-                            icon: const Icon(Icons.keyboard_arrow_down),
-                            items: pickuplocations.map((PickupLocation location) {
-                              return DropdownMenuItem<PickupLocation>(
-                                value: location,
-                                child: Text(location.city),
-                              );
-                            }).toList(),
-                            onChanged: (PickupLocation? newValue) {
-                              setState(() {
-                                selectedLocation = newValue!;
-                              });
+                        ),
+                        SizedBox(
+                          height: 40.h,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, bottom: 20),
+                          child: Text(
+                            "Choose pickup location",
+                            style: CustomFont().subtitleText,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          child: Container(
+                              padding: EdgeInsets.all(12),
+                              height: 50.h,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Choose Pickup location"),
+                                  DropdownButton<PickupLocation>(
+                                    value: selectedLocation,
+                                    dropdownColor: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    underline: SizedBox(),
+                                    icon: const Icon(Icons.keyboard_arrow_down),
+                                    items: pickuplocations
+                                        .map((PickupLocation location) {
+                                      print(
+                                          "pickuplocations${pickuplocations}");
+                                      return DropdownMenuItem<PickupLocation>(
+                                        value: location,
+                                        child: Text(location.city),
+                                      );
+                                    }).toList(),
+                                    onChanged: (PickupLocation? newValue) {
+                                      setState(() {
+                                        selectedLocation = newValue!;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              )),
+                        ),
+                        SizedBox(
+                          height: 50.h,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          child: Row(
+                            children: [
+                              Text(
+                                " Selected Disaster :   ",
+                                style: CustomFont().subtitleText,
+                              ),
+                              Text(
+                                widget.disaster?.name ?? "jjj",
+                                style: CustomFont().bodyText,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          child: AdrressCustomField(
+                            controller: menController,
+                            hinttext: 'Required Dresses for Men',
+                            inputType: TextInputType.number,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please fill the data';
+                              }
+                              return null;
                             },
                           ),
-                        ],
-                      )
-                    ),
-                  ),
-
-
-              SizedBox(height: 50.h,),
-                  Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 20.w),
-                    child: Row(
-                      children: [
-                        Text(" Selected Disaster :   ",style: CustomFont().subtitleText,),
-                        Text(widget.disaster?.name??"jjj",style: CustomFont().bodyText,),
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          child: AdrressCustomField(
+                            controller: womenController,
+                            hinttext: 'Required Dresses for Women',
+                            inputType: TextInputType.number,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please fill the data';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          child: AdrressCustomField(
+                            controller: kidsController,
+                            hinttext: 'Required Dresses for Kids',
+                            inputType: TextInputType.number,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please fill the data';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 80.h,
+                        ),
                       ],
                     ),
                   ),
-
-                  SizedBox(height: 20.h,),
-
-
-                  Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 20.w),
-                    child: AdrressCustomField(
-                      controller: menController,
-                      hinttext: 'Required Dresses for Men',
-                      inputType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please fill the data';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 10.h,),
-                  Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 20.w),
-                    child: AdrressCustomField(
-                      controller: womenController,
-                      hinttext: 'Required Dresses for Women',
-                      inputType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please fill the data';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 10.h,),
-                  Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 20.w),
-                    child: AdrressCustomField(
-                      controller: kidsController,
-                      hinttext: 'Required Dresses for Kids',
-                      inputType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please fill the data';
-                        }
-                        return null;
-                      },
-                    ),
-                  )
-
-
-
-                ],
-              ),
-    ),
           ),
         ),
       ),
@@ -480,8 +555,4 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   //   print("stringvalueee${stringValue}");
   //   return stringValue;
   // }
-
-
-
-
 }
