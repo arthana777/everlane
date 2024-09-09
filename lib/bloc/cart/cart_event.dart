@@ -92,3 +92,12 @@ class ReturnOrder extends CartEvent {
   // TODO: implement props
   List<Object?> get props => [orderItemId,returnQuantity,returnReason];
 }
+
+class CancelOrderevent extends CartEvent{
+  final int orderid;
+  CancelOrderevent(this.orderid);
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+
+}

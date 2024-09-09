@@ -49,12 +49,12 @@ class _DisasterRegistrationState extends State<DisasterRegistration> {
   bool isAadharFilled = false;
   bool isLandmarkFilled = false;
   bool isDescriptionFilled = false;
-  bool isButtonEnabled = false;
+  //bool isButtonEnabled = true;
 
 
   void _validateForm() {
     setState(() {
-      isButtonEnabled = nameController.text.isNotEmpty &&
+      nameController.text.isNotEmpty &&
           locationController.text.isNotEmpty &&
           disatertypeController.text.isNotEmpty &&
           adharController.text.isNotEmpty &&
@@ -99,8 +99,8 @@ class _DisasterRegistrationState extends State<DisasterRegistration> {
       backgroundColor: Color(0xFFEFEFEF),
       floatingActionButton: FloatingActionButton.extended(
         elevation: 0,
-        backgroundColor: isButtonEnabled ? CustomColor.primaryColor : Color(0xFF973d93).withOpacity(0.5),
-        onPressed: isButtonEnabled ?() {
+        backgroundColor: CustomColor.primaryColor,
+        onPressed: () {
     if (_formKey.currentState?.validate() ?? false) {
     context.read<AddressBloc>().add(DisasterReg(
     name: nameController.text,
@@ -133,7 +133,6 @@ class _DisasterRegistrationState extends State<DisasterRegistration> {
     requiredKidsDressesController.clear();
     setState(() {
     selectedDisasterType = null;
-    isButtonEnabled = false;
     });
     }
     else {
@@ -147,7 +146,7 @@ class _DisasterRegistrationState extends State<DisasterRegistration> {
         fontSize: 16.0,
       );
     }
-        }:null,
+        },
 
         label: Container(
           height: 30.h,
@@ -196,8 +195,8 @@ class _DisasterRegistrationState extends State<DisasterRegistration> {
                 SizedBox(height: 15.h,),
                 AdrressCustomField(hinttext: 'Place of Disaster',controller: nameController,
                   validator: (value) {
-                    if (isLocationFilled || (value != null && value.isNotEmpty)) {
-                      isLocationFilled = true; // Mark as filled
+                    if (isNameFilled || (value != null && value.isNotEmpty)) {
+                      isNameFilled = true; // Mark as filled
                       return null;
                     }
                     return 'Please enter Place of Disaster';

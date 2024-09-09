@@ -8,26 +8,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Myorderitem extends StatefulWidget {
-  Myorderitem({super.key, this.ontapremove, this.image, this.title, this.orderstatus, this.itemcount, this.type, this.invoicedwnld, this.quatity, this.returnstatus, this.text, this.ordercode, this.viewmore});
+class OrderDetailitem extends StatefulWidget {
+  OrderDetailitem({super.key, this.ontapremove, this.image, this.title, this.orderstatus, this.itemcount, this.type, this.invoicedwnld, this.quatity, this.returnstatus, this.text});
   final String? image;
   final String? itemcount;
   final int? quatity;
   final String? title;
-  final String? ordercode;
   final String? text;
   final String? orderstatus;
   final String? returnstatus;
   final String? type;
   final VoidCallback? ontapremove;
-  final VoidCallback? viewmore;
   final VoidCallback? invoicedwnld;
 
   @override
-  State<Myorderitem> createState() => _MyorderitemState();
+  State<OrderDetailitem> createState() => _OrderDetailitemState();
 }
 
-class _MyorderitemState extends State<Myorderitem> {
+class _OrderDetailitemState extends State<OrderDetailitem> {
 
   late  String dropedownvalue1;
   @override
@@ -105,16 +103,16 @@ class _MyorderitemState extends State<Myorderitem> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                         "Payment method   : ",
+                          "Payment method   : ",
                           style: CustomFont().bodyText,
                         ),
                         Text(
-                         widget.type??"",
+                          widget.type??"",
                           style:  GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12.sp),),
+                            textStyle: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12.sp),),
                         ),
                       ],
                     ),
@@ -142,7 +140,7 @@ class _MyorderitemState extends State<Myorderitem> {
                     height: 20.h,
                     width: 20.w,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5.r),
+                        borderRadius: BorderRadius.circular(5.r),
                         border: Border.all(color: CustomColor.buttoniconColor)),
                     child: Center(child: Icon(Icons.download,color: Colors.black54,),),
                   ),
@@ -151,16 +149,22 @@ class _MyorderitemState extends State<Myorderitem> {
             ),
           ),
 
-Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    Text("Ordercode: "),
-    Text(widget.ordercode??""),
-SizedBox(width: 50.w,),
-    TextButton(onPressed: widget.viewmore,child: Text("view more")),
-
-  ],
-)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+              onTap: widget.ontapremove,
+              child: Container(
+                height: 30.h,
+                width: 200.w,
+                decoration: BoxDecoration(
+                    color: Colors.white30,
+                    borderRadius: BorderRadius.circular(5.r),
+                    border: Border.all(color: Colors.purple)
+                ),
+                child: Center(child: Text(widget.text??"")),
+              ),
+            ),
+          )
 
         ],
       ),

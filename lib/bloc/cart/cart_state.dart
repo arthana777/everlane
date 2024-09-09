@@ -184,6 +184,8 @@ class Returnloading extends CartState {
 }
 
 class ReturnSuccess extends CartState {
+  String message;
+  ReturnSuccess(this.message);
   @override
   // final List<Cart> carts; // Assuming you have a Cart model
   //
@@ -226,6 +228,15 @@ class ExecutionError extends CartState {
   List<Object> get props => [message];
 }
 
+class CancelorderLoaded extends CartState{
+  final int orderid;
+
+  CancelorderLoaded(this.orderid);
+  @override
+  // TODO: implement props
+  List<Object?> get props => throw UnimplementedError();
+
+}
 
 
 
