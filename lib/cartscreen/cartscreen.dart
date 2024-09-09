@@ -105,7 +105,7 @@ class _CartScreenState extends State<CartScreen> {
                 print(state);
                 if (state is CartLoading) {
                   setState(() {
-                    isLoading = true;
+                    isLoading = false;
                   });
                 } else if (state is CartLoaded) {
                   carts = state.carts;
@@ -115,7 +115,8 @@ class _CartScreenState extends State<CartScreen> {
                   });
                 } else if (state is CartError) {
                   setState(() {});
-                } else if (state is RemoveCartSuccess) {
+                }
+                else if (state is RemoveCartSuccess) {
                   setState(() {
                     carts.forEach((cart) {
                       cart.items.removeWhere(

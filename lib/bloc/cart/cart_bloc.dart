@@ -149,7 +149,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         print("orderitemid${event.orderItemId}");
         print("API call result: $result");
         if(result=="success"){
-          emit(ReturnSuccess());
+          emit(ReturnSuccess(result));
         }
         else{
           emit(ReturnError(message: result));
@@ -181,6 +181,22 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       } catch (e) {
         // Handle any exceptions and emit an error state
         emit(ExecutionError(message: e.toString()));
+      }
+    });
+
+    on<CancelOrderevent>((event, emit) async {
+
+      try {
+        final cancelleditems = await cartDataSource.cancelOrder(event.orderid);
+        print("cancelleditems: $cancelleditems");
+
+        if (cancelleditems == "success") {
+          emit(CancelorderLoaded(event.orderid));
+        } else {
+          emit(RemoveCartFailure(cancelleditems));
+        }
+      } catch (e) {
+        emit(RemoveCartFailure(e.toString()));
       }
     });
 

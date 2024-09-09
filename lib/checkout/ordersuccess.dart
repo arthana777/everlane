@@ -1,3 +1,4 @@
+import 'package:everlane/checkout/myorders.dart';
 import 'package:everlane/widgets/customcolor.dart';
 import 'package:everlane/widgets/customfont.dart';
 import 'package:flutter/material.dart';
@@ -76,6 +77,27 @@ class OrderSuccessScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5.r),
                   ),
                   child: Center(child: Text('Continue Shopping',style: CustomFont().buttontext,)),
+                ),
+              ),
+              SizedBox(height: 20.h),
+
+              InkWell(
+                onTap:(){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyOrders()));
+                },
+                child: Container(
+                  height: 50.h,
+                  width: 300.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.r),
+                    border: Border.all(color:CustomColor.primaryColor,),
+                  ),
+                  child: Center(
+                    child: Text('Go to MyOrders', style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                            color: Colors.black, fontSize: 18.sp, fontWeight: FontWeight.w500)),
+                    ),
+                  ),
                 ),
               ),
             ],

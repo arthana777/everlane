@@ -7,15 +7,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Myorderitem extends StatefulWidget {
-  Myorderitem({super.key, this.ontapremove, this.image, this.title, this.orderstatus, this.itemcount, this.type, this.invoicedwnld, this.quatity, this.returnstatus});
+  Myorderitem({super.key, this.ontapremove, this.image, this.title, this.orderstatus, this.itemcount, this.type, this.invoicedwnld, this.quatity, this.returnstatus, this.text, this.ordercode, this.viewmore});
   final String? image;
   final String? itemcount;
   final int? quatity;
   final String? title;
+  final String? ordercode;
+  final String? text;
   final String? orderstatus;
   final String? returnstatus;
   final String? type;
   final VoidCallback? ontapremove;
+  final VoidCallback? viewmore;
   final VoidCallback? invoicedwnld;
 
   @override
@@ -23,13 +26,7 @@ class Myorderitem extends StatefulWidget {
 }
 
 class _MyorderitemState extends State<Myorderitem> {
-  final List<String> item1 = [
-    "1",
-    '2',
-    '3',
-    '4',
-    '5',
-  ];
+
   late  String dropedownvalue1;
   @override
   void initState() {
@@ -151,6 +148,18 @@ class _MyorderitemState extends State<Myorderitem> {
               ],
             ),
           ),
+
+Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Text("Ordercode: "),
+    Text(widget.ordercode??""),
+SizedBox(width: 50.w,),
+    TextButton(onPressed: widget.viewmore,child: Text("view more")),
+
+  ],
+)
+
         ],
       ),
     );

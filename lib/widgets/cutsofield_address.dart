@@ -36,10 +36,7 @@ class AdrressCustomField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        boxShadow: boxShadow,
-        borderRadius: BorderRadius.circular(borderRadius).r,
-      ),
+      width: MediaQuery.of(context).size.width,
       child: TextFormField(
         onChanged: onchanged,
         controller: controller,

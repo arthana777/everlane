@@ -1,23 +1,31 @@
+
+import 'dart:ui';
+
+import 'package:everlane/widgets/customcolor.dart';
+import 'package:everlane/widgets/customfont.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../widgets/customfont.dart';
-
-class OrderItem extends StatefulWidget {
-  OrderItem({super.key, this.ontapremove, this.image, this.title, this.price, this.itemcount, this.size});
+class OrderDetailitem extends StatefulWidget {
+  OrderDetailitem({super.key, this.ontapremove, this.image, this.title, this.orderstatus, this.itemcount, this.type, this.invoicedwnld, this.quatity, this.returnstatus, this.text});
   final String? image;
   final String? itemcount;
+  final int? quatity;
   final String? title;
-  final String? size;
-  final double? price;
+  final String? text;
+  final String? orderstatus;
+  final String? returnstatus;
+  final String? type;
   final VoidCallback? ontapremove;
+  final VoidCallback? invoicedwnld;
 
   @override
-  State<OrderItem> createState() => _CartItemState();
+  State<OrderDetailitem> createState() => _OrderDetailitemState();
 }
 
-class _CartItemState extends State<OrderItem> {
+class _OrderDetailitemState extends State<OrderDetailitem> {
 
   late  String dropedownvalue1;
   @override
@@ -76,9 +84,9 @@ class _CartItemState extends State<OrderItem> {
                     ),
                     Row(
                       children: [
-                        Icon(Icons.currency_rupee),
+                        Text("Order status : "),
                         Text(
-                          widget.price.toString()
+                          widget.orderstatus??""
                           ,
                           style: GoogleFonts.poppins(
                               textStyle: TextStyle(
@@ -92,18 +100,80 @@ class _CartItemState extends State<OrderItem> {
                       height: 5.h,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("size :  ",style: CustomFont().bodyText,),
-                        Text(widget.size??'',style: CustomFont().subtitleText,),
+                        Text(
+                          "Payment method   : ",
+                          style: CustomFont().bodyText,
+                        ),
+                        Text(
+                          widget.type??"",
+                          style:  GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12.sp),),
+                        ),
+                      ],
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("items : "),
+                        Text(widget.quatity.toString()),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Return Status : "),
+                        Text(widget.returnstatus??''),
                       ],
                     )
                   ],
                 ),
+
+                InkWell(
+                  onTap: widget.invoicedwnld,
+                  child: Container(
+                    height: 20.h,
+                    width: 20.w,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.r),
+                        border: Border.all(color: CustomColor.buttoniconColor)),
+                    child: Center(child: Icon(Icons.download,color: Colors.black54,),),
+                  ),
+                ),
               ],
             ),
           ),
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+              onTap: widget.ontapremove,
+              child: Container(
+                height: 30.h,
+                width: 200.w,
+                decoration: BoxDecoration(
+                    color: Colors.white30,
+                    borderRadius: BorderRadius.circular(5.r),
+                    border: Border.all(color: Colors.purple)
+                ),
+                child: Center(child: Text(widget.text??"")),
+              ),
+            ),
+          )
+
         ],
       ),
     );
   }
 }
+
+
+
+
+
+

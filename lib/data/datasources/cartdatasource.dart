@@ -136,7 +136,9 @@ class CartDatasource{
 
   Future<String> placeOrder(String method, String orderType, int addressId,int disasterid,int pickupid) async {
     print("Address ID: $addressId");
-
+    print("disaster ID: $disasterid");
+    print("Addrepickupss ID: $pickupid");
+    print("ordertype ID: $orderType");
     final String? token = await getToken();
     if (token == null || token.isEmpty) {
       return "Failed: Token not found or is empty";
@@ -164,7 +166,7 @@ class CartDatasource{
         final Map<String, dynamic> decodedResponse = jsonDecode(response.body);
 
         if (decodedResponse['status'] == "success") {
-          return decodedResponse['approval_url']['pdf'] ?? "No approval URL found";
+          return decodedResponse['approval_url'] ?? "No approval URL found";
         }
         else {
           return "Failed: ${decodedResponse['message']}";
@@ -209,7 +211,7 @@ class CartDatasource{
         if (decodedResponse['message'] == "Return requested successfully.") {
           return "success";
         } else {
-          return "Failed: ${decodedResponse['message']}";
+          return " ${decodedResponse['message']}";
         }
       } else {
         return "Failed: ${response.statusCode}";
@@ -296,37 +298,42 @@ class CartDatasource{
     }
   }
 
-  // Future<dynamic> paymentExecute(String paymentId, String payerId, String token) async {
-  //   final String? stringValue = await getToken();
-  //   if (stringValue == null || stringValue.isEmpty) {
-  //     return "Failed: Token not found or is empty";
-  //   }
-  //
-  //   final url = 'https://18.143.206.136/api/payment/execute/?paymentId=$paymentId&token=$token&PayerID=$payerId';
-  //   print("Request URL: $url");
-  //
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse(url),
-  //       headers: {
-  //         'content-type': 'application/json',
-  //         'Authorization': 'Token $stringValue',
-  //       },
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       print("Successful response: ${response.body}");
-  //       final Map<String, dynamic> responseBody = jsonDecode(response.body);
-  //       return responseBody;
-  //     } else {
-  //       print("Failed with status code: ${response.statusCode}");
-  //       return "Failed with status code: ${response.statusCode}";
-  //     }
-  //   } catch (e) {
-  //     print("Exception: $e");
-  //     return "Exception: $e";
-  //   }
-  // }
+  Future<String> cancelOrder(int orderid) async {
+    print("orderid$orderid");
+    final String? stringValue = await getToken();
+    if (stringValue == null || stringValue.isEmpty) {
+      return "Failed: Token not found or is empty";
+    }
+    final SharedPrefeService sp = SharedPrefeService();
+    try {
+      final response = await http.delete(
+        Uri.parse('https://18.143.206.136/api/cancel-order-item/$orderid/'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Token $stringValue',
+        },
+        body: jsonEncode({
+          'id': orderid
+        }),
+      );
+      print(response.body);
+      if (response.statusCode == 200) {
+        final decodedResponse = jsonDecode(response.body);
+        print("ytytytyt${decodedResponse}");
+        if (decodedResponse['message'] ==
+            "Order item canceled successfully") {
+          return "success";
+        }
+        else {
+          return "Failed: ${decodedResponse['message']}";
+        }
+        // Login successful, proceed to next step
+      }
+    } catch (e) {
+      return "Failed: ${e.toString()}";
+    }
+    return "true";
+  }
 
 
   Future<String> updateCartItemQuantity(int cartItemId, String action) async {
