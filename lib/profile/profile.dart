@@ -117,7 +117,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10).r,
+        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10).r,
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
@@ -156,7 +156,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                 SizedBox(height: 10.h),
                 ProfileTextfield(
                   icon: Icons.handshake_outlined,
-                  title: "My Donations",
+                  title: "MyDonations",
                   onTap: () {
                     Navigator.push(
                       context,
@@ -206,16 +206,34 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                   },
                 ),
                 SizedBox(height: 5.h),
-                ProfileTextfield(
-                  icon: Icons.person_2_sharp,
-                  title: "Edit Profile",
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            child: EditProfile(),
-                            type: PageTransitionType.bottomToTop,
-                            duration: Duration(milliseconds: 220)));
+                BlocBuilder<ProfileBloc, ProfileState>(
+                  builder: (context, state) {
+                    if (state is ProfileLoaded) {
+                      final userProfile = state.userProfile;
+
+                      return ProfileTextfield(
+                        icon: Icons.person_2_sharp,
+                        title: "Edit Profile",
+                        onTap: () {
+                          // Navigate to EditProfile with userProfile data
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: EditProfile(
+                                userProfile: userProfile,
+                              ), // Pass user profile
+                              type: PageTransitionType.bottomToTop,
+                              duration: Duration(milliseconds: 220),
+                            ),
+                          );
+                        },
+                      );
+                    } else if (state is ProfileLoading) {
+                      return CircularProgressIndicator(); // Show loading if profile is being loaded
+                    } else {
+                      return Text(
+                          "Failed to load profile"); // Show error or fallback
+                    }
                   },
                 ),
                 SizedBox(height: 5.h),
@@ -333,7 +351,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                           }
                                           return ElevatedButton(
                                             style: ElevatedButton.styleFrom(
-                                              fixedSize: Size(690.w, 48.h),
+                                              fixedSize: Size(370.w, 48.h),
                                               backgroundColor:
                                                   CustomColor.primaryColor,
                                               foregroundColor: Colors.white,
@@ -387,7 +405,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                 SizedBox(height: 8.h),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    fixedSize: Size(690.w, 48.h),
+                    fixedSize: Size(750.w, 48.h),
                     backgroundColor: CustomColor.primaryColor,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
@@ -398,10 +416,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        
                         backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-
                           borderRadius: BorderRadius.circular(10).w,
                         ),
                         contentPadding: EdgeInsets.zero,
