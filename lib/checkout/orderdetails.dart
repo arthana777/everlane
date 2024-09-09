@@ -3,12 +3,10 @@ import 'package:everlane/checkout/myorders.dart';
 import 'package:everlane/widgets/customappbar.dart';
 import 'package:everlane/widgets/customcolor.dart';
 import 'package:everlane/widgets/customfont.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../bloc/cart/cart_bloc.dart';
@@ -18,7 +16,16 @@ import '../widgets/cutsofield_address.dart';
 import '../widgets/orderdetailitem.dart';
 
 class OrderDetails extends StatefulWidget {
-   OrderDetails({super.key, this.title, this.status, this.paymentmethod, this.orders, this.image, this.quatity, this.orderid, this.retunstatus});
+  OrderDetails(
+      {super.key,
+      this.title,
+      this.status,
+      this.paymentmethod,
+      this.orders,
+      this.image,
+      this.quatity,
+      this.orderid,
+      this.retunstatus});
   final String? title;
   final String? image;
   final int? quatity;
@@ -27,8 +34,6 @@ class OrderDetails extends StatefulWidget {
   final String? retunstatus;
   final String? paymentmethod;
   final Order? orders;
-
-
 
   @override
   State<OrderDetails> createState() => _OrderDetailsState();
@@ -133,28 +138,29 @@ void _showModalSheet(BuildContext context)async {
     //BlocProvider.of<CartBloc>(context).add(ReturnOrder());
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(preferredSize: Size.fromHeight(80.h), child: CustomAppBar(
-        text: 'OrderDetails',
-        leading: InkWell(
-          onTap: () {
-            final navigationProvider =
-            Provider.of<NavigationProvider>(context, listen: false);
-            navigationProvider.updateScreenIndex(0);
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => MyOrders()),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(80.h),
+          child: CustomAppBar(
+            text: 'OrderDetails',
+            leading: InkWell(
+              onTap: () {
+                final navigationProvider =
+                    Provider.of<NavigationProvider>(context, listen: false);
+                navigationProvider.updateScreenIndex(0);
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyOrders()),
                   (Route<dynamic> route) => false,
-            );
-          },
-          child: Icon(Icons.arrow_back),
-        ),
-      )),
+                );
+              },
+              child: Icon(Icons.arrow_back),
+            ),
+          )),
       backgroundColor: Colors.white,
-
-
       body: MultiBlocListener(
         listeners: [
           BlocListener<CartBloc, CartState>(
@@ -166,10 +172,7 @@ void _showModalSheet(BuildContext context)async {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Return successful!')),
                 );
-              }
-
-
-              else if (state is ReturnError) {
+              } else if (state is ReturnError) {
                 setState(() {});
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Already Requested')),
@@ -238,14 +241,14 @@ void _showModalSheet(BuildContext context)async {
                                   returnQuantity: returnQuantity,
                                   returnReason: returnreason.text,
                                 ));
-                                Fluttertoast.showToast(
-                                  msg: "${state.message}",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  backgroundColor: Colors.green,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0,
-                                );
+                                // Fluttertoast.showToast(
+                                //   msg: "${state.message}",
+                                //   toastLength: Toast.LENGTH_SHORT,
+                                //   gravity: ToastGravity.BOTTOM,
+                                //   backgroundColor: Colors.green,
+                                //   textColor: Colors.white,
+                                //   fontSize: 16.0,
+                                // );
                               }
 
                             }
@@ -330,10 +333,11 @@ void _showModalSheet(BuildContext context)async {
                       },
                     ),
                   ),
-
-                  SizedBox(height: 30.h,),
+                  SizedBox(
+                    height: 30.h,
+                  ),
                   Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 30.h),
+                    padding: EdgeInsets.symmetric(horizontal: 30.h),
                     child: InkWell(
                      onTap: (){
 
@@ -360,16 +364,20 @@ void _showModalSheet(BuildContext context)async {
 
                       child: Container(
                         height: 50.h,
-                        width: 300.w,
+                        width: 200.w,
                         decoration: BoxDecoration(
                           color: CustomColor.primaryColor,
                           borderRadius: BorderRadius.circular(5.r),
                         ),
-                        child: Center(child: Text(returnStatus == 'NO_RETURN'
-                            ? 'Return'
-                            : returnStatus == 'PENDING'
-                            ? 'Requested'
-                            : 'Return',style: CustomFont().buttontext,)),
+                        child: Center(
+                            child: Text(
+                          returnStatus == 'NO_RETURN'
+                              ? 'Return'
+                              : returnStatus == 'PENDING'
+                                  ? 'Requested'
+                                  : 'Return',
+                          style: CustomFont().buttontext,
+                        )),
                       ),
                     ),
                   )

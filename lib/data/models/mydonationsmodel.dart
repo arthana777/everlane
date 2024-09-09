@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 class Donation {
   final int disaster;

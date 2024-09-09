@@ -1,15 +1,12 @@
 import 'dart:io';
 import 'package:everlane/widgets/cutsofield_address.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:everlane/data/models/disastermodel.dart';
 import 'package:everlane/data/navigation_provider/navigation_provider.dart';
-import 'package:everlane/donation/upload_clothes.dart';
 import 'package:everlane/widgets/customappbar.dart';
 import 'package:everlane/widgets/customcolor.dart';
 import 'package:everlane/widgets/customfont.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -36,7 +33,7 @@ class ImagePickerScreen extends StatefulWidget {
   @override
   _ImagePickerScreenState createState() => _ImagePickerScreenState();
 }
-
+   
 class _ImagePickerScreenState extends State<ImagePickerScreen> {
   List<File> images = [];
   bool isLoading = true;

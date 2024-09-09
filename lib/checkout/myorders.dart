@@ -1,6 +1,5 @@
 import 'package:everlane/bloc/cart/cart_bloc.dart';
 import 'package:everlane/checkout/orderdetails.dart';
-import 'package:everlane/checkout/orderitem.dart';
 import 'package:everlane/data/models/ordermodel.dart';
 import 'package:everlane/data/navigation_provider/navigation_provider.dart';
 import 'package:everlane/profile/profile.dart';
@@ -23,20 +22,22 @@ class MyOrders extends StatefulWidget {
 class _MyOrdersState extends State<MyOrders> {
   List<Order> orders = [];
 
-
-
   @override
   void initState() {
     BlocProvider.of<CartBloc>(context).add(fetchOrders());
     super.initState();
   }
-  final String invoiceUrl = "http://18.143.206.136/media/invoices/invoice_D83A32A692.pdf";
+
+  final String invoiceUrl =
+      "http://18.143.206.136/media/invoices/invoice_D83A32A692.pdf";
   Future<void> _launchURL() async {
-    final Uri url = Uri.parse("http://18.143.206.136/media/invoices/invoice_D83A32A692.pdf");
+    final Uri url = Uri.parse(
+        "http://18.143.206.136/media/invoices/invoice_D83A32A692.pdf");
     if (!await launchUrl(url)) {
       throw 'Could not launch $url';
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,12 +49,12 @@ class _MyOrdersState extends State<MyOrders> {
           leading: InkWell(
             onTap: () {
               final navigationProvider =
-              Provider.of<NavigationProvider>(context, listen: false);
+                  Provider.of<NavigationProvider>(context, listen: false);
               navigationProvider.updateScreenIndex(0);
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => Profile()),
-                    (Route<dynamic> route) => false,
+                (Route<dynamic> route) => false,
               );
             },
             child: Icon(Icons.arrow_back),

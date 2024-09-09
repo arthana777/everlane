@@ -1,6 +1,7 @@
 import 'package:everlane/bloc/editprofile/bloc/editprofile_bloc.dart';
 import 'package:everlane/bloc/editprofile/bloc/editprofile_event.dart';
 import 'package:everlane/bloc/editprofile/bloc/editprofile_state.dart';
+import 'package:everlane/data/models/userprofile.dart';
 import 'package:everlane/profile/profile.dart';
 import 'package:everlane/widgets/custom_textfield.dart';
 import 'package:everlane/widgets/customappbar.dart';
@@ -9,9 +10,12 @@ import 'package:everlane/widgets/customfont.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class EditProfile extends StatefulWidget {
-  EditProfile({super.key});
+  final Userprofile userProfile;
+
+  EditProfile({super.key, required this.userProfile});
 
   @override
   State<EditProfile> createState() => _EditProfileState();
@@ -23,26 +27,34 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final usernameController = TextEditingController();
 
-  final firstnameController = TextEditingController();
-
-  final lastNameController = TextEditingController();
-
-  final emailController = TextEditingController();
-
-  final phoneNumberController = TextEditingController();
+  late TextEditingController usernameController;
+  late TextEditingController firstnameController;
+  late TextEditingController lastNameController;
+  late TextEditingController emailController;
+  late TextEditingController phoneNumberController;
 
   bool _isButtonVisible = false;
 
   @override
   void initState() {
     super.initState();
-    phoneNumberController.addListener(_handleTextChange);
-    emailController.addListener(_handleTextChange);
-    lastNameController.addListener(_handleTextChange);
+
+    usernameController =
+        TextEditingController(text: widget.userProfile.username);
+    firstnameController =
+        TextEditingController(text: widget.userProfile.firstName);
+    lastNameController =
+        TextEditingController(text: widget.userProfile.lastName);
+    emailController = TextEditingController(text: widget.userProfile.email);
+    phoneNumberController =
+        TextEditingController(text: widget.userProfile.mobile);
+
     usernameController.addListener(_handleTextChange);
+    firstnameController.addListener(_handleTextChange);
     lastNameController.addListener(_handleTextChange);
+    emailController.addListener(_handleTextChange);
+    phoneNumberController.addListener(_handleTextChange);
   }
 
   void _handleTextChange() {
@@ -57,11 +69,11 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   void dispose() {
-    phoneNumberController.dispose();
-    emailController.dispose();
-    lastNameController.dispose();
-    firstnameController.dispose();
     usernameController.dispose();
+    firstnameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -74,7 +86,6 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     final editProfileBloc = context.read<EditprofileBloc>();
-
     return Scaffold(
       backgroundColor: const Color(0xFFEFEFEF),
       appBar: PreferredSize(
@@ -86,33 +97,29 @@ class _EditProfileState extends State<EditProfile> {
             },
             icon: const Icon(Icons.arrow_back),
           ),
-          text: "Edit profile",
+          text: "Edit Profile",
           color: Colors.transparent,
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10, top: 70).r,
+        padding: const EdgeInsets.only(left: 10, right: 10, top: 70),
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
             child: Column(
               children: [
-                SizedBox(height: 20.h),
+                SizedBox(height: 20),
                 CircleAvatar(
                   backgroundImage: const NetworkImage(
                     'https://i.pinimg.com/474x/8e/0c/fa/8e0cfaf58709f7e626973f0b00d033d0.jpg',
                   ),
                   backgroundColor: Colors.white,
-                  maxRadius: 60.r,
+                  maxRadius: 60,
                 ),
-                SizedBox(height: 30.h),
+                SizedBox(height: 30),
                 CustomTextfield(
-                  focusNode: fieldOne,
-                  onFieldSubmitted: (value) {
-                    FocusScope.of(context).requestFocus(fieldTwo);
-                  },
                   controller: usernameController,
-                  hintText: 'User name',
+                  hintText: 'Enter your username',
                   inputType: TextInputType.text,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -121,62 +128,49 @@ class _EditProfileState extends State<EditProfile> {
                     return null;
                   },
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 10),
                 CustomTextfield(
-                  focusNode: fieldTwo,
-                  onFieldSubmitted: (contex) {
-                    FocusScope.of(context).requestFocus(fieldThree);
-                  },
                   controller: firstnameController,
-                  hintText: 'First Name',
+                  hintText: 'Enter your first name',
                   inputType: TextInputType.name,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your  first name';
+                      return 'Please enter your first name';
                     }
                     return null;
                   },
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 10),
                 CustomTextfield(
-                  focusNode: fieldThree,
-                  onFieldSubmitted: (value) {
-                    FocusScope.of(context).requestFocus(fieldFour);
-                  },
                   controller: lastNameController,
-                  hintText: 'Last Name',
+                  hintText: 'Enter your last name',
                   inputType: TextInputType.text,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your Last name';
+                      return 'Please enter your last name';
                     }
                     return null;
                   },
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 10),
                 CustomTextfield(
-                  focusNode: fieldFour,
-                  onFieldSubmitted: (value) {
-                    FocusScope.of(context).requestFocus(fieldFive);
-                  },
                   controller: emailController,
-                  hintText: 'Email',
+                  hintText: 'Enter your email',
                   inputType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Please enter a valid email Address";
+                      return "Please enter a valid email address";
                     }
                     if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                      return 'Please enter a valid email Address';
+                      return 'Please enter a valid email address';
                     }
                     return null;
                   },
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 10),
                 CustomTextfield(
-                  focusNode: fieldFive,
                   controller: phoneNumberController,
-                  hintText: 'Mobile Number',
+                  hintText: 'Enter your mobile number',
                   inputType: TextInputType.phone,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -188,7 +182,7 @@ class _EditProfileState extends State<EditProfile> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 20),
                 BlocListener<EditprofileBloc, EditprofileState>(
                   listener: (context, state) {
                     print("loadinggggg");
@@ -198,10 +192,11 @@ class _EditProfileState extends State<EditProfile> {
                       );
                       print("error${state}");
                     } else if (state is UserProfileUpdated) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Profile Updated Successfully"),
-                        ),
+                      Fluttertoast.showToast(
+                        backgroundColor: Colors.green,
+                        gravity: ToastGravity.BOTTOM,
+                        textColor: Colors.white,
+                        msg: "Password Updated Successfully",
                       );
                       Navigator.pushReplacement(
                         context,
@@ -210,10 +205,11 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                       );
                     } else if (state is UserProfileError) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("User Update Failed. Try Again"),
-                        ),
+                      Fluttertoast.showToast(
+                        backgroundColor: Colors.red,
+                        gravity: ToastGravity.BOTTOM,
+                        textColor: Colors.white,
+                        msg: "User Update Failed. Try Again",
                       );
                     }
                     ;
@@ -252,7 +248,6 @@ class _EditProfileState extends State<EditProfile> {
                     },
                   ),
                 ),
-                SizedBox(height: 20.h)
               ],
             ),
           ),

@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -150,9 +149,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         print("orderitemid${event.orderItemId}");
         print("API call result: $result");
         if(result=="success"){
-          emit(ReturnSuccess());
+          emit(ReturnSuccess(result));
         }
-        else if(){
+        else{
           emit(ReturnError(message: result));
         }
       } catch (e) {

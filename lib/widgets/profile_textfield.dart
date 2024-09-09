@@ -19,7 +19,7 @@ class ProfileTextfield extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0).w,
+        margin: EdgeInsets.symmetric(vertical: 5.0.h, horizontal: 0.8).w,
         padding: EdgeInsets.all(16.0).w,
         decoration: BoxDecoration(
           color: Colors.white,

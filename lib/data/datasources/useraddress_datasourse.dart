@@ -3,10 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:everlane/bloc/address/address_bloc.dart';
 import 'package:everlane/data/models/addressmodel.dart';
 import 'package:everlane/data/models/disastermodel.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 

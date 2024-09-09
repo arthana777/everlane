@@ -77,7 +77,7 @@ class Order {
       'payment_method': paymentMethod,
       'payment_status': paymentStatus,
       'order_status': orderStatus,
-      'items': items.map((item) => item?.toJson()).toList(),
+      'items': items.map((item) => item.toJson()).toList(),
       'is_donated': isDonated,
       'disaster': disaster,
       'pickup_location': pickupLocation,

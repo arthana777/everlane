@@ -1,11 +1,8 @@
 
 
 
-import 'package:everlane/domain/entities/product_entity.dart';
 
-import '../data/models/detailproduct.dart';
 import '../data/models/product_model.dart';
-import '../domain/entities/category_entity.dart';
 
 
 abstract class ProductRepo {

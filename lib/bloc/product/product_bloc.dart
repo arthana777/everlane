@@ -5,7 +5,6 @@ import 'package:meta/meta.dart';
 
 import '../../data/models/detailproduct.dart';
 import '../../data/models/product_model.dart';
-import '../../domain/entities/product_entity.dart';
 import '../../domain/usecases/product_usecases.dart';
 
 part 'product_event.dart';

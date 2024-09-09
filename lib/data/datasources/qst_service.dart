@@ -17,9 +17,7 @@ class QstService {
     String? token = await getToken();
     if (token == null) {
       throw Exception('Token not found');
-    }
-
-    try {
+    } try {
       final response = await user.patch(
         url,
         data: data,
