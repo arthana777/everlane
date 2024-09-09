@@ -16,11 +16,14 @@ class SignupRepository {
 
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
-
+      print('Response body: ${user}');
+      Map<String, dynamic> decodedResponse = jsonDecode(response.body);
       if (response.statusCode == 201) {
-        return "success";
+        print(",,,, ${decodedResponse}");
+        return "Success";
       } else {
-        return "failed";
+        print(",,,, $decodedResponse");
+        return "${decodedResponse["message"]}";
       }
     } catch (e) {
       print('Error occurred during registration: $e');

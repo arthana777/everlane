@@ -8,8 +8,11 @@ abstract class NotificationEvent extends Equatable {
 }
 
 class FetchNotifications extends NotificationEvent {}
-class DeleteNotification extends NotificationEvent {
-  final int id;
 
-  DeleteNotification(this.id);
+abstract class DeletNotificationEvent extends Equatable {
+  const DeletNotificationEvent();
+
+  @override
+  List<Object?> get props => [];
 }
+

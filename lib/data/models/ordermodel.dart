@@ -94,6 +94,7 @@ class Item {
   final int quantity;
   final String price;
   final String returnStatus;
+  final String? orderitemstatus;
   final String size;
   final String productImage;
   final double productPrice;
@@ -104,7 +105,7 @@ class Item {
   final dynamic refundAmount;
   final dynamic refundDate;
 
-  Item({
+  Item( {
     required this.id,
     required this.productItem,
     required this.productName,
@@ -120,6 +121,7 @@ class Item {
     this.returnRequestedOn,
     this.refundAmount,
     this.refundDate,
+     this.orderitemstatus,
   });
 
   factory Item.fromJson(Map<String, dynamic> json) {
@@ -139,6 +141,7 @@ class Item {
       returnRequestedOn: json['return_requested_on'],
       refundAmount: json['refund_amount'],
       refundDate: json['refund_date'],
+      orderitemstatus: json['order_item_status'],
     );
   }
 
@@ -150,6 +153,7 @@ class Item {
       'quantity': quantity,
       'price': price,
       'return_status': returnStatus,
+      "order_item_status":orderitemstatus,
       'size': size,
       'product_image': productImage,
       'product_price': productPrice,

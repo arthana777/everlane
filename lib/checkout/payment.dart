@@ -1,12 +1,11 @@
 
-
+import 'package:everlane/checkout/address_creation.dart';
 import 'package:everlane/checkout/address_list.dart';
 import 'package:everlane/checkout/ordersuccess.dart';
 import 'package:everlane/checkout/pickuplocations.dart';
 import 'package:everlane/checkout/webviewscreen.dart';
 import 'package:everlane/data/models/disastermodel.dart';
 import 'package:everlane/data/models/pickupmodel.dart';
-import 'package:everlane/donation/disaster_list.dart';
 import 'package:everlane/widgets/customappbar.dart';
 import 'package:everlane/widgets/customfont.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,15 +19,16 @@ import '../data/models/addressmodel.dart';
 import '../data/models/cartmodel.dart';
 import '../widgets/customcolor.dart';
 import 'orderitem.dart';
-
+  UserAddress? selectedAddress;
 class PaymentScreen extends StatefulWidget {
-  late final UserAddress? address;
+  final UserAddress? address;
   final Disaster? disaster;
   late final PickupLocation? pickupLocation;
   final List<PickupLocation>? pickupLocations;
 
+
   // late final PickupLocation? pickuplocations;
-  PaymentScreen({super.key, this.address,  this.pickupLocation, this.pickupLocations, this.disaster, });
+  PaymentScreen({super.key,  this.address,  this.pickupLocation,  this.pickupLocations, this.disaster, });
 
 
   @override
@@ -37,6 +37,7 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   bool _isLoading = false;
+  UserAddress? deliveryAddress;
   PickupLocation? selectedLocation;
   Disaster? selectedDisaster;
   List<Cart> carts=[];
@@ -49,6 +50,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   List<PickupLocation> pickuplocations=[];
   List<Disaster> disasters=[];
 
+
+
    bool _isVisible=true;
 
    void _toggleVisibility() {
@@ -56,6 +59,154 @@ class _PaymentScreenState extends State<PaymentScreen> {
        _isVisible = !_isVisible;
      });
    }
+  Future<UserAddress?> _showModalSheet(BuildContext context)async {
+
+    List<UserAddress>useradress=[];
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.8,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child:   MultiBlocListener(
+              listeners: [
+                BlocListener<AddressBloc, AddressState>(
+                  listener: (context, state) {
+                    print(state);
+                    if (state is AddressLoading) {
+                      setState(() {
+
+                      });
+                    }
+                    else if (state is AddressLoaded) {
+                      setState(() {
+                        //BlocProvider.of<AddressBloc>(context).add(FetchUserAddresses());
+                      });
+                      useradress = state.userAddresses;
+                      //final useraddress = state.userAddresses;
+                      print("adding to addresslist");
+                    }
+                    else if (state is DeleteAdresssuccess) {
+                      setState(() {
+                        useradress.removeWhere((item) => item.id == state.addressid);
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Item deleted successfully')),
+                      );
+
+                    }else if (state is AddressError) {
+                      // Dismiss loading indicator and show error message
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(state.message)),
+                      );
+                    }
+
+                  },
+                ),
+              ],
+              child:useradress.isEmpty?Center(child: Text("No address available"),)
+             : SingleChildScrollView(
+               child: Column(
+               
+                  children: [
+                    Padding(
+                      padding:  EdgeInsets.symmetric(horizontal: 30.w),
+                      child: Container(
+                        height: 80.h,
+                        width: 400.w,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text("Create Address",style: CustomFont().subtitleText,),
+                            SizedBox(width: 20,),
+                            IconButton(onPressed: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>AddressScreen()));
+                            }, icon: Icon(Icons.add,size: 30.sp,)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                padding: EdgeInsets.all(10),
+                  itemCount: useradress.length,
+                  itemBuilder: (context,index){
+                    print(useradress.length);
+                    print(useradress[index].address);
+                    // final address = state.userAddresses[index];
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: 10.w),
+                        child: InkWell(
+                          onTap: (){
+                            setState((){});
+                            selectedAddress=useradress[index];
+                            Navigator.pop(context, useradress[index]);
+
+                            // Navigator.pop(context, MaterialPageRoute(builder: (Context)=>PaymentScreen(address: useradress[index])));
+                          },
+                          child: Container(
+                            height: 150.h,
+                            width: 400.w,
+                            decoration: BoxDecoration(
+                              color: Colors.white30,
+                              border: Border.all(color: Colors.grey.withOpacity(0.4)),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(useradress[index].address),
+                                      Text(useradress[index].state),
+                                      Text(useradress[index].city),
+                                      Text(useradress[index].pincode),
+                                      Text(useradress[index].mobile),
+                                      Text(useradress[index].locality),
+               
+                                    ],
+                                  ),
+                                  IconButton(onPressed: (){
+                                    BlocProvider.of<AddressBloc>(context)
+                                        .add(DeleteAddress(useradress[index].id),
+                                    );
+                                  }, icon: Icon(Icons.delete))
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                  ],
+                ),
+             ),
+
+            ),
+          );
+        },
+      ),
+    ).whenComplete(() {
+      setState(() {
+
+
+      });
+    },);
+  }
+
   void _selectPaymentMethod(String method) {
     setState(() {
       if (selectedOrderType == "donate") {
@@ -97,20 +248,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
   }
 
-  // Function to navigate to AddressList and receive the selected address
-  Future<void> _selectAddress() async {
-    final UserAddress? selectedAddress = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => AddressList()), // Navigate to address list
-    );
-
-    if (selectedAddress != null) {
-      setState(() {
-        widget.address = selectedAddress; // Update the address with the selected address
-        _isAddressSelected = true;        // Update the button or any state
-      });
-    }
-  }
 
   @override
   void initState() {
@@ -131,17 +268,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
         backgroundColor: CustomColor.primaryColor,
         onPressed: () {
           if (selectedPaymentMethod.isNotEmpty) {
-             if (carts.isNotEmpty) {
+            if (selectedOrderType == "donate" && widget.pickupLocation == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Please select a pickup location')),
+              );
+            } else if (selectedOrderType == "delivery" && selectedAddress == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Please select a delivery address')),
+              );
+            } else if (carts.isNotEmpty) {
               setState(() {
                 _isLoading = true; // Set loading to true
               });
               if (selectedPaymentMethod == "COD") {
                 context.read<CartBloc>().add(PlaceOrder(
-                  deliveryAddressId: widget.address?.id ?? 0,
+                  deliveryAddressId: selectedAddress?.id ?? 0,
                   orderType: selectedOrderType??"",
                   paymentMethod: selectedPaymentMethod,
 
                 ));
+                print("llllllllllll${widget.address?.id ?? 0}");
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Order placed successfully!')),
                 );
@@ -155,8 +301,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   deliveryAddressId: widget.address?.id ?? 0,
                   orderType: selectedOrderType??'',
                   paymentMethod: selectedPaymentMethod,
-                  pickupid: selectedLocation?.id??0,
-                  disasterid: selectedDisaster?.id??0,
+                  pickupid: widget.pickupLocation?.id??0,
+                  disasterid: widget.disaster?.id??0,
                 ));
               }
             } else {
@@ -244,12 +390,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             listener: (context, state) {
               print(state);
               if (state is Pickuploading) {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) =>
-                      Center(child: CircularProgressIndicator()),
-                );
+
               }
               else if (state is Pickuploaded) {
                 print(state);
@@ -386,16 +527,31 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       selectedOrderType=="delivery"? Text("Delivery Address",style: CustomFont().subtitleText,):selectedOrderType=="donate"?
                       Text("Pickup Location",style: CustomFont().subtitleText,):SizedBox(),
 
-                      TextButton(onPressed: (){
-                        if (selectedOrderType == "delivery") {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => AddressList()),
-                          );
-                        } else if (selectedOrderType == "donate") {
-                          // _selectDisasterAddress(); // Navigate to DisasterList and select disaster address
-                        }
+                      TextButton(
+
+                        onPressed: ()async{
+                          print("hsdklmnklcm");
+                          BlocProvider.of<AddressBloc>(context).add(FetchUserAddresses());
+                         // final UserAddress? selectedAddress = await _showModalSheet(context);
+                          _showModalSheet(context).whenComplete(() {
+                            setState(() {
+
+                            });
+                          },);
+
+                        // if (selectedOrderType == "delivery") {
+                        //   _showModalSheet(context);
+
+                        //   // Navigator.push(
+                        //   //   context,
+                        //   //   MaterialPageRoute(builder: (context) => AddressList()),
+                        //   // );
+                        // }
+                        // else if (selectedOrderType == "donate") {
+                        //   // _selectDisasterAddress(); // Navigate to DisasterList and select disaster address
+                        // }
                       },
+
                           child: selectedOrderType == "delivery"?Text("Choose",style: GoogleFonts.questrial(color: Colors.purple,),):Text(""),
                       )],
                   ),
@@ -414,19 +570,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
-                        child: Column(
+                        child:selectedAddress != null ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(widget.address?.address??""),
-                            Text(widget.address?.state??""),
-                            Text(widget.address?.city??""),
-                            Text(widget.address?.pincode??""),
-                            Text(widget.address?.mobile??""),
-                            Text(widget.address?.locality??""),
+                            Text(selectedAddress?.address??""),
+                            Text(selectedAddress?.state??""),
+                            Text(selectedAddress?.city??""),
+                            Text(selectedAddress?.pincode??""),
+                            Text(selectedAddress?.mobile??""),
+                            Text(selectedAddress?.locality??""),
                             //Text(widget.pickupLocation?.city??""),
-
                           ],
-                        ),
+                        ): Center(child: Text('No Address Selected')),
                       ),
                     ),
                   )
@@ -497,7 +652,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 underline: SizedBox(),
                                 icon: const Icon(Icons.keyboard_arrow_down),
                                 items: disasters.map((Disaster disaster) {
-                                  print("selectedDisaster${selectedDisaster?.id}");
                                   return DropdownMenuItem<Disaster>(
                                     value: disaster,
                                     child: Text('${disaster.name}, ${disaster.location}'),
@@ -512,8 +666,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             ],
                           )
                       ),
-
-
                     ],
                   ),
 
@@ -565,12 +717,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         Text("Paypal",style: CustomFont().bodyText,),
                         IconButton(onPressed: (){
                           _selectPaymentMethod("ONLINE");
-                        }, icon: Icon(selectedPaymentMethod == "ONLINE" ? Icons.check_circle : Icons.circle_outlined))
-                        ,
+                        }, icon: Icon(selectedPaymentMethod == "ONLINE" ? Icons.check_circle : Icons.circle_outlined)),
                       ],
                     ),
-
-
                   ),
                 ),
                 SizedBox(height: 20.h,),
@@ -578,7 +727,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15.w),
                     child:  Container(
-                      height: 50.h,
+                      height: 60.h,
                       width: 450.w,
                       decoration: BoxDecoration(
                         color: Colors.white,

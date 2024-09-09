@@ -52,7 +52,8 @@ void _selectAddress(UserAddress selectedAddress) {
             child: Icon(Icons.arrow_back)),
         text: "Select Address",
       )),
-      body: MultiBlocListener(
+      body:
+      MultiBlocListener(
         listeners: [
           BlocListener<AddressBloc, AddressState>(
             listener: (context, state) {
@@ -103,6 +104,7 @@ void _selectAddress(UserAddress selectedAddress) {
                   padding:  EdgeInsets.symmetric(horizontal: 10.w),
                   child: InkWell(
                     onTap: (){
+                      //Navigator.pop(context, useradress[index]);
                       Navigator.push(context, MaterialPageRoute(builder: (Context)=>PaymentScreen(address: useradress[index])));
                     },
                     child: Container(

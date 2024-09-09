@@ -8,7 +8,8 @@ import '../../data/datasources/login_datasource.dart';
 part 'loginn_event.dart';
 part 'loginn_state.dart';
 
-class LoginnBloc extends Bloc<LoginnEvent, LoginnState> {
+class LoginnBloc
+ extends Bloc<LoginnEvent, LoginnState> {
   LoginnBloc() : super(LoginnInitial()) {
     Apiservices datas = Apiservices();
     on<LoginButtonEvent>((event, emit) async {

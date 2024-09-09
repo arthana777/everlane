@@ -1,9 +1,7 @@
-
+import 'package:everlane/bloc/forgot_password/bloc/forgot_password_event.dart';
+import 'package:everlane/bloc/forgot_password/bloc/forgot_password_state.dart';
+import 'package:everlane/data/datasources/forgot_password_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../data/datasources/forgot_password_service.dart';
-import 'forgot_password_event.dart';
-import 'forgot_password_state.dart';
 
 class ForgotPasswordBloc
     extends Bloc<ForgotPasswordEvent, ForgotPasswordState> {
@@ -18,15 +16,18 @@ class ForgotPasswordBloc
     ForgotPasswordRequested event,
     Emitter<ForgotPasswordState> emit,
   ) async {
-    print("ForgotPasswordRequested event verununde");
     emit(ForgotPasswordLoading());
+    print("ForgotPasswordRequested event received");
+    print("Making API call for username: ${event.username}");
+
     try {
-      print("success vernd");
-      await authRepository.forgotPassword(event.username);
-      emit(ForgotPasswordSuccess());
+      final message =
+          await authRepository.forgotPassword(event.username);
+      emit(ForgotPasswordSuccess(message: message));
+      print("success :-${event.username}");
     } catch (e) {
-      print('poyii guuyd');
-      emit(ForgotPasswordFailure(error: e.toString()));
+      print("forgotPassword failed${event}");
+      emit(ForgotPasswordFailure(message: e.toString()));
     }
   }
 }

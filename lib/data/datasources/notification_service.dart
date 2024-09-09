@@ -1,13 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:everlane/data/models/notification_model.dart';
 
-import '../models/notification_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationService {
   String notificationUrl = 'https://18.143.206.136/api/notification/';
   Dio user = Dio();
 
   NotificationService({user});
+
+  Dio delet = Dio();
 
   Future<void> saveToken(String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -49,12 +51,28 @@ class NotificationService {
     }
   }
 
-  Future<void> deleteNotification(int id) async {
+  Future<String> deleteNotification(int id) async {
+    String? token = await getToken();
+    if (token == null) {
+      throw Exception('Token not found');
+    }
     try {
-      final response = await user
-          .delete('https://18.143.206.136/api/notification/$id/delete/');
-
-      if (response.statusCode == 200) {
+      final response = await user.delete(
+        'https://18.143.206.136/api/notification/$id/delete/',
+        options: Options(
+          headers: {
+            'Authorization': 'Token $token',
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+      print(token);
+      print("response$response");
+      print("hhuhuhu${response.statusCode}");
+      print("bhbhb4${id}");
+      if (response.statusCode == 200 && response.data['status'] == 'success') {
+        return response.data['message'];
+      } else {
         throw Exception('Failed to delete notification');
       }
     } on DioException catch (e) {

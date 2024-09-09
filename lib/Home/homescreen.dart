@@ -1,4 +1,3 @@
-
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:everlane/Home/searchscreen.dart';
@@ -56,8 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
     {
       'id': '1',
       'title': 'winter',
-     'image':
-      //'image': "https://drive.google.com/file/d/159d9IK0BY8I_99FxxkuTzU1mpkTaf17y/view?usp=sharing",
+      'image':
+          //'image': "https://drive.google.com/file/d/159d9IK0BY8I_99FxxkuTzU1mpkTaf17y/view?usp=sharing",
 
       'https://img.freepik.com/free-photo/view-snowman-with-winter-landscape-snow_23-2150635358.jpg?ga=GA1.1.1985107230.1716028092&semt=ais_hybrid'
     },
@@ -65,12 +64,13 @@ class _HomeScreenState extends State<HomeScreen> {
       'id': '2',
       'title': 'summer',
       'image':
-       'https://media.istockphoto.com/id/1465451690/photo/beach-umbralla-and-chair-on-sand-summer-holiday-travel-background.jpg?s=612x612&w=0&k=20&c=ChGTBog7Px_3uTkdCINE43kNf4qM2EZ-pkLzvYq5Wzs='
+          'https://media.istockphoto.com/id/1465451690/photo/beach-umbralla-and-chair-on-sand-summer-holiday-travel-background.jpg?s=612x612&w=0&k=20&c=ChGTBog7Px_3uTkdCINE43kNf4qM2EZ-pkLzvYq5Wzs='
     },
     {
       'id': '3',
       'title': 'rainy',
-      'image': 'https://img.freepik.com/free-photo/young-woman-walking-rain-with-umbrella_1303-22538.jpg?ga=GA1.1.1985107230.1716028092&semt=ais_hybrid',
+      'image':
+          'https://img.freepik.com/free-photo/young-woman-walking-rain-with-umbrella_1303-22538.jpg?ga=GA1.1.1985107230.1716028092&semt=ais_hybrid',
     },
     {
       'id': '4',
@@ -211,18 +211,18 @@ class _HomeScreenState extends State<HomeScreen> {
             elevation: 6,
             backgroundColor: CustomColor.primaryColor,
             onPressed: () {
-               Qstmodalbottomsheet.moreModalBottomSheet(context);
+              Qstmodalbottomsheet.moreModalBottomSheet(context);
             },
             label: Container(
               height: 30.h,
-              decoration: const BoxDecoration(
+              decoration: const BoxDecoration( 
                 color: CustomColor.primaryColor,
               ),
             ),
             icon: Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: Icon(
-                Icons.question_answer_outlined,
+                Icons.question_mark_sharp,
                 size: 20.sp,
                 color: CustomColor.buttoniconColor,
               ),
@@ -406,8 +406,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     decoration: BoxDecoration(
                                         color: isclicked == index
                                             ? Color(0xFF973d93)
-                                            : Color(0xFF973d93).withOpacity(0.5),
-                                        borderRadius: BorderRadius.circular(5.r)),
+                                            : Color(0xFF973d93)
+                                                .withOpacity(0.5),
+                                        borderRadius:
+                                            BorderRadius.circular(5.r)),
                                     child: Center(
                                         child: Text(
                                       categories[index].name ?? 'text',
@@ -425,7 +427,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Padding(
                         padding:
-                             EdgeInsets.only(left: 20.w, top: 30.h, bottom: 5.w),
+                            EdgeInsets.only(left: 20.w, top: 30.h, bottom: 5.w),
                         child: Text(
                           "Categories ",
                           style: CustomFont().subtitleText,
@@ -459,7 +461,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 builder: (context) =>
                                                     CategoryGridview(
                                                   subcategoryName:
-                                                      subcategories[index].name ??
+                                                      subcategories[index]
+                                                              .name ??
                                                           "",
                                                   productId:
                                                       subcategories[index].id ??
@@ -476,10 +479,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             decoration: BoxDecoration(
                                               color: Colors.black12,
                                               image: DecorationImage(
-                                                  image: NetworkImage(subcategories[
-                                                              index]
-                                                          .image ??
-                                                      'https://media.istockphoto.com/id/1176789549/photo/handsome-gentleman-downtown.jpg?s=1024x1024&w=is&k=20&c=psf6n8f2mWlkiCxZKh4LHJeEjda-4dv4H734xm8MBiA='),
+                                                  image: NetworkImage(
+                                                      subcategories[index]
+                                                              .image ??
+                                                          'https://media.istockphoto.com/id/1176789549/photo/handsome-gentleman-downtown.jpg?s=1024x1024&w=is&k=20&c=psf6n8f2mWlkiCxZKh4LHJeEjda-4dv4H734xm8MBiA='),
                                                   fit: BoxFit.cover),
                                               borderRadius:
                                                   BorderRadius.circular(100),
@@ -518,7 +521,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       decoration: BoxDecoration(
                                           color: Colors.black26,
                                           image: DecorationImage(
-                                              image: NetworkImage(i.image ?? ''),
+                                              image:
+                                                  NetworkImage(i.image ?? ''),
                                               fit: BoxFit.cover)),
                                     );
                                   },
@@ -526,8 +530,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               }).toList(),
                             ),
                       Padding(
-                        padding:  EdgeInsets.only(
-                            left: 20.w, right: 20.w, top: 30.h,bottom: 10.h),
+                        padding: EdgeInsets.only(
+                            left: 20.w, right: 20.w, top: 30.h, bottom: 10.h),
                         child: Text(
                           "Trending",
                           style: CustomFont().subtitleText,
@@ -542,15 +546,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                 scrollDirection: Axis.horizontal,
                                 itemCount: products.length,
                                 itemBuilder: (context, index) => Padding(
-                                    padding:  EdgeInsets.only(
-                                        left: 20.w, ),
+                                    padding: EdgeInsets.only(
+                                      left: 20.w,
+                                    ),
                                     child: InkWell(
                                       onTap: () {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => ProductDetails(
-                                              productId: products[index].id ?? 0,
+                                            builder: (context) =>
+                                                ProductDetails(
+                                              productId:
+                                                  products[index].id ?? 0,
                                             ),
                                           ),
                                         );
@@ -619,11 +626,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 physics: NeverScrollableScrollPhysics(),
                                 itemCount: seasonbanner.length,
                                 itemBuilder: (context, index) => Padding(
-                                      padding:  EdgeInsets.only(
-                                              left: 10.w,
-                                              right: 10.w,
-                                              top: 1.h,
-                                              bottom: 4.h),
+                                      padding: EdgeInsets.only(
+                                          left: 10.w,
+                                          right: 10.w,
+                                          top: 1.h,
+                                          bottom: 4.h),
                                       child: InkWell(
                                           onTap: () {
                                             Navigator.push(
@@ -631,16 +638,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     Seasongridview(
-                                                  seasonName: seasonbanner[index]
-                                                          ['title'] ??
-                                                      "",
+                                                  seasonName:
+                                                      seasonbanner[index]
+                                                              ['title'] ??
+                                                          "",
                                                 ),
                                               ),
                                             );
                                             context.read<ProductBloc>().add(
-                                                  LoadSeasons(seasonbanner[index]
-                                                          ['title'] ??
-                                                      ''),
+                                                  LoadSeasons(
+                                                      seasonbanner[index]
+                                                              ['title'] ??
+                                                          ''),
                                                 );
                                             // context.read<ProductBloc>().add(LoadProducts());
                                           },

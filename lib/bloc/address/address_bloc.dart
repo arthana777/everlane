@@ -3,8 +3,6 @@ import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:meta/meta.dart';
 
 import '../../data/datasources/useraddress_datasourse.dart';

@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
-  void initState(){
+  void initState(){  
     super.initState();
     loadData();
     Timer(Duration(seconds: 4), () {

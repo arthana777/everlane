@@ -1,4 +1,3 @@
-import 'package:everlane/Home/homescreen.dart';
 import 'package:everlane/bloc/change_password/bloc/change_password_bloc.dart';
 import 'package:everlane/bloc/change_password/bloc/change_password_event.dart';
 import 'package:everlane/bloc/change_password/bloc/change_password_state.dart';
@@ -69,12 +68,15 @@ class Profile extends StatelessWidget {
               }
             },
             child: BlocBuilder<ProfileBloc, ProfileState>(
-              builder: (context, state){
-                if (state is ProfileLoading){
-                  return const Center(child: CircularProgressIndicator(color: Colors.purple,));
-                } else if (state is ProfileLoaded){
+              builder: (context, state) {
+                if (state is ProfileLoading) {
+                  return const Center(
+                      child: CircularProgressIndicator(
+                    color: Colors.purple,
+                  ));
+                } else if (state is ProfileLoaded) {
                   return ProfileDetails(userProfile: state.userProfile);
-                } else if (state is ProfileError){
+                } else if (state is ProfileError) {
                   return Center(child: Text(state.message));
                 } else {
                   return const Center(
@@ -151,7 +153,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     );
                   },
                 ),
-
                 SizedBox(height: 10.h),
                 ProfileTextfield(
                   icon: Icons.handshake_outlined,
@@ -178,7 +179,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     );
                   },
                 ),
-
                 SizedBox(height: 5.h),
                 ProfileTextfield(
                   icon: Icons.shopping_cart,
@@ -192,7 +192,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     );
                   },
                 ),
-
                 SizedBox(height: 5.h),
                 ProfileTextfield(
                   icon: Icons.notifications_active,
@@ -206,7 +205,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     );
                   },
                 ),
-
                 SizedBox(height: 5.h),
                 ProfileTextfield(
                   icon: Icons.person_2_sharp,
@@ -239,14 +237,29 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                 bottom:
                                     MediaQuery.of(context).viewInsets.bottom),
                             child: SizedBox(
-                              height: 250.h,
+                              height: 320.h,
                               child: Padding(
                                 padding: const EdgeInsets.only(
-                                    top: 25, left: 10, right: 10),
+                                        top: 25, left: 10, right: 10)
+                                    .w,
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
+                                    Text(
+                                      "Change Your Password",
+                                      style: GoogleFonts.poppins(
+                                        color: CustomColor.primaryColor,
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Enter your current password and new password",
+                                      style:
+                                          GoogleFonts.poppins(fontSize: 14.sp),
+                                    ),
+                                    SizedBox(height: 15.h),
                                     CustomTextfield(
                                       focusNode: fieldOne,
                                       onFieldSubmitted: (value) {
@@ -254,7 +267,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                             .requestFocus(fieldTwo);
                                       },
                                       controller: old_passwordController,
-                                      hintText: 'Old Password',
+                                      hintText: 'Enter Your Old Password',
                                       inputType: TextInputType.name,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
@@ -270,20 +283,20 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                     CustomTextfield(
                                       focusNode: fieldTwo,
                                       controller: new_PassController,
-                                      hintText: 'New Password',
+                                      hintText: 'Enter Your New Password',
                                       inputType: TextInputType.name,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return "Please enter a proper password";
+                                          return "Please enter a valid password";
                                         }
                                         if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
                                             .hasMatch(value)) {
-                                          return 'Please enter a proper password';
+                                          return 'Please enter a  password';
                                         }
                                         return null;
                                       },
                                     ),
-                                    SizedBox(height: 10.h),
+                                    SizedBox(height: 25.h),
                                     BlocListener<ChangePasswordBloc,
                                         ChangePasswordState>(
                                       listener: (context, state) async {
@@ -293,7 +306,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                             backgroundColor: Colors.green,
                                             gravity: ToastGravity.BOTTOM,
                                             textColor: Colors.white,
-                                            msg: "Profile Updated Successfully",
+                                            msg:
+                                                "Password Updated Successfully",
                                           );
                                           await Future.delayed(
                                               const Duration(seconds: 1));
@@ -318,6 +332,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                           }
                                           return ElevatedButton(
                                             style: ElevatedButton.styleFrom(
+                                              fixedSize: Size(370.w, 48.h),
                                               backgroundColor:
                                                   CustomColor.primaryColor,
                                               foregroundColor: Colors.white,
@@ -371,6 +386,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                 SizedBox(height: 8.h),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                    fixedSize: Size(350.w, 48.h),
                     backgroundColor: CustomColor.primaryColor,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
@@ -382,46 +398,99 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       context: context,
                       builder: (context) => AlertDialog(
                         backgroundColor: Colors.white,
-                        title: Text(
-                          'Log Out',
-                          style: GoogleFonts.poppins(),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10).w,
                         ),
-                        content: Text(
-                          'If You Want To Log Out!!!',
-                          style: GoogleFonts.poppins(),
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              color: Colors.white,
-                              padding: const EdgeInsets.all(14).w,
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(10).w,
-                                child: Text(
-                                  'Yes!',
-                                  style: GoogleFonts.poppins(
-                                      color: Colors.red,
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                onTap: () {
-                                  Navigator.of(context)
-                                      .popUntil((route) => route.isFirst);
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          FirstPage(),
-                                    ),
-                                  );
-                                },
+                        contentPadding: EdgeInsets.zero,
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(16.0).w,
+                              child: Icon(
+                                Icons.logout_rounded,
+                                color: CustomColor.primaryColor,
+                                size: 60.sp,
                               ),
                             ),
-                          )
-                        ],
+                            // Title
+                            Text(
+                              "Are You Sure?",
+                              style: TextStyle(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 10.h),
+                            // Content text
+                            Text(
+                              "Do you want to logout?",
+                              style: TextStyle(
+                                  fontSize: 16.sp, color: Colors.black54),
+                            ),
+                            SizedBox(height: 20.h),
+                            Divider(height: 1, color: Colors.grey),
+                            // Action buttons
+                            Row(
+                              children: [
+                                // No Button
+                                Expanded(
+                                  child: InkWell( 
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close dialog
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(20),
+                                          ),
+                                          color: Colors.white),
+                                      padding: EdgeInsets.all(15),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "No",
+                                        style: TextStyle(
+                                            fontSize: 18, color: Colors.black),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                // Yes Button
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .popUntil((route) => route.isFirst);
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              FirstPage(),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          bottomRight: Radius.circular(10),
+                                        ),
+                                        color: CustomColor.primaryColor,
+                                      ),
+                                      padding: EdgeInsets.all(15),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "Yes",
+                                        style: TextStyle(
+                                            fontSize: 18, color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },

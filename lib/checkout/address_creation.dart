@@ -1,4 +1,3 @@
-
 import 'package:everlane/checkout/address_list.dart';
 import 'package:everlane/checkout/payment.dart';
 import 'package:everlane/data/navigation_provider/navigation_provider.dart';
@@ -11,7 +10,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
-
 import '../bloc/address/address_bloc.dart';
 import '../btm_navigation/btm_navigation.dart';
 import '../data/models/addressmodel.dart';
@@ -20,12 +18,14 @@ import '../widgets/customcolor.dart';
 import '../widgets/cutsofield_address.dart';
 
 class AddressScreen extends StatefulWidget {
-   AddressScreen({super.key});
+  AddressScreen({super.key});
 
   @override
   State<AddressScreen> createState() => _AddressScreenState();
 }
-List<UserAddress>useradress=[];
+
+List<UserAddress> useradress = [];
+
 class _AddressScreenState extends State<AddressScreen> {
   final TextEditingController houseNoController = TextEditingController();
 
@@ -47,8 +47,6 @@ class _AddressScreenState extends State<AddressScreen> {
   String? _usernameError;
   String? _passwordError;
   String _mobileErrorMessage = '';
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +90,38 @@ class _AddressScreenState extends State<AddressScreen> {
         fontSize: 16.0,
       );
     }
+          if (_formKey.currentState?.validate() ?? false) {
+            // Form is valid, proceed with action
+
+            context.read<AddressBloc>().add(CreateAddress(
+                  mobile: mobileController.text,
+                  pincode: pinCodeController.text,
+                  locality: localityController.text,
+                  address: addressController.text,
+                  city: cityController.text,
+                  state: stateController.text,
+                  landmark: landmarkController.text,
+                  isDefault: true,
+                  isActive: true,
+                  isDeleted: false,
+                ));
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => AddressList(),
+            //   ),
+            // );
+          } else {
+            // Show toast if form is not valid
+            Fluttertoast.showToast(
+              msg: "Please fill out all fields.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.white,
+              textColor: Colors.black,
+              fontSize: 16.0,
+            );
+          }
         },
         label: Container(
           height: 30.h,
