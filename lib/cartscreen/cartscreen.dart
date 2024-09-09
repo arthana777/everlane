@@ -1,10 +1,8 @@
 import 'package:everlane/checkout/payment.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 
 import '../bloc/cart/cart_bloc.dart';
 import '../bloc/whishlist/whishlist_bloc.dart';
@@ -87,7 +85,7 @@ class _CartScreenState extends State<CartScreen> {
           child: CustomAppBar(
             text: 'My Cart',
             leading: IconButton(
-                onPressed: () {
+                onPressed: () { 
                   Navigator.push(
                       context,
                       PageTransition(
@@ -182,9 +180,11 @@ class _CartScreenState extends State<CartScreen> {
                             return Padding(
                               padding: EdgeInsets.symmetric(
                                   vertical: 100.h, horizontal: 110.w),
-                              child: Text(
-                                "YOUR CART IS EMPTY",
-                                style: CustomFont().bodyText,
+                              child: Center(
+                                child: Text(
+                                  "YOUR CART IS EMPTY",
+                                  style: CustomFont().bodyText,
+                                ),
                               ),
                             );
                           }

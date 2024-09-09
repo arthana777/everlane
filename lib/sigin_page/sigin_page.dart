@@ -149,6 +149,7 @@ class _SiginPageState extends State<SiginPage> {
                           focusNode: fieldOne,
                           onFieldSubmitted: (value) {
                             FocusScope.of(context).requestFocus(fieldTwo);
+                            return null;
                           },
                           hintText: 'Enter your Username',
                           controller: _usernameController,
@@ -189,7 +190,7 @@ class _SiginPageState extends State<SiginPage> {
                           style: const TextStyle(color: Colors.red),
                         ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           TextButton(
                             onPressed: () {
@@ -253,7 +254,9 @@ class _SiginPageState extends State<SiginPage> {
                                                 Padding(
                                                   padding:
                                                       const EdgeInsets.only(
-                                                          left: 10, right: 10).r,
+                                                              left: 10,
+                                                              right: 10)
+                                                          .r,
                                                   child: CustomTextfield(
                                                     controller:
                                                         forgotusernameController,
@@ -328,7 +331,7 @@ class _SiginPageState extends State<SiginPage> {
                                                           style: ElevatedButton
                                                               .styleFrom(
                                                             fixedSize: Size(
-                                                                350.w, 48.h),
+                                                                690.w, 48.h),
                                                             backgroundColor:
                                                                 CustomColor
                                                                     .primaryColor,
@@ -379,9 +382,9 @@ class _SiginPageState extends State<SiginPage> {
                             },
                             child: Text(
                               "Forgot Password?",
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w500,
-                                color: Colors.red,
+                                color: const Color.fromARGB(255, 255, 26, 10),
                                 fontSize: 13.sp,
                               ),
                             ),
@@ -397,7 +400,7 @@ class _SiginPageState extends State<SiginPage> {
                                 const EdgeInsets.only(left: 10, right: 10).w,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                fixedSize: const Size(350, 48),
+                                fixedSize: Size(690.w, 48.h),
                                 backgroundColor: CustomColor.primaryColor,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10).w,

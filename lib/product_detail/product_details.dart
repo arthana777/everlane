@@ -60,7 +60,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
   void tappingfun(int index) {
     isclicked = index;
-    isItemOutOfStock = productdetail?.items?[index].stock == 0;
+    isItemOutOfStock = productdetail?.items[index].stock == 0;
 
     setState(() {});
   }
@@ -72,7 +72,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       final cartState = BlocProvider.of<CartBloc>(context).state;
       if (cartState is CartLoaded) {
         isProductInCart = cartState.carts.any((item) =>
-        item.id == productdetail?.id && item.items[index].size == productdetail?.items?[isclicked!].size
+        item.id == productdetail?.id && item.items[index].size == productdetail?.items[isclicked!].size
         );
       }
 
@@ -90,7 +90,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         BlocProvider.of<CartBloc>(context).add(
           AddToCart(
             productId: productdetail?.id ?? 0,
-            size: productdetail?.items?[index].size ?? '',
+            size: productdetail?.items[index].size ?? '',
           ),
         );
         Fluttertoast.showToast(
@@ -480,9 +480,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                             shrinkWrap: true,
                             itemCount: productdetail?.items.length,
                             itemBuilder: (context, index) {
-                              final item = productdetail!.items?[index];
+                              final item = productdetail!.items[index];
                               print("sizessss${item}");
-                              print(productdetail?.items?.length);
+                              print(productdetail?.items.length);
                               return Padding(
                                 padding: const EdgeInsets.all(5.0),
                                 child: InkWell(

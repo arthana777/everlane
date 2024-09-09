@@ -110,6 +110,7 @@ class _EditProfileState extends State<EditProfile> {
                   focusNode: fieldOne,
                   onFieldSubmitted: (value) {
                     FocusScope.of(context).requestFocus(fieldTwo);
+                    return null;
                   },
                   controller: usernameController,
                   hintText: 'User name',
@@ -126,6 +127,7 @@ class _EditProfileState extends State<EditProfile> {
                   focusNode: fieldTwo,
                   onFieldSubmitted: (contex) {
                     FocusScope.of(context).requestFocus(fieldThree);
+                    return null;
                   },
                   controller: firstnameController,
                   hintText: 'First Name',
@@ -142,6 +144,7 @@ class _EditProfileState extends State<EditProfile> {
                   focusNode: fieldThree,
                   onFieldSubmitted: (value) {
                     FocusScope.of(context).requestFocus(fieldFour);
+                    return null;
                   },
                   controller: lastNameController,
                   hintText: 'Last Name',
@@ -158,6 +161,7 @@ class _EditProfileState extends State<EditProfile> {
                   focusNode: fieldFour,
                   onFieldSubmitted: (value) {
                     FocusScope.of(context).requestFocus(fieldFive);
+                    return null;
                   },
                   controller: emailController,
                   hintText: 'Email',
@@ -226,6 +230,7 @@ class _EditProfileState extends State<EditProfile> {
                       return _isButtonVisible
                           ? ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                fixedSize: Size(690.w, 48.h),
                                 backgroundColor: CustomColor.primaryColor,
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(

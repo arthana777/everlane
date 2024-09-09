@@ -51,8 +51,7 @@ class _QuestionsState extends State<Questions> {
             );
           } else if (state is QuestionError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text('Data updated successfully! ${state.message}')),
+              SnackBar(content: Text('${state.message}')),
             );
           }
         },

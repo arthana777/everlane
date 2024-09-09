@@ -1,6 +1,5 @@
 import 'package:everlane/bloc/cart/cart_bloc.dart';
 import 'package:everlane/checkout/orderdetails.dart';
-import 'package:everlane/checkout/orderitem.dart';
 import 'package:everlane/data/models/ordermodel.dart';
 import 'package:everlane/data/navigation_provider/navigation_provider.dart';
 import 'package:everlane/profile/profile.dart';
@@ -23,20 +22,22 @@ class MyOrders extends StatefulWidget {
 class _MyOrdersState extends State<MyOrders> {
   List<Order> orders = [];
 
-
-
   @override
   void initState() {
     BlocProvider.of<CartBloc>(context).add(fetchOrders());
     super.initState();
   }
-  final String invoiceUrl = "http://18.143.206.136/media/invoices/invoice_D83A32A692.pdf";
+
+  final String invoiceUrl =
+      "http://18.143.206.136/media/invoices/invoice_D83A32A692.pdf";
   Future<void> _launchURL() async {
-    final Uri url = Uri.parse("http://18.143.206.136/media/invoices/invoice_D83A32A692.pdf");
+    final Uri url = Uri.parse(
+        "http://18.143.206.136/media/invoices/invoice_D83A32A692.pdf");
     if (!await launchUrl(url)) {
       throw 'Could not launch $url';
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,12 +49,12 @@ class _MyOrdersState extends State<MyOrders> {
           leading: InkWell(
             onTap: () {
               final navigationProvider =
-              Provider.of<NavigationProvider>(context, listen: false);
+                  Provider.of<NavigationProvider>(context, listen: false);
               navigationProvider.updateScreenIndex(0);
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => Profile()),
-                    (Route<dynamic> route) => false,
+                (Route<dynamic> route) => false,
               );
             },
             child: Icon(Icons.arrow_back),
@@ -78,45 +79,54 @@ class _MyOrdersState extends State<MyOrders> {
         child: orders.isEmpty
             ? Center(child: Text("No orders found"))
             : ListView.builder(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          itemCount: orders.length,
-          itemBuilder: (context, index) {
-            final order = orders[index];
+                padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 20.h),
+                itemCount: orders.length,
+                itemBuilder: (context, index) {
+                  final order = orders[index];
 
-            // Check if the order has at least one item
-            if (order.items.isNotEmpty) {
-              final item = order.items[0];
+                  // Check if the order has at least one item
+                  if (order.items.isNotEmpty) {
+                    final item = order.items[0];
 
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: InkWell(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>OrderDetails(image: item.productImage,
-                      orders: order,title: item.productName,quatity:item.quantity,orderid:item.id,retunstatus: item.returnStatus,)));
-                  },
-                  child: Myorderitem(
-                    title: item.productName,
-                    orderstatus: order.orderStatus,
-                    image: item.productImage,
-                    type: order.paymentMethod,
-                    invoicedwnld:  _launchURL,
-                    quatity: item.quantity,
-                    returnstatus: item.returnStatus,
-                  ),
-                ),
-              );
-            } else {
-              // Handle the case where there are no items in the order
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  title: Text("No items available for this order"),
-                  subtitle: Text("Order Status: ${order.orderStatus}"),
-                ),
-              );
-            }
-          },
-        ),
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OrderDetails(
+                                        image: item.productImage,
+                                        orders: order,
+                                        title: item.productName,
+                                        quatity: item.quantity,
+                                        orderid: item.id,
+                                        retunstatus: item.returnStatus,
+                                      )));
+                        },
+                        child: Myorderitem(
+                          title: item.productName,
+                          orderstatus: order.orderStatus,
+                          image: item.productImage,
+                          type: order.paymentMethod,
+                          invoicedwnld: _launchURL,
+                          quatity: item.quantity,
+                          returnstatus: item.returnStatus,
+                        ),
+                      ),
+                    );
+                  } else {
+                    // Handle the case where there are no items in the order
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        title: Text("No items available for this order"),
+                        subtitle: Text("Order Status: ${order.orderStatus}"),
+                      ),
+                    );
+                  }
+                },
+              ),
       ),
     );
   }

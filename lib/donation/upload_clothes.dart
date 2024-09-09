@@ -3,13 +3,10 @@ import 'dart:io';
 
 import 'package:everlane/widgets/customappbar.dart';
 import 'package:everlane/widgets/customfont.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:linear_progress_bar/linear_progress_bar.dart';
 
-import '../bloc/address/address_bloc.dart';
 import '../widgets/customcolor.dart';
 
 class UploadClothes extends StatefulWidget {

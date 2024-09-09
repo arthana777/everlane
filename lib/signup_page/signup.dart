@@ -208,6 +208,7 @@ class _SiginupState extends State<Siginup> {
                           focusNode: fieldOne,
                           onFieldSubmitted: (value) {
                             FocusScope.of(context).requestFocus(fieldTwo);
+                            return null;
                           },
                           controller: nameController,
                           hintText: "Firstname",
@@ -225,6 +226,7 @@ class _SiginupState extends State<Siginup> {
                           focusNode: fieldTwo,
                           onFieldSubmitted: (value) {
                             FocusScope.of(context).requestFocus(fieldThree);
+                            return null;
                           },
                           controller: lastNameController,
                           hintText: 'Enter Last Name',
@@ -241,6 +243,7 @@ class _SiginupState extends State<Siginup> {
                           focusNode: fieldThree,
                           onFieldSubmitted: (value) {
                             FocusScope.of(context).requestFocus(fieldFour);
+                            return null;
                           },
                           controller: emailController,
                           hintText: 'Enter Your Email',
@@ -261,6 +264,7 @@ class _SiginupState extends State<Siginup> {
                           focusNode: fieldFour,
                           onFieldSubmitted: (value) {
                             FocusScope.of(context).requestFocus(fieldFive);
+                            return null;
                           },
                           controller: userNameController,
                           hintText: 'Enter UserName',
@@ -278,6 +282,7 @@ class _SiginupState extends State<Siginup> {
                           focusNode: fieldFive,
                           onFieldSubmitted: (value) {
                             FocusScope.of(context).requestFocus(fieldSix);
+                            return null;
                           },
                           controller: _mobileController,
                           hintText: 'Enter mobile number',
@@ -412,7 +417,7 @@ class _SiginupState extends State<Siginup> {
                                             .r,
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        fixedSize: Size(350.w, 48.h),
+                                        fixedSize: Size(690.w, 48.h),
                                         backgroundColor:
                                             CustomColor.primaryColor,
                                         shape: RoundedRectangleBorder(

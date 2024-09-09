@@ -225,19 +225,19 @@ class _SeasongridviewState extends State<Seasongridview> {
                           print("wishlist length${whishlist.length}");
                           setState(() {
                             if (wishlistProductIds
-                                .contains(seasons[index]?.id)) {
-                              print("remove${seasons[index]?.id}");
+                                .contains(seasons[index].id)) {
+                              print("remove${seasons[index].id}");
                               BlocProvider.of<WhishlistBloc>(context).add(
                                 Removefromwishlist(whishlist[index].product??0),
                               );
                               wishlistProductIds
-                                  .remove(seasons[index]?.id ?? 0);
+                                  .remove(seasons[index].id ?? 0);
                             } else {
-                              print("added${seasons[index]?.id}");
+                              print("added${seasons[index].id}");
                               BlocProvider.of<WhishlistBloc>(context)
-                                  .add(AddToWishlist(seasons[index]?.id ?? 0));
-                              wishlistProductIds.add(seasons[index]?.id ?? 0);
-                              print(seasons[index]?.id ?? 0);
+                                  .add(AddToWishlist(seasons[index].id ?? 0));
+                              wishlistProductIds.add(seasons[index].id ?? 0);
+                              print(seasons[index].id ?? 0);
                             }
                           });
                         },

@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class WishlistEvent extends Equatable {
   const WishlistEvent();

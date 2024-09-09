@@ -224,7 +224,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               } else if (state is PlaceOrderSuccess) {
                 final approvalUrl = state.approvalUrl;
                 print("apprival url in place order succresss${approvalUrl}");
-                if (selectedPaymentMethod == "ONLINE" && approvalUrl != null) {
+                if (selectedPaymentMethod == "ONLINE") {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -432,7 +432,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 ),
                               )
                             : Text(""),
-                      )
+                      ),
                     ],
                   ),
                 ),

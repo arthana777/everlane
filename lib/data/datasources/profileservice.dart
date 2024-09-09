@@ -9,7 +9,7 @@ class ProfileService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('auth_token', token);
   }
-
+  
   Dio client = Dio(); 
 
   Future<String?> getToken() async {
@@ -37,12 +37,9 @@ class ProfileService {
     print("Token:- ${token}");
     print("responce${response.data['data']}");
     print("${response.statusCode}");
-
     if (response.statusCode == 200) {
       userprofile = Userprofile.fromJson(response.data['data']);
-
       print("hehehe kittyy ${response.data['data']}");
-
       return userprofile;
     } else {
       throw Exception('Failed to load profile');

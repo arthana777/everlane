@@ -117,7 +117,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10).r,
+        padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10).r,
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
@@ -156,7 +156,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                 SizedBox(height: 10.h),
                 ProfileTextfield(
                   icon: Icons.handshake_outlined,
-                  title: "MyDonations",
+                  title: "My Donations",
                   onTap: () {
                     Navigator.push(
                       context,
@@ -265,6 +265,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                       onFieldSubmitted: (value) {
                                         FocusScope.of(context)
                                             .requestFocus(fieldTwo);
+                                        return null;
                                       },
                                       controller: old_passwordController,
                                       hintText: 'Enter Your Old Password',
@@ -332,7 +333,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                           }
                                           return ElevatedButton(
                                             style: ElevatedButton.styleFrom(
-                                              fixedSize: Size(370.w, 48.h),
+                                              fixedSize: Size(690.w, 48.h),
                                               backgroundColor:
                                                   CustomColor.primaryColor,
                                               foregroundColor: Colors.white,
@@ -386,7 +387,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                 SizedBox(height: 8.h),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    fixedSize: Size(350.w, 48.h),
+                    fixedSize: Size(690.w, 48.h),
                     backgroundColor: CustomColor.primaryColor,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
@@ -397,8 +398,10 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
+                        
                         backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
+
                           borderRadius: BorderRadius.circular(10).w,
                         ),
                         contentPadding: EdgeInsets.zero,
@@ -435,7 +438,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                               children: [
                                 // No Button
                                 Expanded(
-                                  child: InkWell( 
+                                  child: InkWell(
                                     onTap: () {
                                       Navigator.of(context)
                                           .pop(); // Close dialog
