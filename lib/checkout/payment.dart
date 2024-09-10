@@ -111,8 +111,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   },
                 ),
               ],
-              child:useradress.isEmpty?Center(child: Text("No address available"),)
-             : SingleChildScrollView(
+              child:
+             SingleChildScrollView(
                child: Column(
                
                   children: [
@@ -133,7 +133,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ),
                       ),
                     ),
-                    ListView.builder(
+                    useradress.isEmpty?Center(child: Text("No address available"),): ListView.builder(
                       shrinkWrap: true,
                 padding: EdgeInsets.all(10),
                   itemCount: useradress.length,
@@ -298,7 +298,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               } else if (selectedPaymentMethod == "ONLINE") {
                 // Trigger the online payment processing
                 context.read<CartBloc>().add(PlaceOrder(
-                  deliveryAddressId: widget.address?.id ?? 0,
+                  deliveryAddressId: selectedAddress?.id ?? 0,
                   orderType: selectedOrderType??'',
                   paymentMethod: selectedPaymentMethod,
                   pickupid: widget.pickupLocation?.id??0,

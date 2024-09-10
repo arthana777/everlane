@@ -205,7 +205,7 @@ class _CategoryGridviewState extends State<CategoryGridview> {
               size: 50.w,
             ),
           ): Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 10.w),
+            padding:  EdgeInsets.symmetric(horizontal: 10.w,vertical: 20.w),
             child: GridView.builder(
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

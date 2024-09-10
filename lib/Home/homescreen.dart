@@ -519,7 +519,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       margin:
                                           EdgeInsets.symmetric(horizontal: 5.0),
                                       decoration: BoxDecoration(
-                                          color: Colors.black26,
+                                          color: Colors.black12,
                                           image: DecorationImage(
                                               image:
                                                   NetworkImage(i.image ?? ''),
