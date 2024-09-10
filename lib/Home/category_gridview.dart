@@ -84,7 +84,7 @@ class _CategoryGridviewState extends State<CategoryGridview> {
                       state.carts.forEach((cart) {
                         cartItemCount=cart.items.length;
                         print("Cart ID: ${cart.id}, Items: ${cart.items.length}");
-                      });
+                      },);
                     }
                     return Positioned(
                       right: 35.w,

@@ -65,14 +65,14 @@ class _CartScreenState extends State<CartScreen> {
                   );
                 }
               : null,
-          label: Container(
-            height: 30.h,
-            width: 150.w,
-            decoration: BoxDecoration(
+               label: Container(
+               height: 30.h,
+               width: 150.w,
+                decoration: BoxDecoration(
                 //color:  carts.any((cart) => cart.items.isNotEmpty)?CustomColor.primaryColor:Color(0xFF973d93).withOpacity(0.5),
-                ),
-            child: Center(
-              child: Text("Checkout", style: CustomFont().buttontext),
+                   ),
+                    child: Center(
+                    child: Text("Checkout", style: CustomFont().buttontext),
             ),
           ),
           icon: Icon(
