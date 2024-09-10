@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'image':
           //'image': "https://drive.google.com/file/d/159d9IK0BY8I_99FxxkuTzU1mpkTaf17y/view?usp=sharing",
 
-      'https://img.freepik.com/free-photo/view-snowman-with-winter-landscape-snow_23-2150635358.jpg?ga=GA1.1.1985107230.1716028092&semt=ais_hybrid'
+          'https://img.freepik.com/free-photo/view-snowman-with-winter-landscape-snow_23-2150635358.jpg?ga=GA1.1.1985107230.1716028092&semt=ais_hybrid'
     },
     {
       'id': '2',
@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'id': '4',
       'title': 'autumn',
       'image':
-      'https://img.freepik.com/free-photo/view-from-flat-lay-woman-style-accessories-autumn-leaves-fashion-trend-vintage-photo-camera-traveler-outfit_285396-5107.jpg?ga=GA1.1.1985107230.1716028092&semt=ais_hybrid',
+          'https://img.freepik.com/free-photo/view-from-flat-lay-woman-style-accessories-autumn-leaves-fashion-trend-vintage-photo-camera-traveler-outfit_285396-5107.jpg?ga=GA1.1.1985107230.1716028092&semt=ais_hybrid',
     },
   ];
 
@@ -215,15 +215,15 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             label: Container(
               height: 30.h,
-              decoration: const BoxDecoration( 
+              decoration: const BoxDecoration(
                 color: CustomColor.primaryColor,
               ),
             ),
             icon: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
+              padding: const EdgeInsets.only(left: 8).w,
               child: Icon(
-                Icons.question_mark_sharp,
-                size: 20.sp,
+                Icons.edit_note_rounded,
+                size: 30.sp,
                 color: CustomColor.buttoniconColor,
               ),
             ),
@@ -264,25 +264,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: 10.w,
                     ),
                     InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DonationHomeScreen(),
-                            ),
-                          );
-                        },
-                        child:Container(
-                          height: 25.h,
-                          width: 25.h,
-                          decoration: BoxDecoration(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DonationHomeScreen(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        height: 25.h,
+                        width: 25.h,
+                        decoration: BoxDecoration(
                             image: DecorationImage(
                                 image: NetworkImage(
-                                    'https://cdn-icons-png.flaticon.com/128/2967/2967188.png',
+                                  'https://cdn-icons-png.flaticon.com/128/2967/2967188.png',
                                 ),
-                            fit: BoxFit.cover)
-                          ),
-                        ),
+                                fit: BoxFit.cover)),
+                      ),
                     ),
                   ],
                 ),
@@ -290,7 +289,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-
           body: MultiBlocListener(
               listeners: [
                 BlocListener<CategoryBloc, CategoryState>(
@@ -332,40 +330,38 @@ class _HomeScreenState extends State<HomeScreen> {
                   listener: (context, state) {
                     print(state);
                     if (state is addtoWishlistLoading) {
-                           setState(() {
-                             isLoading=false;
-                           });
+                      setState(() {
+                        isLoading = false;
+                      });
                     } else if (state is addtoWishlistSuccess) {
                       print("adding to whislisttt");
                       setState(() {
-                        isLoading=false;
+                        isLoading = false;
                       });
                       BlocProvider.of<WhishlistBloc>(context)
                           .add(RetrieveWhishlist());
                     } else if (state is addtoWishlistFailure) {
-
                       setState(() {
-                        isLoading=false;
+                        isLoading = false;
                       });
                     } else if (state is WishlistSuccess) {
                       // loading=false;
                       whishlist = state.whishlists;
-                      wishlistProductIds = whishlist.map((item) => item.product??0).toList();
+                      wishlistProductIds =
+                          whishlist.map((item) => item.product ?? 0).toList();
                       // for (var i = 0; i <= whishlist.length; i++) {
                       //   wishlistProductIds.add(whishlist[i].product??0);
                       // }
                       setState(() {
-                        isLoading=false;
+                        isLoading = false;
                       });
                     } else if (state is RemoveWishlistSuccess) {
                       setState(() {
-                        isLoading=false;
+                        isLoading = false;
                         whishlist.removeWhere(
                             (item) => item.id == state.removedProductId);
                       });
-                    } else if (state is RemoveWishlistFailure) {
-
-                    }
+                    } else if (state is RemoveWishlistFailure) {}
                   },
                 ),
               ],
@@ -575,10 +571,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         context)
                                                     .add(
                                                   Removefromwishlist(
-                                                      products[index].id??0),
+                                                      products[index].id ?? 0),
                                                 );
-                                                wishlistProductIds.remove(products[index].id??0);
-
+                                                wishlistProductIds.remove(
+                                                    products[index].id ?? 0);
                                               } else {
                                                 print(
                                                     "added${products[index].id}");

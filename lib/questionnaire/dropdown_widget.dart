@@ -4,7 +4,6 @@ import 'package:everlane/widgets/customfont.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 class DropDownnLatest extends StatelessWidget {
   final bool isPage;
   final List<dynamic>? dataList;
@@ -46,6 +45,8 @@ class DropDownnLatest extends StatelessWidget {
             .map((item) => DropdownMenuItem<dynamic>(
                   value: item,
                   child: Text(
+                    textAlign: TextAlign.right,
+
                     item.name,
                     style: CustomFont().titleText,
                     // overflow: TextOverflow.ellipsis,
@@ -85,7 +86,7 @@ class DropDownnLatest extends StatelessWidget {
         dropdownStyleData: DropdownStyleData(
           maxHeight: 400,
           width: 200,
-          direction: DropdownDirection.right,
+          direction: DropdownDirection.left,
           padding: null,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
@@ -110,7 +111,10 @@ class DropDownnLatest extends StatelessWidget {
           height: 40,
           padding: EdgeInsets.only(left: 14, right: 14),
         ),
+
       ),
+
     );
+    
   }
 }

@@ -48,7 +48,14 @@ class _QuestionsState extends State<Questions> {
           } else if (state is QuestionUpdated) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Data updated successfully!')),
+              
             );
+            Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ResultPage(),
+                    ),
+                  );
           } else if (state is QuestionError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('${state.message}')),
@@ -175,9 +182,11 @@ class _QuestionsState extends State<Questions> {
       ),
       child: Center(
         child: ListTile(
+
           leading: Text(title, style: CustomFont().titleText),
           trailing: DropdownButton<String>(
             dropdownColor: Colors.white,
+            alignment: Alignment.topRight,
             borderRadius: BorderRadius.circular(10).w,
             value: value,
             icon: const Icon(Icons.keyboard_arrow_down),
@@ -185,7 +194,7 @@ class _QuestionsState extends State<Questions> {
               return DropdownMenuItem<String>(
                 value: item,
                 child: Text(
-                  item,
+                  item, 
                   style: CustomFont().titleText,
                 ),
               );
