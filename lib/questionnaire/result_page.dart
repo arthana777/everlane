@@ -3,7 +3,6 @@ import 'package:everlane/bloc/question_result/bloc/question_result_event.dart';
 import 'package:everlane/bloc/question_result/bloc/question_result_state.dart';
 import 'package:everlane/data/models/product_model.dart';
 import 'package:everlane/product_detail/product_details.dart';
-import 'package:everlane/questionnaire/questionsetial.dart';
 import 'package:everlane/widgets/customcolor.dart';
 import 'package:everlane/widgets/customfont.dart';
 import 'package:flutter/material.dart';

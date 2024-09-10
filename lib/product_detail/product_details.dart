@@ -44,7 +44,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   List<WhislistProduct> whishlist = [];
   DetailProduct? productdetail;
   List<Cart> carts = [];
-  int? isclicked=-1;
+  int? isclicked;
   bool isLoading=false;
   bool isAddedToCart = false;
   bool isItemOutOfStock = false;
@@ -74,6 +74,17 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 
   void _addToCart(int index) {
+    if (isclicked == null) {
+      Fluttertoast.showToast(
+        msg: "Please select a size before adding to cart!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return;
+    }
     if (isclicked != null) {
       bool isProductInCart = false;
 
@@ -214,44 +225,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
         ),
 
-        // PreferredSize(
-        //     preferredSize: Size.fromHeight(50.h),
-        //     child: CustomAppBar(
-        //       text: productdetail?.name ?? '',
-        //       leading: InkWell(
-        //           onTap: () {
-        //             final navigationProvider =
-        //             Provider.of<NavigationProvider>(context, listen: false);
-        //             navigationProvider.updateScreenIndex(0);
-        //             Navigator.pop(context);
-        //           },
-        //           child: Icon(Icons.arrow_back)),
-        //       action: [
-        //         Stack(
-        //           children: [
-        //             Container(
-        //               height: 100.h,
-        //               width: 100.w,
-        //               child: IconButton(onPressed: (){
-        //                 Navigator.push(context, MaterialPageRoute(builder: (context)=>CartScreen()));
-        //               }, icon: Icon(Icons.shopping_cart,size: 30.sp,)),
-        //
-        //             ),
-        //             Positioned(
-        //               right: 40.w,
-        //                 top: 5.h,
-        //                 child: Container(
-        //                     height: 15.h,
-        //                     width: 15.w,
-        //                     decoration: BoxDecoration(
-        //                       color: Colors.purple.withOpacity(0.4),
-        //                       borderRadius: BorderRadius.circular(10.r),
-        //                     ),
-        //                     child: Center(child: Text(cartItemCount.toString(),style: GoogleFonts.poppins(color: Colors.white),))))
-        //           ],
-        //         )
-        //       ],
-        //     )),
+
         body: MultiBlocListener(
             listeners: [
               BlocListener<ProductBloc, ProductState>(
