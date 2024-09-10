@@ -519,7 +519,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       margin:
                                           EdgeInsets.symmetric(horizontal: 5.0),
                                       decoration: BoxDecoration(
-                                          color: Colors.black26,
+                                          color: Colors.black12,
                                           image: DecorationImage(
                                               image:
                                                   NetworkImage(i.image ?? ''),
@@ -568,28 +568,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 "wishlist length${whishlist.length}");
                                             setState(() {
                                               if (wishlistProductIds.contains(
-                                                  products[index]?.id)) {
+                                                  products[index].id)) {
                                                 print(
-                                                    "remove${products[index]?.id}");
+                                                    "remove${products[index].id}");
                                                 BlocProvider.of<WhishlistBloc>(
                                                         context)
                                                     .add(
                                                   Removefromwishlist(
                                                       products[index].id??0),
                                                 );
-                                                wishlistProductIds.remove(products[index]?.id??0);
+                                                wishlistProductIds.remove(products[index].id??0);
 
                                               } else {
                                                 print(
-                                                    "added${products[index]?.id}");
+                                                    "added${products[index].id}");
                                                 BlocProvider.of<WhishlistBloc>(
                                                         context)
                                                     .add(AddToWishlist(
-                                                        products[index]?.id ??
+                                                        products[index].id ??
                                                             0));
                                                 wishlistProductIds.add(
-                                                    products[index]?.id ?? 0);
-                                                print(products[index]?.id ?? 0);
+                                                    products[index].id ?? 0);
+                                                print(products[index].id ?? 0);
                                               }
                                             });
                                           },
@@ -600,7 +600,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               'https://plus.unsplash.com/premium_photo-1706727290668-f6b805ea48da?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyfHx8ZW58MHx8fHx8',
                                           price: products[index].price ?? "",
                                           isInWishlist: wishlistProductIds
-                                              .contains(products[index]?.id)),
+                                              .contains(products[index].id)),
                                       // isInWishlist: whishlist.any((item) => item.id == products[index].id),
                                     )),
                               ),

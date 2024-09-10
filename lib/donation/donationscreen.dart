@@ -1,8 +1,6 @@
-import 'package:everlane/checkout/address_creation.dart';
 import 'package:everlane/widgets/customappbar.dart';
 import 'package:everlane/widgets/customcolor.dart';
 import 'package:everlane/widgets/customfont.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +21,6 @@ class DonationHomeScreen extends StatelessWidget {
           preferredSize: Size.fromHeight(100.h),
           child: CustomAppBar(
             color: Colors.transparent,
-            text: "Donate here",
             leading: InkWell(
                 onTap: () {
                   final navigationProvider =
@@ -48,10 +45,13 @@ class DonationHomeScreen extends StatelessWidget {
                       color: Colors.grey,
                       image: DecorationImage(
                           image: NetworkImage(
-                            "https://img.freepik.com/free-photo/volunteer-helping-with-donation-box_23-2149230501.jpg?ga=GA1.1.1985107230.1716028092",
+                            "https://media.istockphoto.com/id/840639252/photo/hands-holding-heart.jpg?s=612x612&w=0&k=20&c=PMqtQ5bbe4d4s1fYcNUSAZyEQBeDqumymuyZC3PRt-Y="
+                             //"https://plus.unsplash.com/premium_photo-1661904004367-7f73cb7e6e03?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDEyfHx8ZW58MHx8fHx8"
+                              //"https://img.freepik.com/free-photo/young-peeple-red-packing-cardboards-with-humanitarian-help_259150-57380.jpg?ga=GA1.1.1985107230.1716028092&semt=ais_hybrid"
+                            //"https://img.freepik.com/free-photo/volunteer-helping-with-donation-box_23-2149230501.jpg?ga=GA1.1.1985107230.1716028092",
                           ),
                           fit: BoxFit.cover,
-                          opacity: 0.6)),
+                          opacity: 0.5)),
                 ),
                 Positioned(
                   top: 200.h,
@@ -72,14 +72,14 @@ class DonationHomeScreen extends StatelessWidget {
                         height: 50.h,
                         width: 300.w,
                         decoration: BoxDecoration(
-                            color: CustomColor.primaryColor,
+                            color: CustomColor.primaryColor.withOpacity(0.8),
                             border: Border.all(
-                              color: Colors.black26,
+                              color: Colors.white,
                             ),
                             borderRadius: BorderRadius.circular(10.r)),
                         child: Center(
                             child: Text(
-                          "Disaster Registration",
+                          "Help us to keep track",
                           style: CustomFont().buttontext,
                         )),
                       ),
@@ -105,14 +105,14 @@ class DonationHomeScreen extends StatelessWidget {
                         height: 50.h,
                         width: 300.w,
                         decoration: BoxDecoration(
-                            color: CustomColor.primaryColor,
+                            color: CustomColor.primaryColor.withOpacity(0.8),
                             border: Border.all(
-                              color: Colors.black26,
+                              color: Colors.white,
                             ),
                             borderRadius: BorderRadius.circular(10.r)),
                         child: Center(
                             child: Text(
-                          "Donate ",
+                          "Donate now! ",
                           style: CustomFont().buttontext,
                         )),
                       ),

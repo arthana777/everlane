@@ -50,12 +50,6 @@ class _SiginPageState extends State<SiginPage> {
     );
   }
 
-  // void _confirm() {
-  //   BlocProvider.of<ForgotPasswordBloc>(context).add(
-  //     ForgotPasswordRequested(forgotusernameController.text),
-  //   );
-  // }
-
   String? _validateUsername(String? value) {
     if (value == null || value.isEmpty) {
       return "Please enter a valid Username";
@@ -123,7 +117,7 @@ class _SiginPageState extends State<SiginPage> {
               }
             },
             child: Padding(
-              padding: const EdgeInsets.only(top: 100),
+              padding:  EdgeInsets.only(top: 100.h),
               child: Container(
                 height: double.infinity.h,
                 width: double.infinity.w,
@@ -144,11 +138,12 @@ class _SiginPageState extends State<SiginPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10).w,
+                        padding:  EdgeInsets.only(left: 10.w, right: 10.w),
                         child: CustomTextfield(
                           focusNode: fieldOne,
                           onFieldSubmitted: (value) {
                             FocusScope.of(context).requestFocus(fieldTwo);
+                            return null;
                           },
                           hintText: 'Enter your Username',
                           controller: _usernameController,
@@ -162,7 +157,7 @@ class _SiginPageState extends State<SiginPage> {
                         ),
                       SizedBox(height: 10.h),
                       Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10).w,
+                        padding:  EdgeInsets.only(left: 10.w, right: 10.w),
                         child: CustomTextfield(
                           focusNode: fieldTwo,
                           hintText: 'Enter Your Password',
@@ -189,7 +184,7 @@ class _SiginPageState extends State<SiginPage> {
                           style: const TextStyle(color: Colors.red),
                         ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           TextButton(
                             onPressed: () {
@@ -222,10 +217,10 @@ class _SiginPageState extends State<SiginPage> {
                                               children: [
                                                 Padding(
                                                   padding:
-                                                      const EdgeInsets.only(
-                                                              top: 15,
-                                                              left: 15,
-                                                              right: 15)
+                                                       EdgeInsets.only(
+                                                              top: 15.h,
+                                                              left: 15.w,
+                                                              right: 15.w)
                                                           .r,
                                                   child: Text(
                                                     "Forgot Password",
@@ -241,7 +236,7 @@ class _SiginPageState extends State<SiginPage> {
                                                 SizedBox(height: 10.h),
                                                 Padding(
                                                   padding: EdgeInsets.only(
-                                                          left: 15, right: 15)
+                                                          left: 15.w, right: 15.w)
                                                       .r,
                                                   child: Text(
                                                     "Enter your username and click confirm. The new password will be sent to your email.",
@@ -252,8 +247,9 @@ class _SiginPageState extends State<SiginPage> {
                                                 SizedBox(height: 20.h),
                                                 Padding(
                                                   padding:
-                                                      const EdgeInsets.only(
-                                                          left: 10, right: 10).r,
+                                                       EdgeInsets.only(
+                                                              left: 10.w,
+                                                              right: 10.w),
                                                   child: CustomTextfield(
                                                     controller:
                                                         forgotusernameController,
@@ -318,17 +314,17 @@ class _SiginPageState extends State<SiginPage> {
                                                       }
                                                       return Padding(
                                                         padding:
-                                                            const EdgeInsets
+                                                             EdgeInsets
                                                                     .only(
-                                                                    left: 13,
-                                                                    right: 13,
-                                                                    top: 15)
+                                                                    left: 13.w,
+                                                                    right: 13.w,
+                                                                    top: 15.h)
                                                                 .r,
                                                         child: ElevatedButton(
                                                           style: ElevatedButton
                                                               .styleFrom(
                                                             fixedSize: Size(
-                                                                350.w, 48.h),
+                                                                690.w, 48.h),
                                                             backgroundColor:
                                                                 CustomColor
                                                                     .primaryColor,
@@ -337,8 +333,8 @@ class _SiginPageState extends State<SiginPage> {
                                                               borderRadius:
                                                                   BorderRadius
                                                                           .circular(
-                                                                              10)
-                                                                      .w,
+                                                                              10.r)
+                                                                      ,
                                                             ),
                                                           ),
                                                           onPressed: () {
@@ -379,9 +375,9 @@ class _SiginPageState extends State<SiginPage> {
                             },
                             child: Text(
                               "Forgot Password?",
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w500,
-                                color: Colors.red,
+                                color: const Color.fromARGB(255, 255, 26, 10),
                                 fontSize: 13.sp,
                               ),
                             ),
@@ -394,13 +390,13 @@ class _SiginPageState extends State<SiginPage> {
                         child: Center(
                           child: Padding(
                             padding:
-                                const EdgeInsets.only(left: 10, right: 10).w,
+                                 EdgeInsets.only(left: 10.w, right: 10.w),
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                fixedSize: const Size(350, 48),
+                                fixedSize: Size(690.w, 48.h),
                                 backgroundColor: CustomColor.primaryColor,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10).w,
+                                  borderRadius: BorderRadius.circular(10.r),
                                 ),
                               ),
                               onPressed: _validateAndSubmit,

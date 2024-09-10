@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -29,7 +30,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColor.backgroundColor,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text(
@@ -73,8 +74,34 @@ class _NotificationScreenState extends State<NotificationScreen> {
             if (state is NotificationLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is NotificationError) {
-              return const Center(
-                child: Text(""),
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 100),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 150.w,
+                        height: 150.h,
+                        child: Image.network(
+                          "https://i.pinimg.com/736x/95/8d/38/958d38c0173a46b9a6f4cdca074ccbb8.jpg",
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Text("No Notification Yet!",
+                          style: CustomFont().titleText),
+                      SizedBox(
+                        height: 11.h,
+                      ),
+                      Text(
+                          textAlign: TextAlign.center,
+                          "You have no motifications right now.\nCome back later..",
+                          style: GoogleFonts.poppins(
+                              color: Colors.grey, fontSize: 13.sp))
+                    ],
+                  ),
+                ),
               );
             } else if (state is NotificationLoaded) {
               return ListView.builder(

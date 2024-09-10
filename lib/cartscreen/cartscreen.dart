@@ -1,10 +1,8 @@
 import 'package:everlane/checkout/payment.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 
 import '../bloc/cart/cart_bloc.dart';
 import '../bloc/whishlist/whishlist_bloc.dart';
@@ -14,6 +12,7 @@ import '../btm_navigation/btm_navigation.dart';
 import '../data/models/cartmodel.dart';
 import '../data/models/whishlistmodel.dart';
 
+import '../product_detail/product_details.dart';
 import '../widgets/customappbar.dart';
 import '../widgets/customcircularindicator.dart';
 import '../widgets/customcolor.dart';
@@ -87,7 +86,7 @@ class _CartScreenState extends State<CartScreen> {
           child: CustomAppBar(
             text: 'My Cart',
             leading: IconButton(
-                onPressed: () {
+                onPressed: () { 
                   Navigator.push(
                       context,
                       PageTransition(
@@ -183,9 +182,11 @@ class _CartScreenState extends State<CartScreen> {
                             return Padding(
                               padding: EdgeInsets.symmetric(
                                   vertical: 100.h, horizontal: 110.w),
-                              child: Text(
-                                "YOUR CART IS EMPTY",
-                                style: CustomFont().bodyText,
+                              child: Center(
+                                child: Text(
+                                  "YOUR CART IS EMPTY",
+                                  style: CustomFont().bodyText,
+                                ),
                               ),
                             );
                           }
@@ -193,37 +194,48 @@ class _CartScreenState extends State<CartScreen> {
                             children: carts[cartIndex].items.map((item) {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: CartItemCard(
-                                  ontapremove: () {
-                                    setState(() {});
-                                    BlocProvider.of<CartBloc>(context).add(
-                                      RemovefromCart(item.id),
+                                child: InkWell(
+                                  onTap: (){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProductDetails(
+                                            productId: carts[0].id ?? 0,
+                                          )),
                                     );
                                   },
-                                  movetowish: () {
-                                    BlocProvider.of<WhishlistBloc>(context)
-                                        .add(AddToWishlist(item.id ?? 0));
-                                    BlocProvider.of<CartBloc>(context).add(
-                                      RemovefromCart(item.id),
-                                    );
-                                  },
-                                  title: item.productName,
-                                  price: item.productPrice,
-                                  image: item.productImage,
-                                  itemcount: item.quantity.toString(),
-                                  size: item.size!,
-                                  decreased: () {
-                                    BlocProvider.of<CartBloc>(context).add(
-                                        IncreaseCartItemQuantity(
-                                            item.id, 'increase'));
-                                  },
-                                  increased: () {
-                                    if (item.quantity > 1) {
+                                  child: CartItemCard(
+                                    ontapremove: () {
+                                      setState(() {});
                                       BlocProvider.of<CartBloc>(context).add(
-                                          DecreaseCartItemQuantity(
-                                              item.id, 'decrease'));
-                                    }
-                                  },
+                                        RemovefromCart(item.id),
+                                      );
+                                    },
+                                    movetowish: () {
+                                      BlocProvider.of<WhishlistBloc>(context)
+                                          .add(AddToWishlist(item.id ?? 0));
+                                      BlocProvider.of<CartBloc>(context).add(
+                                        RemovefromCart(item.id),
+                                      );
+                                    },
+                                    title: item.productName,
+                                    price: item.productPrice,
+                                    image: item.productImage,
+                                    itemcount: item.quantity.toString(),
+                                    size: item.size!,
+                                    decreased: () {
+                                      BlocProvider.of<CartBloc>(context).add(
+                                          IncreaseCartItemQuantity(
+                                              item.id, 'increase'));
+                                    },
+                                    increased: () {
+                                      if (item.quantity > 1) {
+                                        BlocProvider.of<CartBloc>(context).add(
+                                            DecreaseCartItemQuantity(
+                                                item.id, 'decrease'));
+                                      }
+                                    },
+                                  ),
                                 ),
                               );
                             }).toList(),

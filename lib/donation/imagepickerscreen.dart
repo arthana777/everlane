@@ -1,15 +1,12 @@
 import 'dart:io';
 import 'package:everlane/widgets/cutsofield_address.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:everlane/data/models/disastermodel.dart';
 import 'package:everlane/data/navigation_provider/navigation_provider.dart';
-import 'package:everlane/donation/upload_clothes.dart';
 import 'package:everlane/widgets/customappbar.dart';
 import 'package:everlane/widgets/customcolor.dart';
 import 'package:everlane/widgets/customfont.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -21,6 +18,7 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import '../data/models/pickupmodel.dart';
 import '../widgets/customcircularindicator.dart';
+import 'donationsuccess.dart';
 
 class ImagePickerScreen extends StatefulWidget {
   final Disaster? disaster;
@@ -36,7 +34,7 @@ class ImagePickerScreen extends StatefulWidget {
   @override
   _ImagePickerScreenState createState() => _ImagePickerScreenState();
 }
-
+   
 class _ImagePickerScreenState extends State<ImagePickerScreen> {
   List<File> images = [];
   bool isLoading = true;
@@ -147,6 +145,12 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   }
 
   void _uploadImages() {
+    if (selectedLocation == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select a pickup location')),
+      );
+      return;
+    }
     print(widget.disaster?.id);
     if (images.isNotEmpty) {
       context.read<AddressBloc>().add(uploadclothes(
@@ -195,6 +199,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
               textColor: Colors.black,
               fontSize: 16.0,
             );
+
           } else {
             // Show toast if form is not valid
             Fluttertoast.showToast(
@@ -274,11 +279,9 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                 setState(() {
                   isLoading = false;
                 });
-
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Donationsuccess()));
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Upload successful')),
-                );
+
 
                 print("image uploading");
               } else if (state is AddressError) {
@@ -287,14 +290,14 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                 });
                 // Dismiss loading indicator and show error message
                 Navigator.pop(context);
-                Fluttertoast.showToast(
-                  msg: "Please upload valid image!",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  backgroundColor: Colors.green,
-                  textColor: Colors.white,
-                  fontSize: 16.0,
-                );
+                // Fluttertoast.showToast(
+                //   msg: "Please upload valid image!",
+                //   toastLength: Toast.LENGTH_SHORT,
+                //   gravity: ToastGravity.BOTTOM,
+                //   backgroundColor: Colors.green,
+                //   textColor: Colors.white,
+                //   fontSize: 16.0,
+                // );
                 print('Error: ${state.message}');
                 // ScaffoldMessenger.of(context).showSnackBar(
                 //   SnackBar(content: Text(state.message)),
@@ -331,13 +334,6 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                                       borderRadius: BorderRadius.circular(12).w,
                                       border: Border.all(
                                           color: Colors.black45, width: 1),
-                                      // boxShadow: [
-                                      //   BoxShadow(
-                                      //     color: Colors.black12,
-                                      //     blurRadius: 8,
-                                      //     offset: Offset(2, 2),
-                                      //   ),
-                                      // ],
                                     ),
                                     child: Column(
                                       mainAxisAlignment:

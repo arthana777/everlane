@@ -205,7 +205,7 @@ class _CategoryGridviewState extends State<CategoryGridview> {
               size: 50.w,
             ),
           ): Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 10.w),
+            padding:  EdgeInsets.symmetric(horizontal: 10.w,vertical: 20.w),
             child: GridView.builder(
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -231,12 +231,12 @@ class _CategoryGridviewState extends State<CategoryGridview> {
                       child: ProductCard(
                         ontap: () {
                           setState(() {
-                            if  (wishlistProductIds.contains(filtercategories[index]?.id) ){
-                              print("remove${filtercategories[index]?.id}");
+                            if  (wishlistProductIds.contains(filtercategories[index].id) ){
+                              print("remove${filtercategories[index].id}");
                               BlocProvider.of<WhishlistBloc>(context)
                                   .add(Removefromwishlist(filtercategories[index].id ?? 0),
                               );
-                              wishlistProductIds.remove(filtercategories[index]?.id??0);
+                              wishlistProductIds.remove(filtercategories[index].id??0);
                                 // setState(() {
                                 //   isLoading=false;
                                 // });
@@ -244,11 +244,11 @@ class _CategoryGridviewState extends State<CategoryGridview> {
                               // setState(() {
                               //   isLoading=false;
                               // });
-                              print("added${filtercategories[index]?.id}");
+                              print("added${filtercategories[index].id}");
                               BlocProvider.of<WhishlistBloc>(context)
-                                  .add(AddToWishlist(filtercategories[index]?.id ?? 0));
-                              wishlistProductIds.add(filtercategories[index]?.id??0);
-                              print(filtercategories[index]?.id ?? 0);
+                                  .add(AddToWishlist(filtercategories[index].id ?? 0));
+                              wishlistProductIds.add(filtercategories[index].id??0);
+                              print(filtercategories[index].id ?? 0);
                             }
                           });
                         },

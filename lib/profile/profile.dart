@@ -206,16 +206,34 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                   },
                 ),
                 SizedBox(height: 5.h),
-                ProfileTextfield(
-                  icon: Icons.person_2_sharp,
-                  title: "Edit Profile",
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            child: EditProfile(),
-                            type: PageTransitionType.bottomToTop,
-                            duration: Duration(milliseconds: 220)));
+                BlocBuilder<ProfileBloc, ProfileState>(
+                  builder: (context, state) {
+                    if (state is ProfileLoaded) {
+                      final userProfile = state.userProfile;
+
+                      return ProfileTextfield(
+                        icon: Icons.person_2_sharp,
+                        title: "Edit Profile",
+                        onTap: () {
+                          // Navigate to EditProfile with userProfile data
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              child: EditProfile(
+                                userProfile: userProfile,
+                              ), // Pass user profile
+                              type: PageTransitionType.bottomToTop,
+                              duration: Duration(milliseconds: 220),
+                            ),
+                          );
+                        },
+                      );
+                    } else if (state is ProfileLoading) {
+                      return CircularProgressIndicator(); // Show loading if profile is being loaded
+                    } else {
+                      return Text(
+                          "Failed to load profile"); // Show error or fallback
+                    }
                   },
                 ),
                 SizedBox(height: 5.h),
@@ -265,6 +283,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                                       onFieldSubmitted: (value) {
                                         FocusScope.of(context)
                                             .requestFocus(fieldTwo);
+                                        return null;
                                       },
                                       controller: old_passwordController,
                                       hintText: 'Enter Your Old Password',
@@ -386,7 +405,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                 SizedBox(height: 8.h),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    fixedSize: Size(350.w, 48.h),
+                    fixedSize: Size(750.w, 48.h),
                     backgroundColor: CustomColor.primaryColor,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
@@ -435,7 +454,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                               children: [
                                 // No Button
                                 Expanded(
-                                  child: InkWell( 
+                                  child: InkWell(
                                     onTap: () {
                                       Navigator.of(context)
                                           .pop(); // Close dialog

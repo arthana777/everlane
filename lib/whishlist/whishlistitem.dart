@@ -1,15 +1,16 @@
-import 'package:everlane/bloc/whishlist/whishlist_bloc.dart';
-import 'package:everlane/bloc/whishlist/whishlist_event.dart';
-import 'package:everlane/bloc/whishlist/whishlist_state.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class WhishlistItem extends StatefulWidget {
-  WhishlistItem({super.key, this.saveontap, this.removeonTap,  this.text, this.image, this.price, this.description});
+  WhishlistItem(
+      {super.key,
+      this.saveontap,
+      this.removeonTap,
+      this.text,
+      this.image,
+      this.price,
+      this.description});
   final VoidCallback? saveontap;
   final VoidCallback? removeonTap;
   final String? text;
@@ -22,7 +23,6 @@ class WhishlistItem extends StatefulWidget {
 }
 
 class _WhishlistItemState extends State<WhishlistItem> {
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -47,8 +47,7 @@ class _WhishlistItemState extends State<WhishlistItem> {
                     color: Colors.grey,
                     borderRadius: BorderRadius.circular(5.r),
                     image: DecorationImage(
-                        image: NetworkImage(
-                          widget.image??
+                        image: NetworkImage(widget.image ??
                             "https://plus.unsplash.com/premium_photo-1658506787944-7939ed84aaf8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bWVuJTIwZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D"),
                         fit: BoxFit.cover),
                   ),
@@ -60,7 +59,7 @@ class _WhishlistItemState extends State<WhishlistItem> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.text??"",
+                      widget.text ?? "",
                       style: GoogleFonts.poppins(
                           textStyle: TextStyle(
                               color: Colors.black,
@@ -70,7 +69,7 @@ class _WhishlistItemState extends State<WhishlistItem> {
                     SizedBox(
                       width: 210.w,
                       child: Text(
-                        widget.description??"Apple fifteen pro max",
+                        widget.description ?? "Apple fifteen pro max",
                         maxLines: 2,
                         style: GoogleFonts.poppins(
                             textStyle: TextStyle(
@@ -95,9 +94,9 @@ class _WhishlistItemState extends State<WhishlistItem> {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 5.h,
-                    ),
+                    // SizedBox(
+                    //   height: 5.h,
+                    // ),
                   ],
                 ),
               ],
@@ -123,7 +122,7 @@ class _WhishlistItemState extends State<WhishlistItem> {
               InkWell(
                 onTap: widget.removeonTap,
                 child: Container(
-                  width: 180.w,
+                  width: 168.w,
                   padding: EdgeInsets.all(15),
                   child: Center(child: Text("Remove")),
                 ),

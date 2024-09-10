@@ -1,15 +1,12 @@
 import 'package:everlane/data/models/disastermodel.dart';
 import 'package:everlane/widgets/customappbar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../bloc/address/address_bloc.dart';
-import '../data/models/mydonationsmodel.dart';
 import '../data/navigation_provider/navigation_provider.dart';
-import '../widgets/customcircularindicator.dart';
 import '../widgets/customfont.dart';
 
 class MyRegistration extends StatefulWidget {

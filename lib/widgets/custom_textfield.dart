@@ -41,39 +41,36 @@ class CustomTextfield extends StatefulWidget {
 class _CustomTextfieldState extends State<CustomTextfield> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 0, right: 0).r,
-      child: TextFormField(
-        focusNode: widget.focusNode,
-        onFieldSubmitted: widget.onFieldSubmitted,
-        controller: widget.controller,
-        textCapitalization: widget.textCapitalization,
-        maxLength: 32,
-        maxLines: 1,
-        obscureText: widget.obscureText,
-        keyboardType: widget.inputType,
-        onChanged: widget.onChanged,
-        style: const TextStyle(color: Colors.black),
-        decoration: InputDecoration(
-          prefix: widget.prefix,
-          contentPadding: const EdgeInsets.only(
-            left: 10,
-            top: 10,
-          ).r,
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          hintText: widget.hintText,
-          hintStyle: CustomFont().hintText,
-          suffixIcon: widget.icon,
-          counterText: '',
-          fillColor: Colors.white,
-          filled: true,
+    return TextFormField(
+      focusNode: widget.focusNode,
+      onFieldSubmitted: widget.onFieldSubmitted,
+      controller: widget.controller,
+      textCapitalization: widget.textCapitalization,
+      maxLength: 32,
+      maxLines: 1,
+      obscureText: widget.obscureText,
+      keyboardType: widget.inputType,
+      onChanged: widget.onChanged,
+      style: const TextStyle(color: Colors.black),
+      decoration: InputDecoration(
+        prefix: widget.prefix,
+        contentPadding:  EdgeInsets.only(
+          left: 10.w,
+          top: 10.h,
         ),
-        validator: widget.validator,
-        textAlign: TextAlign.start,
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(8.r),
+        ),
+        hintText: widget.hintText,
+        hintStyle: CustomFont().hintText,
+        suffixIcon: widget.icon,
+        counterText: '',
+        fillColor: Colors.white,
+        filled: true,
       ),
+      validator: widget.validator,
+      textAlign: TextAlign.start,
     );
   }
 }

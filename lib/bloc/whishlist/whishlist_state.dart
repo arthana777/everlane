@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 
-import '../../data/models/product_model.dart';
 import '../../data/models/whishlistmodel.dart';
 
 abstract class WishlistState extends Equatable {

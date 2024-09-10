@@ -1,5 +1,4 @@
 import 'package:everlane/checkout/myorders.dart';
-import 'package:everlane/data/models/paymentresponsemodel.dart';
 import 'package:everlane/widgets/customappbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

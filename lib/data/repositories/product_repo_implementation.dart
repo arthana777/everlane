@@ -1,6 +1,4 @@
 import 'package:everlane/data/datasources/product_datasource.dart';
-import 'package:everlane/data/models/detailproduct.dart';
-import 'package:everlane/domain/entities/product_entity.dart';
 import 'package:everlane/repository/product_repo.dart';
 
 import '../models/product_model.dart';

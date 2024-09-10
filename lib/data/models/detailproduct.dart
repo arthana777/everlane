@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 class DetailProduct {
   final int id;

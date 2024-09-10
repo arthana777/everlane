@@ -1,19 +1,17 @@
-
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:everlane/bloc/address/address_bloc.dart';
 import 'package:everlane/data/models/addressmodel.dart';
 import 'package:everlane/data/models/disastermodel.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../sharedprefrence/sharedprefs_login.dart';
 import '../models/mydonationsmodel.dart';
 import '../models/pickupmodel.dart';
-class UseraddressDatasourse{
+
+class UseraddressDatasourse {
   final client = http.Client();
   Future<String?> getToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -21,6 +19,7 @@ class UseraddressDatasourse{
     print("stringvalueee${stringValue}");
     return stringValue;
   }
+
   Future<dynamic> getAddress() async {
     final String? stringValue = await getToken();
     if (stringValue == null || stringValue.isEmpty) {
@@ -39,14 +38,13 @@ class UseraddressDatasourse{
         print("Successful response: ${response.body}");
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
 
-
         if (responseBody['data'] != null && responseBody['data'] is List) {
           final List<dynamic> dataList = responseBody['data'];
-        final List<UserAddress> useradress = dataList.map((json) =>
-            UserAddress.fromJson(json)).toList();
-        print(useradress.length);
-        return useradress;
-      } else {
+          final List<UserAddress> useradress =
+              dataList.map((json) => UserAddress.fromJson(json)).toList();
+          print(useradress.length);
+          return useradress;
+        } else {
           // Return an empty list if 'data' is null or not a list
           return <UserAddress>[];
         }
@@ -59,7 +57,6 @@ class UseraddressDatasourse{
       throw Exception("$e");
     }
   }
-
 
   Future<String> DeleteAddress(int aid) async {
     print("piddddddd$aid");
@@ -75,20 +72,16 @@ class UseraddressDatasourse{
           'Content-Type': 'application/json',
           'Authorization': 'Token $stringValue',
         },
-        body: jsonEncode({
-          'id': aid
-        }),
+        body: jsonEncode({'id': aid}),
       );
       print(response.body);
       if (response.statusCode == 200) {
         final decodedResponse = jsonDecode(response.body);
         print("ytytytyt${decodedResponse}");
-        if (decodedResponse['message'] ==
-            "Address deleted successfully.") {
+        if (decodedResponse['message'] == "Address deleted successfully.") {
           // await getToken(token);
           return "success";
-        }
-        else {
+        } else {
           return "Failed: ${decodedResponse['message']}";
         }
         // Login successful, proceed to next step
@@ -100,16 +93,17 @@ class UseraddressDatasourse{
   }
 
   Future<String> createAddress(
-       String mobile,
-       String pincode,
-       String locality,
-       String address,
-       String city,
-       String state,
-       String landmark,
-       bool isDefault,
-       bool isActive,
-       bool isDeleted,) async {
+    String mobile,
+    String pincode,
+    String locality,
+    String address,
+    String city,
+    String state,
+    String landmark,
+    bool isDefault,
+    bool isActive,
+    bool isDeleted,
+  ) async {
     final String? stringValue = await getToken();
     if (stringValue == null || stringValue.isEmpty) {
       return "Failed: Token not found or is empty";
@@ -122,7 +116,7 @@ class UseraddressDatasourse{
           'Content-Type': 'application/json',
           'Authorization': 'Token $stringValue',
         },
-        body: jsonEncode(<String,dynamic>{
+        body: jsonEncode(<String, dynamic>{
           'mobile': mobile,
           'pincode': pincode,
           'locality': locality,
@@ -139,12 +133,10 @@ class UseraddressDatasourse{
       if (response.statusCode == 201) {
         final decodedResponse = jsonDecode(response.body);
         print("ytytytyt${decodedResponse}");
-        if (decodedResponse['message'] ==
-            "Address created successfully.") {
+        if (decodedResponse['message'] == "Address created successfully.") {
           // await getToken(token);
           return "success";
-        }
-        else {
+        } else {
           return "Failed: ${decodedResponse['message']}";
         }
         // Login successful, proceed to next step
@@ -155,18 +147,16 @@ class UseraddressDatasourse{
     return "true";
   }
 
-
-
   Future<String> DisasterReg(
-      String name,
-      String adhar,
-      String location,
-      String description,
-      int requiredMenDresses,
-      int requiredWomenDresses,
-      int requiredKidsDresses,
-      //int user,
-      ) async {
+    String name,
+    String adhar,
+    String location,
+    String description,
+    int requiredMenDresses,
+    int requiredWomenDresses,
+    int requiredKidsDresses,
+    //int user,
+  ) async {
     final String? stringValue = await getToken();
     if (stringValue == null || stringValue.isEmpty) {
       return "Failed: Token not found or is empty";
@@ -180,7 +170,6 @@ class UseraddressDatasourse{
           'Authorization': 'Token $stringValue',
         },
         body: jsonEncode(<String, dynamic>{
-
           'name': name,
           'adhar': adhar,
           'location': location,
@@ -188,8 +177,7 @@ class UseraddressDatasourse{
           'required_men_dresses': requiredMenDresses,
           'required_women_dresses': requiredWomenDresses,
           'required_kids_dresses': requiredKidsDresses,
-         // 'user': user,
-
+          // 'user': user,
         }),
       );
 
@@ -228,8 +216,8 @@ class UseraddressDatasourse{
 
         final List<dynamic> dataList = responseBody['data'];
 
-        final List<Disaster> disasteradress = dataList.map((json) =>
-            Disaster.fromJson(json)).toList();
+        final List<Disaster> disasteradress =
+            dataList.map((json) => Disaster.fromJson(json)).toList();
         print(disasteradress.length);
         return disasteradress;
       } else {
@@ -241,7 +229,6 @@ class UseraddressDatasourse{
       throw Exception("$e");
     }
   }
-
 
   Future<dynamic> getmydonations() async {
     final String? stringValue = await getToken();
@@ -263,8 +250,8 @@ class UseraddressDatasourse{
 
         final List<dynamic> dataList = responseBody['data'];
 
-        final List<Donation> mydonations = dataList.map((json) =>
-            Donation.fromJson(json)).toList();
+        final List<Donation> mydonations =
+            dataList.map((json) => Donation.fromJson(json)).toList();
         print(mydonations.length);
         return mydonations;
       } else {
@@ -276,8 +263,6 @@ class UseraddressDatasourse{
       throw Exception("$e");
     }
   }
-
-
 
   Future<dynamic> getmyregistrations() async {
     final String? stringValue = await getToken();
@@ -298,8 +283,8 @@ class UseraddressDatasourse{
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
         final List<dynamic> dataList = responseBody['data'];
 
-        final List<Disaster> mydisasters = dataList.map((json) =>
-            Disaster.fromJson(json)).toList();
+        final List<Disaster> mydisasters =
+            dataList.map((json) => Disaster.fromJson(json)).toList();
         print(mydisasters.length);
         return mydisasters;
       } else {
@@ -312,9 +297,8 @@ class UseraddressDatasourse{
     }
   }
 
-
-
-  Future<String> uploadCloths(int disid, List<File> images,int men,int women,int kids,int pickup) async {
+  Future<String> uploadCloths(int disid, List<File> images, int men, int women,
+      int kids, int pickup) async {
     print("disasterId: $disid ");
     print("image length: ${images}");
     final String? token = await getToken();
@@ -326,54 +310,51 @@ class UseraddressDatasourse{
     final uri = 'https://18.143.206.136/api/donations/';
 
     try {
-
       final imageFiles = await Future.wait(images.map((image) async {
         //return MultipartFile.fromFile(image.path, filename: path.basename(image.path));
-        return MultipartFile.fromFile(image.path, filename: image.uri.pathSegments.last);
+        return MultipartFile.fromFile(image.path,
+            filename: image.uri.pathSegments.last);
       }).toList());
-        final formData = FormData.fromMap({
-          'disaster': disid,
-          'men_dresses':men,
-          'women_dresses':women,
-          'kids_dresses':kids,
-          // disid.toString(),
-          'images':imageFiles,
-          'pickup_location':pickup,
-          //'images': await MultipartFile.fromFile(image.path, filename: image.uri.pathSegments.last),
-        });
-print("formdataaa${formData}");
+      final formData = FormData.fromMap({
+        'disaster': disid,
+        'men_dresses': men,
+        'women_dresses': women,
+        'kids_dresses': kids,
+        // disid.toString(),
+        'images': imageFiles,
+        'pickup_location': pickup,
+        //'images': await MultipartFile.fromFile(image.path, filename: image.uri.pathSegments.last),
+      });
+      print("formdataaa${formData}");
       print("response of upload image ");
 
-        final response = await dio.post(
-          uri,
-          data: formData,
-          options: Options(
-            validateStatus: (status) => true,
-            headers: {
-              'Authorization': 'Token $token',
-              'Content-Type': 'multipart/form-data',
-            },
-          ),
-        );
-print("response of upload image $response");
-        if (response.statusCode != 200) {
-          return "Failed: ${response.statusMessage}";
-        }
+      final response = await dio.post(
+        uri,
+        data: formData,
+        options: Options(
+          validateStatus: (status) => true,
+          headers: {
+            'Authorization': 'Token $token',
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+      print("response of upload image $response");
+      if (response.statusCode != 200) {
+        return "Failed: ${response.statusMessage}";
+      }
 
-        final decodedResponse = jsonDecode(response.data);
-        if (decodedResponse['message'] != "Product added to wishlist successfully.") {
-          return "Failed: ${decodedResponse['message']}";
-        }
-
+      final decodedResponse = jsonDecode(response.data);
+      if (decodedResponse['message'] !=
+          "Product added to wishlist successfully.") {
+        return "Failed: ${decodedResponse['message']}";
+      }
 
       return "success";
     } catch (e) {
       return "Failed: ${e.toString()}";
     }
   }
-
-
-
 
   Future<dynamic> getPickuplocations() async {
     final String? stringValue = await getToken();
@@ -393,11 +374,10 @@ print("response of upload image $response");
         print("Successful response: ${response.body}");
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
 
-
         if (responseBody['data'] != null && responseBody['data'] is List) {
           final List<dynamic> dataList = responseBody['data'];
-          final List<PickupLocation> pickuplocations = dataList.map((json) =>
-              PickupLocation.fromJson(json)).toList();
+          final List<PickupLocation> pickuplocations =
+              dataList.map((json) => PickupLocation.fromJson(json)).toList();
           print("lengthhhofpickuplocations${pickuplocations.length}");
           return pickuplocations;
         } else {
@@ -413,6 +393,4 @@ print("response of upload image $response");
       throw Exception("$e");
     }
   }
-
-
 }

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:everlane/first_page/first_page.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
