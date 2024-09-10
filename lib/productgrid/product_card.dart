@@ -101,33 +101,35 @@ class ProductCard extends StatelessWidget {
                       maxLines: 1,
                     ),
                   ),
-                  Text(
-                    title,
-                    style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w300,
-                            color: Colors.grey)),
-                    maxLines: 1,
+                  SizedBox(
+                    height: 25.h,
+                    child: Text(
+                      title,
+                      style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.grey)),
+                      maxLines: 1,
+                    ),
                   ),
-                  Row(
-                    children: [
-                      Text(price,
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  fontSize: 14.sp, color: Colors.green))),
-                      SizedBox(
-                        width: 60.w,
-                      ),
-                      Text('5',
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(fontSize: 12.sp))),
-                      const Icon(
-                        Icons.star_outlined,
-                        color: Colors.yellow,
-                      ),
-                    ],
+                  SizedBox(
+                    height: 25.h,
+                    child: Row(
+                      children: [
+                        Icon(Icons.currency_rupee),
+                        Text(price,
+                            style: GoogleFonts.poppins(
+                                textStyle: TextStyle(
+                                    fontSize: 14.sp, color: Colors.green))),
+                      ],
+                    ),
                   ),
+                  SizedBox(
+                    width: 60.w,
+                  ),
+
+
                 ],
               ),
             ),

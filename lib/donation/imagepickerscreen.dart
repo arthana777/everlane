@@ -18,6 +18,7 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import '../data/models/pickupmodel.dart';
 import '../widgets/customcircularindicator.dart';
+import 'donationsuccess.dart';
 
 class ImagePickerScreen extends StatefulWidget {
   final Disaster? disaster;
@@ -144,6 +145,12 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   }
 
   void _uploadImages() {
+    if (selectedLocation == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select a pickup location')),
+      );
+      return;
+    }
     print(widget.disaster?.id);
     if (images.isNotEmpty) {
       context.read<AddressBloc>().add(uploadclothes(
@@ -192,6 +199,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
               textColor: Colors.black,
               fontSize: 16.0,
             );
+
           } else {
             // Show toast if form is not valid
             Fluttertoast.showToast(
@@ -271,11 +279,9 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                 setState(() {
                   isLoading = false;
                 });
-
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Donationsuccess()));
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Upload successful')),
-                );
+
 
                 print("image uploading");
               } else if (state is AddressError) {
@@ -284,14 +290,14 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                 });
                 // Dismiss loading indicator and show error message
                 Navigator.pop(context);
-                Fluttertoast.showToast(
-                  msg: "Please upload valid image!",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  backgroundColor: Colors.green,
-                  textColor: Colors.white,
-                  fontSize: 16.0,
-                );
+                // Fluttertoast.showToast(
+                //   msg: "Please upload valid image!",
+                //   toastLength: Toast.LENGTH_SHORT,
+                //   gravity: ToastGravity.BOTTOM,
+                //   backgroundColor: Colors.green,
+                //   textColor: Colors.white,
+                //   fontSize: 16.0,
+                // );
                 print('Error: ${state.message}');
                 // ScaffoldMessenger.of(context).showSnackBar(
                 //   SnackBar(content: Text(state.message)),
@@ -328,13 +334,6 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                                       borderRadius: BorderRadius.circular(12).w,
                                       border: Border.all(
                                           color: Colors.black45, width: 1),
-                                      // boxShadow: [
-                                      //   BoxShadow(
-                                      //     color: Colors.black12,
-                                      //     blurRadius: 8,
-                                      //     offset: Offset(2, 2),
-                                      //   ),
-                                      // ],
                                     ),
                                     child: Column(
                                       mainAxisAlignment:

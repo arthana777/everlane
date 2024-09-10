@@ -12,6 +12,7 @@ import '../bloc/whishlist/whishlist_event.dart';
 import '../bloc/whishlist/whishlist_state.dart';
 import '../data/models/whishlistmodel.dart';
 import '../data/navigation_provider/navigation_provider.dart';
+import '../product_detail/product_details.dart';
 
 
 class Whishlist extends StatefulWidget {
@@ -117,32 +118,43 @@ class _WhishlistState extends State<Whishlist> {
                     itemCount: whishlist.length,
                     itemBuilder: (context, index) => Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: WhishlistItem(
-                        removeonTap: (){
-                          setState(() {
-                            wishlistProductIds.remove(
-                                whishlist[index].product ?? 0);
-                            whishlist.removeAt(index);
-                            Fluttertoast.showToast(
-                              msg: "product removed Successfully",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              backgroundColor: Colors.white,
-                              textColor: Colors.black,
-                              fontSize: 16.0,
-                            );
-                          });
-                          BlocProvider.of<WhishlistBloc>(context)
-                              .add(Removefromwishlist(whishlist[index].product??0),
+                      child: InkWell(
+                        onTap: (){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProductDetails(
+                                  productId: whishlist[index].id ?? 0,
+                                )),
                           );
+                        },
+                        child: WhishlistItem(
+                          removeonTap: (){
+                            setState(() {
+                              wishlistProductIds.remove(
+                                  whishlist[index].product ?? 0);
+                              whishlist.removeAt(index);
+                              Fluttertoast.showToast(
+                                msg: "product removed Successfully",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.white,
+                                textColor: Colors.black,
+                                fontSize: 16.0,
+                              );
+                            });
+                            BlocProvider.of<WhishlistBloc>(context)
+                                .add(Removefromwishlist(whishlist[index].product??0),
+                            );
 
 
-                      },
-                        text: whishlist[index].name??'',
-                        image: whishlist[index].image??"",
-                        price: whishlist[index].price??0.0,
-                        description: whishlist[index].description??""
+                        },
+                          text: whishlist[index].name??'',
+                          image: whishlist[index].image??"",
+                          price: whishlist[index].price??0.0,
+                          description: whishlist[index].description??""
 
+                        ),
                       ),
                     ),
                   ),

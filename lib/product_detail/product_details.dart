@@ -44,7 +44,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   List<WhislistProduct> whishlist = [];
   DetailProduct? productdetail;
   List<Cart> carts = [];
-  int? isclicked;
+  int? isclicked=-1;
   bool isLoading=false;
   bool isAddedToCart = false;
   bool isItemOutOfStock = false;
@@ -59,11 +59,20 @@ class _ProductDetailsState extends State<ProductDetails> {
     super.initState();
   }
   void tappingfun(int index) {
-    isclicked = index;
-    isItemOutOfStock = productdetail?.items[index].stock == 0;
+    final item = productdetail?.items[index];
+
+    if (item != null && item.stock > 0) {
+
+      isclicked = index;
+      isItemOutOfStock = false;
+    } else {
+
+      isItemOutOfStock = true;
+    }
 
     setState(() {});
   }
+
   void _addToCart(int index) {
     if (isclicked != null) {
       bool isProductInCart = false;
@@ -117,33 +126,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         floatingActionButton: FloatingActionButton.extended(
           elevation: 0,
           backgroundColor: CustomColor.primaryColor,
-          // onPressed: isAddedToCart?null:() {
-          //   if (isclicked != null) {
-          //     BlocProvider.of<CartBloc>(context).add(
-          //       AddToCart(
-          //         productId: productdetail?.id??0,
-          //         size: productdetail?.items?[isclicked!].size??'',
-          //       ),
-          //     );
-          //     print('Product ID: ${productdetail?.id}');
-          //     print('Selected Size: ${productdetail?.items?[isclicked!].size}');
-          //     setState(() {
-          //
-          //     });
-          //
-          //     //here add a flutter toast
-          //     Fluttertoast.showToast(
-          //       msg: "Product added to cart successfully!",
-          //       toastLength: Toast.LENGTH_SHORT,
-          //       gravity: ToastGravity.BOTTOM,
-          //       backgroundColor: Colors.green,
-          //       textColor: Colors.white,
-          //       fontSize: 16.0,
-          //     );
-          //
-          //   }
-          //
-          // },
+
           onPressed: isclicked != null ? () => _addToCart(isclicked!) : null,
           label: Container(
             height: 30.h,
@@ -277,7 +260,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   if (state is DetailsLoaded) {
                     productdetail=state.productdetail;
                     print(productdetail);
-                    tappingfun(0);
+                    //tappingfun(0);
                     setState(() {});
                     print(productdetail);
                   }
@@ -460,17 +443,32 @@ class _ProductDetailsState extends State<ProductDetails> {
                     Padding(
                       padding:  EdgeInsets.symmetric(horizontal: 18.w),
                       child: productdetail == null
-                          ? null
-                          : productdetail!.items.isEmpty
-                          ? Center(
+                          ?  Center(
                         child: Text(
-                          'Out of Stock',
-                          style: CustomFont().subtitleText.copyWith(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          'Loading...',
+                          style: CustomFont().subtitleText,
                         ),
                       )
+                          : productdetail!.items.isEmpty
+                          ? Center(
+                            child: Container(
+                              height: 40.h,
+                              width: 300.w,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: CustomColor.primaryColor),
+                                borderRadius: BorderRadius.all(Radius.circular(5.r)),
+                              ),
+                              child: Center(
+                                child: Text(
+                              'Out of Stock',
+                              style: CustomFont().subtitleText.copyWith(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                                ),
+                              ),
+                            ),
+                          )
                           :Container(
                         height: 50.h,
                          width: double.infinity,
@@ -486,7 +484,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                               return Padding(
                                 padding: const EdgeInsets.all(5.0),
                                 child: InkWell(
-                                  onTap: (){
+                                  onTap: item.isOutOfStock?null:(){
+                                    setState(() {
+                                      isclicked = index;
+                                    });
                                     tappingfun(index);
                                   },
                                   child: Container(
@@ -495,11 +496,20 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     decoration: BoxDecoration(
                                         color: isclicked == index
                                             ? Color(0xFF973d93)
+                                        :item.isOutOfStock?Colors.white10
                                             : Colors.black12,
+                                        //border: item.isOutOfStock?Border.all(color: Colors.white):Border.all(color: CustomColor.primaryColor),
                                         borderRadius: BorderRadius.circular(10)),
                                     child: Center(
                                         child: Text(item?.size ?? "s",
-                                            style: CustomFont().subtitleText)),
+                                            style: item.isOutOfStock?
+                                            GoogleFonts.questrial(
+                                                textStyle: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 12.sp,
+
+                                                )):CustomFont().subtitleText
+                                        )),
                                   ),
                                 ),
                               );

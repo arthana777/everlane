@@ -47,14 +47,9 @@ class ResultPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final product = state.qstresult[index];
                     return InkWell(
-    //                     onTap: () {
-    // //   Navigator.push(
-    // //     context,
-    // //     MaterialPageRoute(
-    // //       builder: (context) => Questionsetial(product: ),
-    // //     ),
-    // //   );
-    // // },
+   
+    
+
 
                       child: Container(
                         height: 350.h,

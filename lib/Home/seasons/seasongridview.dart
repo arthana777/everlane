@@ -133,13 +133,7 @@ class _SeasongridviewState extends State<Seasongridview> {
                     print("GGGGG${seasons[i].id}");
                   }
                 }
-                // if (state is ProductLoaded) {
-                //   products = state.products;
-                //   print("kkkkk${products.length}");
-                //   for (var i = 0; i < products.length; i++) {
-                //     print("GGGGG${products[i].id}");
-                //   }
-                // }
+
                 else {
                   const Center(
                     child: Text("Unknown state"),

@@ -134,7 +134,7 @@ class _MyOrdersState extends State<MyOrders> {
                       if (order.items.isNotEmpty) // Check if the order has at least one item
                         Myorderitem(
                           title: order.items[0].productName, // Show only the first product
-                          orderstatus: order.orderStatus,
+                          orderstatus: order.items[0].orderitemstatus,
                           image: order.items[0].productImage,
                           type: order.paymentMethod,
                           invoicedwnld: _launchURL,

@@ -12,6 +12,7 @@ import '../btm_navigation/btm_navigation.dart';
 import '../data/models/cartmodel.dart';
 import '../data/models/whishlistmodel.dart';
 
+import '../product_detail/product_details.dart';
 import '../widgets/customappbar.dart';
 import '../widgets/customcircularindicator.dart';
 import '../widgets/customcolor.dart';
@@ -193,37 +194,48 @@ class _CartScreenState extends State<CartScreen> {
                             children: carts[cartIndex].items.map((item) {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: CartItemCard(
-                                  ontapremove: () {
-                                    setState(() {});
-                                    BlocProvider.of<CartBloc>(context).add(
-                                      RemovefromCart(item.id),
+                                child: InkWell(
+                                  onTap: (){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProductDetails(
+                                            productId: carts[0].id ?? 0,
+                                          )),
                                     );
                                   },
-                                  movetowish: () {
-                                    BlocProvider.of<WhishlistBloc>(context)
-                                        .add(AddToWishlist(item.id ?? 0));
-                                    BlocProvider.of<CartBloc>(context).add(
-                                      RemovefromCart(item.id),
-                                    );
-                                  },
-                                  title: item.productName,
-                                  price: item.productPrice,
-                                  image: item.productImage,
-                                  itemcount: item.quantity.toString(),
-                                  size: item.size!,
-                                  decreased: () {
-                                    BlocProvider.of<CartBloc>(context).add(
-                                        IncreaseCartItemQuantity(
-                                            item.id, 'increase'));
-                                  },
-                                  increased: () {
-                                    if (item.quantity > 1) {
+                                  child: CartItemCard(
+                                    ontapremove: () {
+                                      setState(() {});
                                       BlocProvider.of<CartBloc>(context).add(
-                                          DecreaseCartItemQuantity(
-                                              item.id, 'decrease'));
-                                    }
-                                  },
+                                        RemovefromCart(item.id),
+                                      );
+                                    },
+                                    movetowish: () {
+                                      BlocProvider.of<WhishlistBloc>(context)
+                                          .add(AddToWishlist(item.id ?? 0));
+                                      BlocProvider.of<CartBloc>(context).add(
+                                        RemovefromCart(item.id),
+                                      );
+                                    },
+                                    title: item.productName,
+                                    price: item.productPrice,
+                                    image: item.productImage,
+                                    itemcount: item.quantity.toString(),
+                                    size: item.size!,
+                                    decreased: () {
+                                      BlocProvider.of<CartBloc>(context).add(
+                                          IncreaseCartItemQuantity(
+                                              item.id, 'increase'));
+                                    },
+                                    increased: () {
+                                      if (item.quantity > 1) {
+                                        BlocProvider.of<CartBloc>(context).add(
+                                            DecreaseCartItemQuantity(
+                                                item.id, 'decrease'));
+                                      }
+                                    },
+                                  ),
                                 ),
                               );
                             }).toList(),

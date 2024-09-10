@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:everlane/bloc/delet_notification/bloc/delet_notification_bloc.dart';
 import 'package:everlane/bloc/notifications/bloc/notification_bloc_bloc.dart';
@@ -29,12 +28,12 @@ import 'data/datasources/qst_service.dart';
 import 'data/datasources/signuprepository.dart';
 import 'data/navigation_provider/navigation_provider.dart';
 
-
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
 
@@ -69,14 +68,15 @@ class MyApp extends StatelessWidget {
               BlocProvider(
                 create: (BuildContext context) => ProfileBloc(ProfileService()),
               ),
-               BlocProvider<NotificationBloc>(
-          create: (context) => NotificationBloc(notificationService: NotificationService( )),
-        ),
-        BlocProvider<DeletNotificationBloc>(
-          create: (context) => DeletNotificationBloc(
-            notificationService: NotificationService(),
-          ),
-        ),
+              BlocProvider<NotificationBloc>(
+                create: (context) => NotificationBloc(
+                    notificationService: NotificationService()),
+              ),
+              BlocProvider<DeletNotificationBloc>(
+                create: (context) => DeletNotificationBloc(
+                  notificationService: NotificationService(),
+                ),
+              ),
               BlocProvider(
                 create: (BuildContext context) =>
                     ForgotPasswordBloc(authRepository: ForgotPasswordService()),
@@ -90,8 +90,7 @@ class MyApp extends StatelessWidget {
                     changePasswordRepo: ChangePasswordRepo()),
               ),
               BlocProvider(
-                create: (BuildContext context) =>
-                    QuestionBloc(QstService()),
+                create: (BuildContext context) => QuestionBloc(QstService()),
               ),
               BlocProvider(
                 create: (BuildContext context) => CategoryBloc(),
