@@ -117,7 +117,7 @@ class _SiginPageState extends State<SiginPage> {
               }
             },
             child: Padding(
-              padding:  EdgeInsets.only(top: 100.h),
+              padding: EdgeInsets.only(top: 100.h),
               child: Container(
                 height: double.infinity.h,
                 width: double.infinity.w,
@@ -138,7 +138,7 @@ class _SiginPageState extends State<SiginPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                        padding:  EdgeInsets.only(left: 10.w, right: 10.w),
+                        padding: EdgeInsets.only(left: 10.w, right: 10.w),
                         child: CustomTextfield(
                           focusNode: fieldOne,
                           onFieldSubmitted: (value) {
@@ -157,7 +157,7 @@ class _SiginPageState extends State<SiginPage> {
                         ),
                       SizedBox(height: 10.h),
                       Padding(
-                        padding:  EdgeInsets.only(left: 10.w, right: 10.w),
+                        padding: EdgeInsets.only(left: 10.w, right: 10.w),
                         child: CustomTextfield(
                           focusNode: fieldTwo,
                           hintText: 'Enter Your Password',
@@ -216,12 +216,11 @@ class _SiginPageState extends State<SiginPage> {
                                                   MainAxisAlignment.start,
                                               children: [
                                                 Padding(
-                                                  padding:
-                                                       EdgeInsets.only(
-                                                              top: 15.h,
-                                                              left: 15.w,
-                                                              right: 15.w)
-                                                          .r,
+                                                  padding: EdgeInsets.only(
+                                                          top: 15.h,
+                                                          left: 15.w,
+                                                          right: 15.w)
+                                                      .r,
                                                   child: Text(
                                                     "Forgot Password",
                                                     style: GoogleFonts.poppins(
@@ -236,7 +235,8 @@ class _SiginPageState extends State<SiginPage> {
                                                 SizedBox(height: 10.h),
                                                 Padding(
                                                   padding: EdgeInsets.only(
-                                                          left: 15.w, right: 15.w)
+                                                          left: 15.w,
+                                                          right: 15.w)
                                                       .r,
                                                   child: Text(
                                                     "Enter your username and click confirm. The new password will be sent to your email.",
@@ -246,10 +246,8 @@ class _SiginPageState extends State<SiginPage> {
                                                 ),
                                                 SizedBox(height: 20.h),
                                                 Padding(
-                                                  padding:
-                                                       EdgeInsets.only(
-                                                              left: 10.w,
-                                                              right: 10.w),
+                                                  padding: EdgeInsets.only(
+                                                      left: 10.w, right: 10.w),
                                                   child: CustomTextfield(
                                                     controller:
                                                         forgotusernameController,
@@ -314,8 +312,7 @@ class _SiginPageState extends State<SiginPage> {
                                                       }
                                                       return Padding(
                                                         padding:
-                                                             EdgeInsets
-                                                                    .only(
+                                                            EdgeInsets.only(
                                                                     left: 13.w,
                                                                     right: 13.w,
                                                                     top: 15.h)
@@ -332,9 +329,8 @@ class _SiginPageState extends State<SiginPage> {
                                                                 RoundedRectangleBorder(
                                                               borderRadius:
                                                                   BorderRadius
-                                                                          .circular(
-                                                                              10.r)
-                                                                      ,
+                                                                      .circular(
+                                                                          10.r),
                                                             ),
                                                           ),
                                                           onPressed: () {
@@ -389,8 +385,7 @@ class _SiginPageState extends State<SiginPage> {
                         onTap: _validateAndSubmit,
                         child: Center(
                           child: Padding(
-                            padding:
-                                 EdgeInsets.only(left: 10.w, right: 10.w),
+                            padding: EdgeInsets.only(left: 10.w, right: 10.w),
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 fixedSize: Size(690.w, 48.h),

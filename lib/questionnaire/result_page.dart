@@ -1,6 +1,8 @@
 import 'package:everlane/bloc/question_result/bloc/question_result_bloc.dart';
 import 'package:everlane/bloc/question_result/bloc/question_result_event.dart';
 import 'package:everlane/bloc/question_result/bloc/question_result_state.dart';
+import 'package:everlane/data/models/product_model.dart';
+import 'package:everlane/product_detail/product_details.dart';
 import 'package:everlane/questionnaire/questionsetial.dart';
 import 'package:everlane/widgets/customcolor.dart';
 import 'package:everlane/widgets/customfont.dart';
@@ -15,6 +17,7 @@ class ResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Product> product = [];
     return Scaffold(
       backgroundColor: CustomColor.backgroundColor,
       appBar: AppBar(
@@ -47,10 +50,15 @@ class ResultPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final product = state.qstresult[index];
                     return InkWell(
-   
-    
-
-
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProductDetails(
+                                    productId: state.qstresult[index].id ?? 0,
+                                  )),
+                        );
+                      },
                       child: Container(
                         height: 350.h,
                         width: 175.w,
@@ -80,7 +88,8 @@ class ResultPage extends StatelessWidget {
                                       height: 200.h,
                                       width: 200.w,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10).w,
+                                        borderRadius:
+                                            BorderRadius.circular(10).w,
                                         image: DecorationImage(
                                           image: NetworkImage(
                                             product.image ?? '',
@@ -157,8 +166,8 @@ class ResultPage extends StatelessWidget {
                                         ),
                                         Text('5',
                                             style: GoogleFonts.poppins(
-                                                textStyle:
-                                                    TextStyle(fontSize: 12.sp))),
+                                                textStyle: TextStyle(
+                                                    fontSize: 12.sp))),
                                         const Icon(
                                           Icons.star_outlined,
                                           color: Colors.yellow,
