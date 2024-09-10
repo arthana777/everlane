@@ -10,7 +10,7 @@ class Questionsetial extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(product.name ?? "Product Details"),
+        title: Text(product.name ?? ""),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
