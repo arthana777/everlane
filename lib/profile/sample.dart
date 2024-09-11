@@ -294,3 +294,26 @@
 //   }
 // }
 
+
+// onTap: () {
+//                                       Navigator.of(context)
+//                                           .popUntil((route) => route.isFirst);
+//                                       Navigator.pushReplacement(
+//                                         context,
+//                                         MaterialPageRoute(
+//                                           builder: (BuildContext context) =>
+//                                               FirstPage(), // Navigate to FirstPage
+//                                         ),
+//                                       );
+//                                     },
+
+// onTap: () {
+//                                                   BlocProvider.of<CartBloc>(
+//                                                           context)
+//                                                       .add(
+//                                                     CancelOrderevent(
+//                                                         item?.id ?? 0),
+//                                                   );
+//                                                   Navigator.of(context)
+//                                                       .pop(); // Close the dialog after the event
+//                                                 }, "Do you want to cancel this item?"  "Are You Sure?",

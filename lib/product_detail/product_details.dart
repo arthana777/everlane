@@ -29,10 +29,8 @@ import '../domain/entities/product_entity.dart';
 import '../widgets/customcolor.dart';
 
 class ProductDetails extends StatefulWidget {
-
   final int productId;
   ProductDetails({Key? key, required this.productId}) : super(key: key);
-
 
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
@@ -45,28 +43,28 @@ class _ProductDetailsState extends State<ProductDetails> {
   DetailProduct? productdetail;
   List<Cart> carts = [];
   int? isclicked;
-  bool isLoading=false;
+  bool isLoading = false;
   bool isAddedToCart = false;
   bool isItemOutOfStock = false;
   bool isInWishlist(int? productId) {
     return wishlistProductIds.contains(productId);
   }
+
   //bool isInWishlist=wishlistProductIds.contains(productde?.id));
-@override
+  @override
   void initState() {
-  BlocProvider.of<ProductBloc>(context).add(LoadDetails(widget.productId));
-  BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist());
+    BlocProvider.of<ProductBloc>(context).add(LoadDetails(widget.productId));
+    BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist());
     super.initState();
   }
+
   void tappingfun(int index) {
     final item = productdetail?.items[index];
 
     if (item != null && item.stock > 0) {
-
       isclicked = index;
       isItemOutOfStock = false;
     } else {
-
       isItemOutOfStock = true;
     }
 
@@ -92,8 +90,8 @@ class _ProductDetailsState extends State<ProductDetails> {
       final cartState = BlocProvider.of<CartBloc>(context).state;
       if (cartState is CartLoaded) {
         isProductInCart = cartState.carts.any((item) =>
-        item.id == productdetail?.id && item.items[index].size == productdetail?.items[isclicked!].size
-        );
+            item.id == productdetail?.id &&
+            item.items[index].size == productdetail?.items[isclicked!].size);
       }
 
       if (isProductInCart) {
@@ -137,7 +135,6 @@ class _ProductDetailsState extends State<ProductDetails> {
         floatingActionButton: FloatingActionButton.extended(
           elevation: 0,
           backgroundColor: CustomColor.primaryColor,
-
           onPressed: isclicked != null ? () => _addToCart(isclicked!) : null,
           label: Container(
             height: 30.h,
@@ -146,7 +143,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               color: CustomColor.primaryColor,
             ),
             child: Center(
-              child:  Text(
+              child: Text(
                 "Add to cart",
                 style: CustomFont().buttontext,
               ),
@@ -154,9 +151,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
           icon: IconButton(
             color: Colors.white,
-            onPressed: () {
-
-            },
+            onPressed: () {},
             icon: Icon(
               Icons.shopping_cart,
               size: 20.sp,
@@ -170,7 +165,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             leading: InkWell(
               onTap: () {
                 final navigationProvider =
-                Provider.of<NavigationProvider>(context, listen: false);
+                    Provider.of<NavigationProvider>(context, listen: false);
                 navigationProvider.updateScreenIndex(0);
                 Navigator.pop(context);
               },
@@ -184,7 +179,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                     width: 100.w,
                     child: IconButton(
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CartScreen()));
                       },
                       icon: Icon(Icons.shopping_cart_outlined, size: 30.sp),
                     ),
@@ -195,8 +193,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                       if (state is CartLoaded) {
                         carts = state.carts;
                         state.carts.forEach((cart) {
-                          cartItemCount=cart.items.length;
-                          print("Cart ID: ${cart.id}, Items: ${cart.items.length}");
+                          cartItemCount = cart.items.length;
+                          print(
+                              "Cart ID: ${cart.id}, Items: ${cart.items.length}");
                         });
                       }
                       return Positioned(
@@ -224,36 +223,29 @@ class _ProductDetailsState extends State<ProductDetails> {
             ],
           ),
         ),
-
-
         body: MultiBlocListener(
             listeners: [
               BlocListener<ProductBloc, ProductState>(
                 listener: (context, state) {
                   print(state);
                   if (state is DetailsLoaded) {
-                    productdetail=state.productdetail;
+                    productdetail = state.productdetail;
                     print(productdetail);
                     //tappingfun(0);
                     setState(() {});
                     print(productdetail);
-                  }
-                  else {
+                  } else {
                     Center(
                       child: Text("Unknown state"),
                     );
                   }
                 },
               ),
-
               BlocListener<WhishlistBloc, WishlistState>(
                 listener: (context, state) {
                   print(state);
                   if (state is addtoWishlistLoading) {
-                    setState(() {
-
-                    });
-
+                    setState(() {});
                   } else if (state is addtoWishlistSuccess) {
                     print("adding to whislisttt");
                     setState(() {
@@ -264,28 +256,23 @@ class _ProductDetailsState extends State<ProductDetails> {
                     //BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist());
                   } else if (state is addtoWishlistFailure) {
                     Navigator.pop(context);
-
                   } else if (state is WishlistSuccess) {
                     // loading=false;
                     whishlist = state.whishlists;
                     wishlistProductIds.clear();
                     for (var i = 0; i <= whishlist.length; i++) {
-                      wishlistProductIds.add(whishlist[i].product??0);
+                      wishlistProductIds.add(whishlist[i].product ?? 0);
                     }
                     setState(() {});
                     print(whishlist.length);
                     print(whishlist[0]);
                     print("oooooooooooooooo");
-
                   } else if (state is RemoveWishlistSuccess) {
                     setState(() {
                       whishlist.removeWhere(
-                              (item) => item.id == state.removedProductId);
+                          (item) => item.id == state.removedProductId);
                     });
-
-                  } else if (state is RemoveWishlistFailure) {
-
-                  }
+                  } else if (state is RemoveWishlistFailure) {}
                 },
               ),
               BlocListener<CartBloc, CartState>(listener: (context, state) {
@@ -297,19 +284,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                     builder: (context) =>
                         Center(child: CircularProgressIndicator()),
                   );
-                }
-                else if (state is CartLoaded) {
+                } else if (state is CartLoaded) {
                   cartItemCount = state.carts.length;
-                }else if (state is addtoCartSuccess) {
+                } else if (state is addtoCartSuccess) {
                   print("adding to cart");
                   // Navigator.pop(context);
-              setState(() {
-
-                   });
-
+                  setState(() {});
                 } else if (state is addtoCartError) {
                   //Navigator.pop(context);
-
                 }
               }),
             ],
@@ -319,194 +301,224 @@ class _ProductDetailsState extends State<ProductDetails> {
                 scrollDirection: Axis.vertical,
                 child: isLoading
                     ? Center(
-                  child: LoadingAnimationWidget.prograssiveDots(
-                    color: Colors.purple,
-                    size: 50.w,
-                  ),
-                ): Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Stack(
-                      children: [
-                        Container(
-                          height: 500.h,
-                          width: 600.w,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(30.r),
-                              topLeft: Radius.circular(30.r),
-                            ),
-                            image: DecorationImage(
-                              image: NetworkImage(productdetail?.image ??
-                                  ""),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                        child: LoadingAnimationWidget.prograssiveDots(
+                          color: Colors.purple,
+                          size: 50.w,
                         ),
-
-                    Positioned(
-                      top: 20.h,
-                      right: 20.w,
-                      child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              if (wishlistProductIds
-                                  .contains(productdetail?.id)) {
-                                print("remove${productdetail?.id}");
-                                final wishlistItem = whishlist.firstWhere(
-                                        (item) =>
-                                    item.product == productdetail?.id);
-                                BlocProvider.of<WhishlistBloc>(context).add(
-                                  Removefromwishlist(wishlistItem.id ?? 0),
-                                );
-                                wishlistProductIds
-                                    .remove(productdetail?.id ?? 0);
-                              } else {
-                                print("added${productdetail?.id}");
-                                BlocProvider.of<WhishlistBloc>(context).add(
-                                    AddToWishlist(productdetail?.id ?? 0));
-                                wishlistProductIds
-                                    .add(productdetail?.id ?? 0);
-                                print(productdetail?.id ?? 0);
-                              }
-                            });
-                          },
-                          child: Container(
-                              height: 30.h,
-                              width: 30.w,
-                              decoration: BoxDecoration(
-                                  color: Colors.white70,
-                                  borderRadius:
-                                  BorderRadius.circular(20.r)),
-                              child: Icon(
-                                isInWishlist(productdetail?.id)
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                size: 25.sp,
-                                color: isInWishlist(productdetail?.id)
-                                    ? Colors.red
-                                    : Colors.grey,
-                              ))),
-                    ),
-                    ]
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 20,
-                        bottom: 20,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            productdetail?.name ?? '',
-                            style: CustomFont().subtitleText,
-                          ),
-                          Row(
+                          Stack(
                             children: [
-                              Icon(Icons.currency_rupee),
-                              Text(
-                                productdetail?.price ?? '',
-                                style: CustomFont().subtitleText,
+                              Container(
+                                height: 500.h,
+                                width: 600.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(30.r),
+                                    topLeft: Radius.circular(30.r),
+                                  ),
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                        productdetail?.image ?? ""),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 20.h,
+                                right: 20.w,
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      if (wishlistProductIds
+                                          .contains(productdetail?.id)) {
+                                        print("remove${productdetail?.id}");
+                                        final wishlistItem =
+                                            whishlist.firstWhere((item) =>
+                                                item.product ==
+                                                productdetail?.id);
+                                        BlocProvider.of<WhishlistBloc>(context)
+                                            .add(
+                                          Removefromwishlist(
+                                              wishlistItem.id ?? 0),
+                                        );
+                                        wishlistProductIds
+                                            .remove(productdetail?.id ?? 0);
+                                      } else {
+                                        print("added${productdetail?.id}");
+                                        BlocProvider.of<WhishlistBloc>(context)
+                                            .add(AddToWishlist(
+                                                productdetail?.id ?? 0));
+                                        wishlistProductIds
+                                            .add(productdetail?.id ?? 0);
+                                        print(productdetail?.id ?? 0);
+                                      }
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 30.h,
+                                    width: 30.w,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white70,
+                                        borderRadius:
+                                            BorderRadius.circular(20.r)),
+                                    child: Icon(
+                                      isInWishlist(productdetail?.id)
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      size: 25.sp,
+                                      color: isInWishlist(productdetail?.id)
+                                          ? Colors.red
+                                          : Colors.grey,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: 20,
+                              bottom: 20,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  productdetail?.name ?? '',
+                                  style: CustomFont().subtitleText,
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(Icons.currency_rupee),
+                                    Text(
+                                      productdetail?.price ?? '',
+                                      style: CustomFont().subtitleText,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 18.w),
+                            child: productdetail == null
+                                ? Center(
+                                    child: Text(
+                                      'Loading...',
+                                      style: CustomFont().subtitleText,
+                                    ),
+                                  )
+                                : productdetail!.items.isEmpty
+                                    ? Center(
+                                        child: Container(
+                                          height: 40.h,
+                                          width: 300.w,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color:
+                                                    CustomColor.primaryColor),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5.r)),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              'Out of Stock',
+                                              style: CustomFont()
+                                                  .subtitleText
+                                                  .copyWith(
+                                                    color: Colors.red,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Container(
+                                        height: 50.h,
+                                        width: double.infinity,
+                                        child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            //physics: NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            itemCount:
+                                                productdetail?.items.length,
+                                            itemBuilder: (context, index) {
+                                              final item =
+                                                  productdetail!.items[index];
+                                              print("sizessss${item}");
+                                              print(
+                                                  productdetail?.items.length);
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: InkWell(
+                                                  onTap: item.isOutOfStock
+                                                      ? null
+                                                      : () {
+                                                          setState(() {
+                                                            isclicked = index;
+                                                          });
+                                                          tappingfun(index);
+                                                        },
+                                                  child: Container(
+                                                    height: 20.h,
+                                                    width: 70.w,
+                                                    decoration: BoxDecoration(
+                                                        color: isclicked ==
+                                                                index
+                                                            ? Color(0xFF973d93)
+                                                            : item.isOutOfStock
+                                                                ? Colors.white10
+                                                                : Colors
+                                                                    .black12,
+                                                        //border: item.isOutOfStock?Border.all(color: Colors.white):Border.all(color: CustomColor.primaryColor),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    child: Center(
+                                                        child: Text(
+                                                            item?.size ?? "s",
+                                                            style: item
+                                                                    .isOutOfStock
+                                                                ? GoogleFonts
+                                                                    .questrial(
+                                                                        textStyle:
+                                                                            TextStyle(
+                                                                    color: Colors
+                                                                        .grey,
+                                                                    fontSize:
+                                                                        12.sp,
+                                                                  ))
+                                                                : CustomFont()
+                                                                    .subtitleText)),
+                                                  ),
+                                                ),
+                                              );
+                                            }),
+                                      ),
+                          ),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          Text(
+                            productdetail?.description ?? '',
+                            style: CustomFont().bodyText,
+                          ),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          SizedBox(
+                            height: 50.h,
+                            width: 550.w,
+                          ),
+                          SizedBox(
+                            height: 50.h,
+                          ),
                         ],
                       ),
-                    ),
-                    Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 18.w),
-                      child: productdetail == null
-                          ?  Center(
-                        child: Text(
-                          'Loading...',
-                          style: CustomFont().subtitleText,
-                        ),
-                      )
-                          : productdetail!.items.isEmpty
-                          ? Center(
-                            child: Container(
-                              height: 40.h,
-                              width: 300.w,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: CustomColor.primaryColor),
-                                borderRadius: BorderRadius.all(Radius.circular(5.r)),
-                              ),
-                              child: Center(
-                                child: Text(
-                              'Out of Stock',
-                              style: CustomFont().subtitleText.copyWith(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                              ),
-                                ),
-                              ),
-                            ),
-                          )
-                          :Container(
-                        height: 50.h,
-                         width: double.infinity,
-                        child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            //physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: productdetail?.items.length,
-                            itemBuilder: (context, index) {
-                              final item = productdetail!.items[index];
-                              print("sizessss${item}");
-                              print(productdetail?.items.length);
-                              return Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: InkWell(
-                                  onTap: item.isOutOfStock?null:(){
-                                    setState(() {
-                                      isclicked = index;
-                                    });
-                                    tappingfun(index);
-                                  },
-                                  child: Container(
-                                    height: 20.h,
-                                    width: 70.w,
-                                    decoration: BoxDecoration(
-                                        color: isclicked == index
-                                            ? Color(0xFF973d93)
-                                        :item.isOutOfStock?Colors.white10
-                                            : Colors.black12,
-                                        //border: item.isOutOfStock?Border.all(color: Colors.white):Border.all(color: CustomColor.primaryColor),
-                                        borderRadius: BorderRadius.circular(10)),
-                                    child: Center(
-                                        child: Text(item?.size ?? "s",
-                                            style: item.isOutOfStock?
-                                            GoogleFonts.questrial(
-                                                textStyle: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 12.sp,
-
-                                                )):CustomFont().subtitleText
-                                        )),
-                                  ),
-                                ),
-                              );
-                            }),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    Text(
-                      productdetail?.description ?? '',
-                      style: CustomFont().bodyText,
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    SizedBox(
-                      height: 50.h,
-                      width: 550.w,
-                    ),
-                    SizedBox(height: 50.h,),
-                  ],
-                ),
               ),
             )));
   }

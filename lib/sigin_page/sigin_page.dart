@@ -168,6 +168,7 @@ class _SiginPageState extends State<SiginPage> {
                               _isPasswordVisible
                                   ? Icons.visibility
                                   : Icons.visibility_off,
+                              size: 20.sp,
                             ),
                             onPressed: () {
                               setState(() {

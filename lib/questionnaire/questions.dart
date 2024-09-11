@@ -8,6 +8,7 @@ import 'package:everlane/widgets/customfont.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Questions extends StatefulWidget {
   const Questions({super.key});
@@ -42,20 +43,29 @@ class _QuestionsState extends State<Questions> {
     return BlocListener<QuestionBloc, QuestionState>(
         listener: (context, state) {
           if (state is QuestionLoading) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Updating...')),
+            Fluttertoast.showToast(
+              msg: "Data updated",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0,
             );
           } else if (state is QuestionUpdated) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Data updated successfully!')),
-              
+            Fluttertoast.showToast(
+              msg: "Upadated Data",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0,
             );
             Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ResultPage(),
-                    ),
-                  );
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ResultPage(),
+              ),
+            );
           } else if (state is QuestionError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('${state.message}')),
@@ -182,7 +192,6 @@ class _QuestionsState extends State<Questions> {
       ),
       child: Center(
         child: ListTile(
-
           leading: Text(title, style: CustomFont().titleText),
           trailing: DropdownButton<String>(
             dropdownColor: Colors.white,
@@ -194,7 +203,7 @@ class _QuestionsState extends State<Questions> {
               return DropdownMenuItem<String>(
                 value: item,
                 child: Text(
-                  item, 
+                  item,
                   style: CustomFont().titleText,
                 ),
               );

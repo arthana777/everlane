@@ -1,7 +1,10 @@
 import 'package:everlane/bloc/question_result/bloc/question_result_bloc.dart';
 import 'package:everlane/bloc/question_result/bloc/question_result_event.dart';
 import 'package:everlane/bloc/question_result/bloc/question_result_state.dart';
+import 'package:everlane/bloc/whishlist/whishlist_bloc.dart';
+import 'package:everlane/bloc/whishlist/whishlist_event.dart';
 import 'package:everlane/data/models/product_model.dart';
+import 'package:everlane/data/models/whishlistmodel.dart';
 import 'package:everlane/product_detail/product_details.dart';
 import 'package:everlane/widgets/customcolor.dart';
 import 'package:everlane/widgets/customfont.dart';
@@ -11,12 +14,24 @@ import 'package:everlane/data/datasources/qst_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ResultPage extends StatelessWidget {
+class ResultPage extends StatefulWidget {
   const ResultPage({super.key});
+
+  @override
+  State<ResultPage> createState() => _ResultPageState();
+}
+
+class _ResultPageState extends State<ResultPage> {
+  List<int> wishlistProductIds = [];
 
   @override
   Widget build(BuildContext context) {
     List<Product> product = [];
+    List<WhislistProduct> whishlist = [];
+    bool isInWishlist(int? productId) {
+      return wishlistProductIds.contains(productId);
+    }
+
     return Scaffold(
       backgroundColor: CustomColor.backgroundColor,
       appBar: AppBar(
@@ -98,8 +113,40 @@ class ResultPage extends StatelessWidget {
                                       ),
                                     ),
                                     Positioned(
-                                        top: 5,
-                                        right: 5,
+                                      top: 10.h,
+                                      right: 10.w,
+                                      child: InkWell(
+                                        onTap: () {
+                                          setState(
+                                            () {
+                                              if (wishlistProductIds
+                                                  .contains(product.id)) {
+                                                print("remove${product.id}");
+                                                final wishlistItem = whishlist
+                                                    .firstWhere((item) =>
+                                                        item.product ==
+                                                        product.id);
+                                                BlocProvider.of<WhishlistBloc>(
+                                                        context)
+                                                    .add(
+                                                  Removefromwishlist(
+                                                      wishlistItem.id ?? 0),
+                                                );
+                                                wishlistProductIds
+                                                    .remove(product.id ?? 0);
+                                              } else {
+                                                print("added${product.id}");
+                                                BlocProvider.of<WhishlistBloc>(
+                                                        context)
+                                                    .add(AddToWishlist(
+                                                        product.id ?? 0));
+                                                wishlistProductIds
+                                                    .add(product.id ?? 0);
+                                                print(product.id ?? 0);
+                                              }
+                                            },
+                                          );
+                                        },
                                         child: Container(
                                           height: 30.h,
                                           width: 30.w,
@@ -107,21 +154,18 @@ class ResultPage extends StatelessWidget {
                                               color: Colors.white70,
                                               borderRadius:
                                                   BorderRadius.circular(20.r)),
-                                          // child: InkWell(
-                                          //   onTap: ontap,
-                                          //   child: Center(
-                                          //     child: Icon(
-                                          //       isInWishlist
-                                          //           ? Icons.favorite
-                                          //           : Icons.favorite_border,
-                                          //       size: 20.sp,
-                                          //       color: isInWishlist
-                                          //           ? Colors.red
-                                          //           : Colors.grey,
-                                          //     ),
-                                          //   ),
-                                          // ),
-                                        )),
+                                          child: Icon(
+                                            isInWishlist(product.id)
+                                                ? Icons.favorite
+                                                : Icons.favorite_border,
+                                            size: 25.sp,
+                                            color: isInWishlist(product.id)
+                                                ? Colors.red
+                                                : Colors.grey,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),

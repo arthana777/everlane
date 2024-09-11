@@ -222,6 +222,7 @@ class _EditProfileState extends State<EditProfile> {
                       return _isButtonVisible
                           ? ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                fixedSize: Size(750.w, 48.h),
                                 backgroundColor: CustomColor.primaryColor,
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(

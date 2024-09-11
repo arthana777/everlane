@@ -45,9 +45,8 @@ class _OrderDetailsState extends State<OrderDetails> {
   final TextEditingController returnreason = TextEditingController();
   final TextEditingController quantity = TextEditingController();
   List<Item> items = [];
-void _showModalSheet(BuildContext context)async {
-
-   // List<UserAddress>useradress=[];
+  void _showModalSheet(BuildContext context) async {
+    // List<UserAddress>useradress=[];
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -60,54 +59,77 @@ void _showModalSheet(BuildContext context)async {
               color: Colors.white,
               borderRadius: BorderRadius.circular(30),
             ),
-            child:   SingleChildScrollView(
+            child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
-
                   children: [
-
                     Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 20.w),
-                      child: Text(widget.title??"",style: CustomFont().subtitleText,),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Text(
+                        widget.title ?? "",
+                        style: CustomFont().subtitleText,
+                      ),
                     ),
-                    SizedBox(height: 10.h,),
+                    SizedBox(
+                      height: 10.h,
+                    ),
                     Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Method of payment",style: CustomFont().subtitleText,),
-
-                          SizedBox(height: 40.w,),
-                          Text(widget.orders?.paymentMethod??"",style: CustomFont().bodyText,),
+                          Text(
+                            "Method of payment",
+                            style: CustomFont().subtitleText,
+                          ),
+                          SizedBox(
+                            height: 40.w,
+                          ),
+                          Text(
+                            widget.orders?.paymentMethod ?? "",
+                            style: CustomFont().bodyText,
+                          ),
                         ],
                       ),
                     ),
                     Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Order Status",style: CustomFont().subtitleText,),
-                          Text(widget.orders?.orderStatus??"",style: CustomFont().bodyText,),
+                          Text(
+                            "Order Status",
+                            style: CustomFont().subtitleText,
+                          ),
+                          Text(
+                            widget.orders?.orderStatus ?? "",
+                            style: CustomFont().bodyText,
+                          ),
                         ],
                       ),
                     ),
-
                     Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Items",style: CustomFont().subtitleText,),
-                          Text(widget.quatity.toString(),style: CustomFont().bodyText,),
+                          Text(
+                            "Items",
+                            style: CustomFont().subtitleText,
+                          ),
+                          Text(
+                            widget.quatity.toString(),
+                            style: CustomFont().bodyText,
+                          ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 20.h,),
+                    SizedBox(
+                      height: 20.h,
+                    ),
                     Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
                       child: AdrressCustomField(
                         hinttext: 'Reason for return',
                         inputType: TextInputType.text,
@@ -120,9 +142,11 @@ void _showModalSheet(BuildContext context)async {
                         },
                       ),
                     ),
-                    SizedBox(height: 20.h,),
+                    SizedBox(
+                      height: 20.h,
+                    ),
                     Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
                       child: AdrressCustomField(
                         hinttext: 'return quantity',
                         inputType: TextInputType.number,
@@ -141,17 +165,15 @@ void _showModalSheet(BuildContext context)async {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 30.h),
                       child: InkWell(
-                        onTap: (){
-
-                          if (_formKey.currentState?.validate() ?? false){
+                        onTap: () {
+                          if (_formKey.currentState?.validate() ?? false) {
                             final returnQuantity = int.tryParse(quantity.text);
                             context.read<CartBloc>().add(ReturnOrder(
-                              orderItemId: widget.orderid,
-                              returnQuantity: returnQuantity,
-                              returnReason: returnreason.text,
-                            ));
-                          }
-                          else {
+                                  orderItemId: widget.orderid,
+                                  returnQuantity: returnQuantity,
+                                  returnReason: returnreason.text,
+                                ));
+                          } else {
                             // Show toast if form is not valid
                             Fluttertoast.showToast(
                               msg: "Please fill out all fields.",
@@ -163,7 +185,6 @@ void _showModalSheet(BuildContext context)async {
                             );
                           }
                         },
-
                         child: Container(
                           height: 50.h,
                           width: 200.w,
@@ -173,17 +194,16 @@ void _showModalSheet(BuildContext context)async {
                           ),
                           child: Center(
                               child: Text(
-                                returnStatus == 'NO_RETURN'
-                                    ? 'Return'
-                                    : returnStatus == 'PENDING'
+                            returnStatus == 'NO_RETURN'
+                                ? 'Return'
+                                : returnStatus == 'PENDING'
                                     ? 'Requested'
                                     : 'Return',
-                                style: CustomFont().buttontext,
-                              )),
+                            style: CustomFont().buttontext,
+                          )),
                         ),
                       ),
                     )
-
                   ],
                 ),
               ),
@@ -191,12 +211,11 @@ void _showModalSheet(BuildContext context)async {
           );
         },
       ),
-    ).whenComplete(() {
-      setState(() {
-
-
-      });
-    },);
+    ).whenComplete(
+      () {
+        setState(() {});
+      },
+    );
   }
 
   @override
@@ -246,20 +265,18 @@ void _showModalSheet(BuildContext context)async {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Already Requested')),
                 );
-              }
-              else if (state is CancelorderLoaded) {
+              } else if (state is CancelorderLoaded) {
                 setState(() {
-
                   items.removeWhere((item) => item.id == state.orderid);
-
                 });
               }
-
             },
           ),
         ],
         child: Padding(
-          padding:  EdgeInsets.symmetric(horizontal: 5.w,),
+          padding: EdgeInsets.symmetric(
+            horizontal: 10 .w,
+          ),
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Form(
@@ -268,11 +285,10 @@ void _showModalSheet(BuildContext context)async {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
                       itemCount: widget.orders?.items.length,
-                      itemBuilder: (context,index){
-
+                      itemBuilder: (context, index) {
                         final item = widget.orders?.items[index];
                         print("orderstatus ${item?.orderitemstatus}");
                         return Padding(
@@ -335,10 +351,13 @@ void _showModalSheet(BuildContext context)async {
                                           SizedBox(height: 10),
                                           Text(
                                             "Do you want to cancel this item?",
-                                            style: TextStyle(fontSize: 16, color: Colors.black54),
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.black54),
                                           ),
                                           SizedBox(height: 20),
-                                          Divider(height: 1, color: Colors.grey),
+                                          Divider(
+                                              height: 1, color: Colors.grey),
                                           Row(
                                             children: [
                                               Expanded(
@@ -348,8 +367,10 @@ void _showModalSheet(BuildContext context)async {
                                                   },
                                                   child: Container(
                                                     decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.only(
-                                                        bottomLeft: Radius.circular(10),
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                        bottomLeft:
+                                                            Radius.circular(10),
                                                       ),
                                                       color: Colors.white,
                                                     ),
@@ -357,7 +378,9 @@ void _showModalSheet(BuildContext context)async {
                                                     alignment: Alignment.center,
                                                     child: Text(
                                                       "No",
-                                                      style: TextStyle(fontSize: 18, color: Colors.black),
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          color: Colors.black),
                                                     ),
                                                   ),
                                                 ),
@@ -365,23 +388,32 @@ void _showModalSheet(BuildContext context)async {
                                               Expanded(
                                                 child: InkWell(
                                                   onTap: () {
-                                                    BlocProvider.of<CartBloc>(context).add(
-                                                      CancelOrderevent(item?.id ?? 0),
+                                                    BlocProvider.of<CartBloc>(
+                                                            context)
+                                                        .add(
+                                                      CancelOrderevent(
+                                                          item?.id ?? 0),
                                                     );
-                                                    Navigator.of(context).pop(); // Close the dialog after the event
+                                                    Navigator.of(context)
+                                                        .pop(); // Close the dialog after the event
                                                   },
                                                   child: Container(
                                                     decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.only(
-                                                        bottomRight: Radius.circular(10),
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                        bottomRight:
+                                                            Radius.circular(10),
                                                       ),
-                                                      color: CustomColor.primaryColor,
+                                                      color: CustomColor
+                                                          .primaryColor,
                                                     ),
                                                     padding: EdgeInsets.all(15),
                                                     alignment: Alignment.center,
                                                     child: Text(
                                                       "Yes",
-                                                      style: TextStyle(fontSize: 18, color: Colors.white),
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          color: Colors.white),
                                                     ),
                                                   ),
                                                 ),
@@ -395,21 +427,20 @@ void _showModalSheet(BuildContext context)async {
                                   break;
 
                                 case "Completed":
-                                // For Completed status, trigger return process
+                                  // For Completed status, trigger return process
                                   _showModalSheet(context);
                                   print("shgasdjh");
                                   break;
 
                                 case "Requested":
-                                // No action needed, return already requested
+                                  // No action needed, return already requested
                                   break;
 
                                 default:
-                                // Default or no action
+                                  // Default or no action
                                   break;
                               }
                             },
-
                           ),
 
                           // child: OrderDetailitem(
@@ -594,7 +625,6 @@ void _showModalSheet(BuildContext context)async {
                   //     image:DecorationImage(image: NetworkImage(widget.image??''),fit: BoxFit.cover),
                   //   ),
                   // ),
-
 
                   // SizedBox(height: 10.h,),
                   // Padding(

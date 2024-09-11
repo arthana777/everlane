@@ -96,7 +96,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ),
                       Text(
                           textAlign: TextAlign.center,
-                          "You have no motifications right now.\nCome back later..",
+                          "You have no notifications right now.\nCome back later..",
                           style: GoogleFonts.poppins(
                               color: Colors.grey, fontSize: 13.sp))
                     ],

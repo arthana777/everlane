@@ -153,7 +153,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     );
                   },
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 5.h),
                 ProfileTextfield(
                   icon: Icons.handshake_outlined,
                   title: "MyDonations",
@@ -166,7 +166,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     );
                   },
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 5.h),
                 ProfileTextfield(
                   icon: Icons.app_registration,
                   title: "My Registrations",
@@ -418,91 +418,85 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       builder: (context) => AlertDialog(
                         backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10).w,
+                          borderRadius:
+                              BorderRadius.circular(12.0.r), // Rounded corners
                         ),
-                        contentPadding: EdgeInsets.zero,
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 10.h, horizontal: 10.w),
+                        title: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: Text(
+                              "Confirm logout",
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(16.0).w,
-                              child: Icon(
-                                Icons.logout_rounded,
-                                color: CustomColor.primaryColor,
-                                size: 60.sp,
-                              ),
-                            ),
-                            // Title
-                            Text(
-                              "Are You Sure?",
-                              style: TextStyle(
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
                             SizedBox(height: 10.h),
-                            // Content text
                             Text(
-                              "Do you want to logout?",
+                              "Are you sure you want to log out?",
+                              textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontSize: 16.sp, color: Colors.black54),
+                                fontSize: 15.sp,
+                                color: Colors.black54,
+                              ),
                             ),
-                            SizedBox(height: 20.h),
-                            Divider(height: 1, color: Colors.grey),
-                            // Action buttons
+                            SizedBox(height: 30.h),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                // No Button
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.of(context)
-                                          .pop(); // Close dialog
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(20),
-                                          ),
-                                          color: Colors.white),
-                                      padding: EdgeInsets.all(15),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "No",
-                                        style: TextStyle(
-                                            fontSize: 18, color: Colors.black),
-                                      ),
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 30.w, vertical: 10.h),
+                                    backgroundColor: Colors.grey[200],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(8.0.r),
+                                    ),
+                                  ),
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: Text(
+                                    "Cancel",
+                                    style: TextStyle(
+                                      fontSize: 15.sp,
+                                      color: Colors.black87,
                                     ),
                                   ),
                                 ),
-                                // Yes Button
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.of(context)
-                                          .popUntil((route) => route.isFirst);
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              FirstPage(),
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          bottomRight: Radius.circular(10),
-                                        ),
-                                        color: CustomColor.primaryColor,
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 40.w, vertical: 10.h),
+                                    backgroundColor: CustomColor.primaryColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(8.0.r),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .popUntil((route) => route.isFirst);
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            FirstPage(),
                                       ),
-                                      padding: EdgeInsets.all(15),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "Yes",
-                                        style: TextStyle(
-                                            fontSize: 18, color: Colors.white),
-                                      ),
+                                    );
+                                  },
+                                  child: Text(
+                                    "OK",
+                                    style: TextStyle(
+                                      fontSize: 15.sp,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
