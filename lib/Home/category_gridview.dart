@@ -48,6 +48,7 @@ class _CategoryGridviewState extends State<CategoryGridview> {
     BlocProvider.of<ProductBloc>(context).add(Loadfiltercategories(1));
     BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist());
     BlocProvider.of<ProductBloc>(context).add(Loadfiltercategories(widget.productId));
+    filtercategories.clear();
     super.initState();
   }
 
@@ -144,7 +145,7 @@ class _CategoryGridviewState extends State<CategoryGridview> {
                 print(state);
                 if (state is addtoWishlistLoading || state is RemoviewishlistLoading) {
                   setState(() {
-                    isLoading = true;
+                    isLoading = false;
                   });
                 }
                 else if (state is addtoWishlistSuccess) {

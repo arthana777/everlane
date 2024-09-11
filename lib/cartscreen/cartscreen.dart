@@ -196,11 +196,12 @@ class _CartScreenState extends State<CartScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: InkWell(
                                   onTap: (){
+                                    print("erkdkufhcbj ${item.id}");
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => ProductDetails(
-                                            productId: carts[0].id ?? 0,
+                                            productId: item.product?? 0,
                                           )),
                                     );
                                   },

@@ -72,7 +72,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(30.r),
             ),
             child:   MultiBlocListener(
               listeners: [
@@ -162,7 +162,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.all(20.0),
+                              padding:  EdgeInsets.symmetric(horizontal: 10.w,vertical: 5.h),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -173,7 +173,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       Text(useradress[index].state),
                                       Text(useradress[index].city),
                                       Text(useradress[index].pincode),
-                                      Text(useradress[index].mobile),
+                                      SizedBox(
+                                        height: 20.h,
+                                          child: Text(useradress[index].mobile)),
                                       Text(useradress[index].locality),
                
                                     ],
@@ -592,36 +594,46 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                            padding: EdgeInsets.all(12),
+                          padding: EdgeInsets.all(12),
+                          // padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 20.h),
                             height: 50.h,
+                            width: double.infinity,
                             decoration: BoxDecoration(
                               color: Colors.white,
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                 Text("Choose Pickup location"),
-                                DropdownButton<PickupLocation>(
-                                  value: selectedLocation,
-                                  dropdownColor: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  underline: SizedBox(),
-                                  icon: const Icon(Icons.keyboard_arrow_down),
-                                  items: pickuplocations.map((PickupLocation location) {
-                                    print("pickuplocations${pickuplocations}");
-                                    return DropdownMenuItem<PickupLocation>(
-                                      value: location,
-                                      child: Text('${location.city}, ${location.address}'),
-                                    );
-                                  }).toList(),
-                                  onChanged: (PickupLocation? newValue) {
-                                    setState(() {
-                                      selectedLocation = newValue!;
-                                    });
-                                  },
-                                ),
-                              ],
-                            )
+                            child: DropdownButton<PickupLocation>(
+                              value: selectedLocation,
+                              hint: Text('Select pickuplocation'),
+                              dropdownColor: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              underline: SizedBox(),
+                              icon: const Icon(Icons.keyboard_arrow_down),
+                              items: pickuplocations.map((PickupLocation location) {
+                                return DropdownMenuItem<PickupLocation>(
+                                  value: location,
+                                  child: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      maxWidth: 300.w, // Set a maximum width to prevent overflow
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            '${location.city}, ${location.address}',
+                                            overflow: TextOverflow.ellipsis, // Handle overflow with ellipsis
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (PickupLocation? newValue) {
+                                setState(() {
+                                  selectedLocation = newValue!;
+                                });
+                              },
+                            ),
                         ),
 
 
@@ -638,32 +650,43 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       Container(
                           padding: EdgeInsets.all(12),
                           height: 50.h,
+                          width: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.white,
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(" Disaster"),
-                              DropdownButton<Disaster>(
-                                value: selectedDisaster,
-                                dropdownColor: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                underline: SizedBox(),
-                                icon: const Icon(Icons.keyboard_arrow_down),
-                                items: disasters.map((Disaster disaster) {
-                                  return DropdownMenuItem<Disaster>(
-                                    value: disaster,
-                                    child: Text('${disaster.name}, ${disaster.location}'),
-                                  );
-                                }).toList(),
-                                onChanged: (Disaster? newValue) {
-                                  setState(() {
-                                    selectedDisaster = newValue!;
-                                  });
-                                },
-                              ),
-                            ],
+                          child: DropdownButton<Disaster>(
+                            value: selectedDisaster,
+                            hint: Text('Select a disaster'),
+                            dropdownColor: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            underline: SizedBox(),
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            items: disasters.map((Disaster disaster) {
+                              return DropdownMenuItem<Disaster>(
+                                value: disaster,
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    maxWidth: 300.w, // Set a maximum width to prevent overflow
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          '${disaster.name}, ${disaster.location}',
+                                          overflow: TextOverflow.ellipsis, // Handle overflow with ellipsis
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                //child: Text('${disaster.name}, ${disaster.location}'),
+                              );
+                            }).toList(),
+                            onChanged: (Disaster? newValue) {
+                              setState(() {
+                                selectedDisaster = newValue!;
+                              });
+                            },
                           )
                       ),
                     ],

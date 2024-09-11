@@ -38,7 +38,7 @@ class _MyorderitemState extends State<Myorderitem> {
   Widget build(BuildContext context) {
     return Container(
       width: 380.w,
-      margin: EdgeInsets.symmetric(horizontal: 10),
+      margin: EdgeInsets.symmetric(horizontal: 5.w),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.withOpacity(0.4)),
         borderRadius: BorderRadius.circular(10.r),
@@ -47,7 +47,7 @@ class _MyorderitemState extends State<Myorderitem> {
       child: Column(
         children: [
           Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 15.w,vertical: 15.h),
+            padding:  EdgeInsets.symmetric(horizontal: 10.w,vertical: 8.h),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -82,20 +82,20 @@ class _MyorderitemState extends State<Myorderitem> {
                                 fontSize: 12.sp)),
                       ),
                     ),
-                    Row(
-                      children: [
-                        Text("Order status : "),
-                        Text(
-                          widget.orderstatus??""
-                          ,
-                          style: GoogleFonts.poppins(
-                              textStyle: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12.sp)),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Text("Order status : "),
+                    //     Text(
+                    //       widget.orderstatus??""
+                    //       ,
+                    //       style: GoogleFonts.poppins(
+                    //           textStyle: TextStyle(
+                    //               color: Colors.black,
+                    //               fontWeight: FontWeight.w500,
+                    //               fontSize: 12.sp)),
+                    //     ),
+                    //   ],
+                    // ),
                     SizedBox(
                       height: 5.h,
                     ),
@@ -120,7 +120,7 @@ class _MyorderitemState extends State<Myorderitem> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("items : "),
+                        Text("Quantity : "),
                         Text(widget.quatity.toString()),
                       ],
                     ),

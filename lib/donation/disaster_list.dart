@@ -67,10 +67,10 @@ class _DisasterListState extends State<DisasterList> {
               }
               else if (state is AddressError) {
                 // Dismiss loading indicator and show error message
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message)),
-                );
+                // Navigator.pop(context);
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   SnackBar(content: Text(state.message)),
+                // );
               }
 
             },

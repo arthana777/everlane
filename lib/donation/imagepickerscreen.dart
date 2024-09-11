@@ -191,14 +191,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
         onPressed: () {
           if (_formKey.currentState?.validate() ?? false) {
             _uploadImages();
-            Fluttertoast.showToast(
-              msg: "uploaded succesfully.",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              backgroundColor: Colors.white,
-              textColor: Colors.black,
-              fontSize: 16.0,
-            );
+
 
           } else {
             // Show toast if form is not valid
@@ -271,34 +264,28 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
           BlocListener<AddressBloc, AddressState>(
             listener: (context, state) {
               print(state);
-              if (state is AddressLoading) {
-                setState(() {
-                  isLoading = true;
-                });
-              } else if (state is uploadclothesuccess) {
+              if (state is uploadclothesuccess) {
                 setState(() {
                   isLoading = false;
                 });
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>Donationsuccess()));
-                Navigator.pop(context);
-
+            print("success");
+                 Navigator.push(context, MaterialPageRoute(builder: (context)=>Donationsuccess()));
+                // Navigator.pop(context);
 
                 print("image uploading");
               } else if (state is AddressError) {
                 setState(() {
                   isLoading = false;
                 });
-                // Dismiss loading indicator and show error message
-                Navigator.pop(context);
-                // Fluttertoast.showToast(
-                //   msg: "Please upload valid image!",
-                //   toastLength: Toast.LENGTH_SHORT,
-                //   gravity: ToastGravity.BOTTOM,
-                //   backgroundColor: Colors.green,
-                //   textColor: Colors.white,
-                //   fontSize: 16.0,
-                // );
                 print('Error: ${state.message}');
+                Fluttertoast.showToast(
+                      msg: "${state.message}",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      backgroundColor: Colors.green,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
                 // ScaffoldMessenger.of(context).showSnackBar(
                 //   SnackBar(content: Text(state.message)),
                 // );
@@ -398,7 +385,8 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                                                   decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            30.r),
+                                                            30.r
+                                                        ),
                                                     color: Colors.white,
                                                   ),
                                                   child: Center(
