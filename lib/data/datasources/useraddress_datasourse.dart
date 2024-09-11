@@ -339,18 +339,18 @@ class UseraddressDatasourse {
           },
         ),
       );
-      print("response of upload image $response");
-      if (response.statusCode != 200) {
-        return "Failed: ${response.statusMessage}";
+      print("response of upload image ${response.statusCode} ${response.data}");
+      if (response.statusCode == 201) {
+
+          return "success";
+
+      }else{
+        return "Failed";
       }
 
-      final decodedResponse = jsonDecode(response.data);
-      if (decodedResponse['message'] !=
-          "Product added to wishlist successfully.") {
-        return "Failed: ${decodedResponse['message']}";
-      }
 
-      return "success";
+
+
     } catch (e) {
       return "Failed: ${e.toString()}";
     }

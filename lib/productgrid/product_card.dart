@@ -114,10 +114,10 @@ class ProductCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 25.h,
+                    height: 20.h,
                     child: Row(
                       children: [
-                        Icon(Icons.currency_rupee),
+                        Icon(Icons.currency_rupee,size: 20.sp,),
                         Text(price,
                             style: GoogleFonts.poppins(
                                 textStyle: TextStyle(

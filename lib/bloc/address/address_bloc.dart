@@ -123,7 +123,7 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
           emit(uploadclothesuccess());
         }
         else{
-          emit(AddressError(message:  e.toString(),));
+          emit(AddressError(message: "One or more dresses are dirty or torn. Please upload clean dresses and good condition",));
         }
       } catch (e) {
         emit(AddressError( message: e.toString(),));

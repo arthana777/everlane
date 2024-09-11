@@ -74,48 +74,9 @@ class _MyOrdersState extends State<MyOrders> {
         },
         child: orders.isEmpty
             ? Center(child: Text("No orders found"))
-        //     : ListView.builder(
-        //   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        //   itemCount: orders.length,
-        //   itemBuilder: (context, index) {
-        //     final order = orders[index];
-        //
-        //     // Check if the order has at least one item
-        //     if (order.items.isNotEmpty) {
-        //       final item = order.items[0];
-        //
-        //       return Padding(
-        //         padding: const EdgeInsets.all(8.0),
-        //         child: InkWell(
-        //           onTap: (){
-        //             Navigator.push(context, MaterialPageRoute(builder: (context)=>OrderDetails(image: item.productImage,
-        //               orders: order,title: item.productName,quatity:item.quantity,orderid:item.id,retunstatus: item.returnStatus,)));
-        //           },
-        //           child: Myorderitem(
-        //             title: item.productName,
-        //             orderstatus: order.orderStatus,
-        //             image: item.productImage,
-        //             type: order.paymentMethod,
-        //             invoicedwnld:  _launchURL,
-        //             quatity: item.quantity,
-        //             returnstatus: item.returnStatus,
-        //           ),
-        //         ),
-        //       );
-        //     } else {
-        //       // Handle the case where there are no items in the order
-        //       return Padding(
-        //         padding: const EdgeInsets.all(8.0),
-        //         child: ListTile(
-        //           title: Text("No items available for this order"),
-        //           subtitle: Text("Order Status: ${order.orderStatus}"),
-        //         ),
-        //       );
-        //     }
-        //   },
-        // ),
+
         :ListView.builder(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
           itemCount: orders.length,
           itemBuilder: (context, index) {
             final order = orders[index];
@@ -123,7 +84,7 @@ class _MyOrdersState extends State<MyOrders> {
             // Check if the order has items
             if (order.items.isNotEmpty) {
               return Padding(
-                padding: const EdgeInsets.all(8.0),
+               padding: const EdgeInsets.all(5.0),
                 child: InkWell(
                   onTap: () {
 
@@ -133,8 +94,7 @@ class _MyOrdersState extends State<MyOrders> {
                     children: [
                       if (order.items.isNotEmpty) // Check if the order has at least one item
                         Myorderitem(
-                          title: order.items[0].productName, // Show only the first product
-                          orderstatus: order.items[0].orderitemstatus,
+                          title: order.items[0].productName,
                           image: order.items[0].productImage,
                           type: order.paymentMethod,
                           invoicedwnld: _launchURL,
