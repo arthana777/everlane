@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OrderDetailitem extends StatefulWidget {
   OrderDetailitem({super.key, this.ontapremove, this.image, this.title, this.orderstatus, this.itemcount, this.type, this.invoicedwnld, this.quatity, this.returnstatus, this.text});
@@ -34,11 +35,13 @@ class _OrderDetailitemState extends State<OrderDetailitem> {
     super.initState();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 380.w,
-      margin: EdgeInsets.symmetric(horizontal: 10),
+      margin: EdgeInsets.symmetric(horizontal: 5.w),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.withOpacity(0.4)),
         borderRadius: BorderRadius.circular(10.r),
@@ -120,7 +123,7 @@ class _OrderDetailitemState extends State<OrderDetailitem> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("items : "),
+                        Text("Quantity : "),
                         Text(widget.quatity.toString()),
                       ],
                     ),

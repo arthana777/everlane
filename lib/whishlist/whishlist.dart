@@ -124,7 +124,7 @@ class _WhishlistState extends State<Whishlist> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ProductDetails(
-                                  productId: whishlist[index].id ?? 0,
+                                  productId: whishlist[index].product ?? 0,
                                 )),
                           );
                         },

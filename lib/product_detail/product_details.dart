@@ -53,8 +53,9 @@ class _ProductDetailsState extends State<ProductDetails> {
   //bool isInWishlist=wishlistProductIds.contains(productde?.id));
   @override
   void initState() {
-    BlocProvider.of<ProductBloc>(context).add(LoadDetails(widget.productId));
-    BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist());
+    print("dcmhbjkj ${widget.productId}");
+  BlocProvider.of<ProductBloc>(context).add(LoadDetails(widget.productId));
+  BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist());
     super.initState();
   }
 
@@ -261,7 +262,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     whishlist = state.whishlists;
                     wishlistProductIds.clear();
                     for (var i = 0; i <= whishlist.length; i++) {
-                      wishlistProductIds.add(whishlist[i].product ?? 0);
+                      // wishlistProductIds.add(whishlist[i].product??0);
                     }
                     setState(() {});
                     print(whishlist.length);

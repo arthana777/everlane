@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../bloc/cart/cart_bloc.dart';
 import '../data/models/ordermodel.dart';
@@ -52,159 +53,153 @@ class _OrderDetailsState extends State<OrderDetails> {
       isScrollControlled: true,
       builder: (context) => StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
-          return Container(
-            height: MediaQuery.of(context).size.height * 0.5,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context)
+                  .viewInsets
+                  .bottom,
             ),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: Text(
-                        widget.title ?? "",
-                        style: CustomFont().subtitleText,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.5,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child:   SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+
+                    children: [
+
+                      Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Text(widget.title??"",style: CustomFont().subtitleText,),
                       ),
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Method of payment",
-                            style: CustomFont().subtitleText,
-                          ),
-                          SizedBox(
-                            height: 40.w,
-                          ),
-                          Text(
-                            widget.orders?.paymentMethod ?? "",
-                            style: CustomFont().bodyText,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Order Status",
-                            style: CustomFont().subtitleText,
-                          ),
-                          Text(
-                            widget.orders?.orderStatus ?? "",
-                            style: CustomFont().bodyText,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Items",
-                            style: CustomFont().subtitleText,
-                          ),
-                          Text(
-                            widget.quatity.toString(),
-                            style: CustomFont().bodyText,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: AdrressCustomField(
-                        hinttext: 'Reason for return',
-                        inputType: TextInputType.text,
-                        controller: returnreason,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter reason for return';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: AdrressCustomField(
-                        hinttext: 'return quantity',
-                        inputType: TextInputType.number,
-                        controller: quantity,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter quantity';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30.h),
-                      child: InkWell(
-                        onTap: () {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            final returnQuantity = int.tryParse(quantity.text);
-                            context.read<CartBloc>().add(ReturnOrder(
-                                  orderItemId: widget.orderid,
-                                  returnQuantity: returnQuantity,
-                                  returnReason: returnreason.text,
-                                ));
-                          } else {
-                            // Show toast if form is not valid
-                            Fluttertoast.showToast(
-                              msg: "Please fill out all fields.",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              backgroundColor: Colors.white,
-                              textColor: Colors.black,
-                              fontSize: 16.0,
-                            );
-                          }
-                        },
-                        child: Container(
-                          height: 50.h,
-                          width: 200.w,
-                          decoration: BoxDecoration(
-                            color: CustomColor.primaryColor,
-                            borderRadius: BorderRadius.circular(5.r),
-                          ),
-                          child: Center(
-                              child: Text(
-                            returnStatus == 'NO_RETURN'
-                                ? 'Return'
-                                : returnStatus == 'PENDING'
-                                    ? 'Requested'
-                                    : 'Return',
-                            style: CustomFont().buttontext,
-                          )),
+                      SizedBox(height: 10.h,),
+                      Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Method of payment",style: CustomFont().subtitleText,),
+
+                            SizedBox(height: 40.w,),
+                            Text(widget.orders?.paymentMethod??"",style: CustomFont().bodyText,),
+                          ],
                         ),
                       ),
-                    )
-                  ],
+                      Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Order Status",style: CustomFont().subtitleText,),
+                            Text(widget.orders?.orderStatus??"",style: CustomFont().bodyText,),
+                          ],
+                        ),
+                      ),
+
+                      Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Items",style: CustomFont().subtitleText,),
+                            Text(widget.quatity.toString(),style: CustomFont().bodyText,),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 20.h,),
+                      Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                        child: AdrressCustomField(
+                          hinttext: 'Reason for return',
+                          inputType: TextInputType.text,
+                          controller: returnreason,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter reason for return';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 20.h,),
+                      Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                        child: AdrressCustomField(
+                          hinttext: 'return quantity',
+                          inputType: TextInputType.number,
+                          controller: quantity,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter quantity';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.h),
+                        child: InkWell(
+                          onTap: (){
+
+                            if (_formKey.currentState?.validate() ?? false){
+                              final returnQuantity = int.tryParse(quantity.text);
+                              context.read<CartBloc>().add(ReturnOrder(
+                                orderItemId: widget.orderid,
+                                returnQuantity: returnQuantity,
+                                returnReason: returnreason.text,
+                              ));
+                              Fluttertoast.showToast(
+                                msg: "Returned Successfully",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.white,
+                                textColor: Colors.black,
+                                fontSize: 16.0,
+                              );
+                            }
+                            else {
+                              // Show toast if form is not valid
+                              Fluttertoast.showToast(
+                                msg: "Please fill out all fields.",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.white,
+                                textColor: Colors.black,
+                                fontSize: 16.0,
+                              );
+                            }
+                          },
+
+                          child: Container(
+                            height: 50.h,
+                            width: 200.w,
+                            decoration: BoxDecoration(
+                              color: CustomColor.primaryColor,
+                              borderRadius: BorderRadius.circular(5.r),
+                            ),
+                            child: Center(
+                                child: Text(
+                                  returnStatus == 'NO_RETURN'
+                                      ? 'Return'
+                                      : returnStatus == 'PENDING'
+                                      ? 'Requested'
+                                      : 'Return',
+                                  style: CustomFont().buttontext,
+                                )),
+                          ),
+                        ),
+                      )
+
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -226,7 +221,15 @@ class _OrderDetailsState extends State<OrderDetails> {
     //BlocProvider.of<CartBloc>(context).add(ReturnOrder());
     super.initState();
   }
-
+  final String invoiceUrl =
+      "http://18.143.206.136/media/invoices/invoice_D83A32A692.pdf";
+  Future<void> _launchURL() async {
+    final Uri url = Uri.parse(
+        "http://18.143.206.136/media/invoices/invoice_D83A32A692.pdf");
+    if (!await launchUrl(url)) {
+      throw 'Could not launch $url';
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -295,31 +298,36 @@ class _OrderDetailsState extends State<OrderDetails> {
                           padding: const EdgeInsets.all(8.0),
                           child: OrderDetailitem(
                             title: item?.productName ?? '',
-                            orderstatus: widget.orders?.orderStatus,
+                            orderstatus: widget.orders?.items[index].orderitemstatus,
                             image: item?.productImage,
                             type: widget.orders?.paymentMethod,
                             quatity: item?.quantity,
-                            returnstatus: item?.orderitemstatus,
-
-                            // Determine button text based on item order status
+                            returnstatus: widget.orders?.items[index].returnStatus,
+                              invoicedwnld: _launchURL,
                             text: () {
-                              switch (item?.orderitemstatus) {
+                              switch (widget.orders?.items[index].orderitemstatus) {
                                 case "Pending":
                                 case "Processing":
-                                  return "Cancel"; // Both Pending and Processing should show "Cancel"
+                                  return "Cancel";
                                 case "Completed":
-                                  return "Return"; // Completed should show "Return"
+                                  if (widget.orders?.items[index].returnStatus == "PENDING") {
+                                    return "Requested for Return";
+                                  } else if (widget.orders?.items[index].returnStatus == "APPROVED") {
+                                    return "Returned";
+                                  }
+                                  return "Return";
                                 case "Requested":
-                                  return "Requested for Return"; // Show "Requested for Return" for Requested status
+                                  return "Requested for Return";
                                 case "Cancelled":
-                                  return "Cancelled"; // Cancelled should show "Cancelled"
+                                  return "Cancelled";
                                 default:
-                                  return "Cancelled"; // Default to an empty string if no other status matches
+                                  return "Cancelled";
                               }
                             }(),
 
+
                             ontapremove: () {
-                              switch (item?.orderitemstatus) {
+                              switch (widget.orders?.items[index].orderitemstatus) {
                                 case "Pending":
                                 case "Processing":
                                   showDialog(
@@ -427,322 +435,60 @@ class _OrderDetailsState extends State<OrderDetails> {
                                   break;
 
                                 case "Completed":
-                                  // For Completed status, trigger return process
-                                  _showModalSheet(context);
-                                  print("shgasdjh");
+                                // Check if the return has already been requested, avoid showing modal
+                                  if (widget.orders?.items[index].returnStatus == "PENDING") {
+
+                                    print("Return already requested");
+                                    Fluttertoast.showToast(
+                                              msg: "Return already requested",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              backgroundColor: Colors.green,
+                                              textColor: Colors.white,
+                                              fontSize: 16.0,
+                                            );
+                                  }
+                                  else if(widget.orders?.items[index].returnStatus == "APPROVED"){
+                                    Fluttertoast.showToast(
+                                      msg: "Already Returned",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      backgroundColor: Colors.green,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0,
+                                    );
+                                  }
+                                  else {
+                                    _showModalSheet(context);
+                                  }
                                   break;
 
                                 case "Requested":
-                                  // No action needed, return already requested
+                                // No action if return is already requested
+                                  print("Return already requested, no further action needed");
                                   break;
 
                                 default:
-                                  // Default or no action
+                                  Fluttertoast.showToast(
+                                    msg: "Order Already Cancelled",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    backgroundColor: Colors.green,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0,
+                                  );
                                   break;
                               }
                             },
+
+
+
                           ),
 
-                          // child: OrderDetailitem(
-                          //   title: item?.productName??'',
-                          //   orderstatus: widget.orders?.orderStatus,
-                          //   image: item?.productImage,
-                          //   type: widget.orders?.paymentMethod,
-                          //   quatity: item?.quantity,
-                          //   returnstatus: item?.orderitemstatus,
-                          //   text: item?.orderitemstatus == "Pending"
-                          //       ? "Cancel"
-                          //       : item?.orderitemstatus == "Completed"
-                          //       ? "Return"
-                          //       : item?.orderitemstatus == "Pending" || item?.orderitemstatus == "Processing"
-                          //       ? "Cancel"
-                          //       : item?.orderitemstatus == "Requested"
-                          //       ? "Requested for Return"
-                          //       : ""
-                          //     ,
-                          //   // text: item?.orderitemstatus == "Canceled"
-                          //   //     ?"Canceled":"Cancel",
-                          //
-                          //       // : item?.orderitemstatus == "Completed"
-                          //       // ? " Return"
-                          //       // : "Return Requested",
-                          //
-                          //
-                          //   ontapremove: item?.orderitemstatus == "Pending" || item?.orderitemstatus == "Processing"
-                          //       ? ()
-                          //   {
-                          //     _showModalSheet(context);
-                          //     // final returnQuantity = int.tryParse(quantity.text);
-                          //     //     context.read<CartBloc>().add(ReturnOrder(
-                          //     //       orderItemId: widget.orderid,
-                          //     //       returnQuantity: returnQuantity,
-                          //     //       returnReason: returnreason.text,
-                          //     //     ));
-                          //   }
-                          //       : item?.orderitemstatus == "Completed"
-                          //       ? ()
-                          //   {
-                          //    // _showModalSheet(context);
-                          //   }
-                          //       : item?.orderitemstatus == "Completed"
-                          //       ? ()
-                          //   {
-                          //     showDialog(
-                          //       context: context,
-                          //       builder: (context) => AlertDialog(
-                          //         backgroundColor: Colors.white,
-                          //         shape: RoundedRectangleBorder(
-                          //           borderRadius: BorderRadius.circular(10).w,
-                          //         ),
-                          //         contentPadding: EdgeInsets.zero,
-                          //         content: Column(
-                          //           mainAxisSize: MainAxisSize.min,
-                          //           children: [
-                          //             Padding(
-                          //               padding: const EdgeInsets.all(16.0).w,
-                          //               child: Icon(
-                          //                 Icons.logout_rounded,
-                          //                 color: CustomColor.primaryColor,
-                          //                 size: 60.sp,
-                          //               ),
-                          //             ),
-                          //             // Title
-                          //             Text(
-                          //               "Are You Sure?",
-                          //               style: TextStyle(
-                          //                 fontSize: 20.sp,
-                          //                 fontWeight: FontWeight.bold,
-                          //               ),
-                          //             ),
-                          //             SizedBox(height: 10.h),
-                          //             // Content text
-                          //             Text(
-                          //               "Do you want to logout?",
-                          //               style: TextStyle(
-                          //                   fontSize: 16.sp, color: Colors.black54),
-                          //             ),
-                          //             SizedBox(height: 20.h),
-                          //             Divider(height: 1, color: Colors.grey),
-                          //             // Action buttons
-                          //             Row(
-                          //               children: [
-                          //                 // No Button
-                          //                 Expanded(
-                          //                   child: InkWell(
-                          //                     onTap: () {
-                          //                       Navigator.of(context)
-                          //                           .pop(); // Close dialog
-                          //                     },
-                          //                     child: Container(
-                          //                       decoration: BoxDecoration(
-                          //                           borderRadius: BorderRadius.only(
-                          //                             bottomLeft: Radius.circular(20),
-                          //                           ),
-                          //                           color: Colors.white),
-                          //                       padding: EdgeInsets.all(15),
-                          //                       alignment: Alignment.center,
-                          //                       child: Text(
-                          //                         "No",
-                          //                         style: TextStyle(
-                          //                             fontSize: 18, color: Colors.black),
-                          //                       ),
-                          //                     ),
-                          //                   ),
-                          //                 ),
-                          //                 // Yes Button
-                          //                 Expanded(
-                          //                   child: InkWell(
-                          //                     onTap: () {
-                          //                       BlocProvider.of<CartBloc>(context).add(CancelOrderevent(items[index].id),);
-                          //
-                          //                     },
-                          //                     child: Container(
-                          //                       decoration: BoxDecoration(
-                          //                         borderRadius: BorderRadius.only(
-                          //                           bottomRight: Radius.circular(10),
-                          //                         ),
-                          //                         color: CustomColor.primaryColor,
-                          //                       ),
-                          //                       padding: EdgeInsets.all(15),
-                          //                       alignment: Alignment.center,
-                          //                       child: Text(
-                          //                         "Yes",
-                          //                         style: TextStyle(
-                          //                             fontSize: 18, color: Colors.white),
-                          //                       ),
-                          //                     ),
-                          //                   ),
-                          //                 ),
-                          //               ],
-                          //             ),
-                          //           ],
-                          //         ),
-                          //       ),
-                          //     );
-                          //   }
-                          //       : item?.orderitemstatus == "Requested"
-                          //       ? ()
-                          //   {
-                          //
-                          //   }
-                          //       : ()
-                          //   {
-                          //
-                          //   },
-                          //
-                          //   //   ontapremove:  (){
-                          //   //   if( item?.orderitemstatus == "Canceled"){
-                          //   //     BlocProvider.of<CartBloc>(context).add(CancelOrderevent(items[index].id),);
-                          //   //   }
-                          //   //   else if(item?.orderitemstatus == "Pending" || item?.orderitemstatus == "Processing"){
-                          //   //
-                          //   //     final returnQuantity = int.tryParse(quantity.text);
-                          //   //     context.read<CartBloc>().add(ReturnOrder(
-                          //   //       orderItemId: widget.orderid,
-                          //   //       returnQuantity: returnQuantity,
-                          //   //       returnReason: returnreason.text,
-                          //   //     ));
-                          //   //     // Fluttertoast.showToast(
-                          //   //     //   msg: "${state.message}",
-                          //   //     //   toastLength: Toast.LENGTH_SHORT,
-                          //   //     //   gravity: ToastGravity.BOTTOM,
-                          //   //     //   backgroundColor: Colors.green,
-                          //   //     //   textColor: Colors.white,
-                          //   //     //   fontSize: 16.0,
-                          //   //     // );
-                          //   //   }
-                          //   //
-                          //   // }
-                          //   //invoicedwnld: _launchURL,
-                          // ),
+
                         );
                       }),
-                  // Container(
-                  //   height: 400.h,
-                  //   width: 400.w,
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.black12,
-                  //     image:DecorationImage(image: NetworkImage(widget.image??''),fit: BoxFit.cover),
-                  //   ),
-                  // ),
 
-                  // SizedBox(height: 10.h,),
-                  // Padding(
-                  //   padding:  EdgeInsets.symmetric(horizontal: 20.w),
-                  //   child: Text(widget.title??"",style: CustomFont().subtitleText,),
-                  // ),
-                  // SizedBox(height: 10.h,),
-                  // Padding(
-                  //   padding:  EdgeInsets.symmetric(horizontal: 20.w),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       Text("Method of payment",style: CustomFont().subtitleText,),
-                  //
-                  //       SizedBox(height: 40.w,),
-                  //       Text(widget.orders?.paymentMethod??"",style: CustomFont().bodyText,),
-                  //     ],
-                  //   ),
-                  // ),
-                  // Padding(
-                  //   padding:  EdgeInsets.symmetric(horizontal: 20.w),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       Text("Order Status",style: CustomFont().subtitleText,),
-                  //       Text(widget.orders?.paymentStatus??"",style: CustomFont().bodyText,),
-                  //     ],
-                  //   ),
-                  // ),
-                  //
-                  // Padding(
-                  //   padding:  EdgeInsets.symmetric(horizontal: 20.w),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       Text("Items",style: CustomFont().subtitleText,),
-                  //       Text(widget.quatity.toString(),style: CustomFont().bodyText,),
-                  //     ],
-                  //   ),
-                  // ),
-                  // SizedBox(height: 20.h,),
-                  // Padding(
-                  //   padding:  EdgeInsets.symmetric(horizontal: 20.w),
-                  //   child: AdrressCustomField(
-                  //     hinttext: 'Reason for return',
-                  //     inputType: TextInputType.text,
-                  //     controller: returnreason,
-                  //     validator: (value) {
-                  //       if (value == null || value.isEmpty) {
-                  //         return 'Please enter reason for return';
-                  //       }
-                  //       return null;
-                  //     },
-                  //   ),
-                  // ),
-                  // SizedBox(height: 20.h,),
-                  // Padding(
-                  //   padding:  EdgeInsets.symmetric(horizontal: 20.w),
-                  //   child: AdrressCustomField(
-                  //     hinttext: 'return quantity',
-                  //     inputType: TextInputType.number,
-                  //     controller: quantity,
-                  //     validator: (value) {
-                  //       if (value == null || value.isEmpty) {
-                  //         return 'Please enter quantity';
-                  //       }
-                  //       return null;
-                  //     },
-                  //   ),
-                  // ),
-                  // SizedBox(
-                  //   height: 30.h,
-                  // ),
-                  // Padding(
-                  //   padding: EdgeInsets.symmetric(horizontal: 30.h),
-                  //   child: InkWell(
-                  //    onTap: (){
-                  //
-                  //      if (_formKey.currentState?.validate() ?? false){
-                  //        final returnQuantity = int.tryParse(quantity.text);
-                  //        context.read<CartBloc>().add(ReturnOrder(
-                  //          orderItemId: widget.orderid,
-                  //          returnQuantity: returnQuantity,
-                  //          returnReason: returnreason.text,
-                  //        ));
-                  //      }
-                  //      else {
-                  //        // Show toast if form is not valid
-                  //        Fluttertoast.showToast(
-                  //          msg: "Please fill out all fields.",
-                  //          toastLength: Toast.LENGTH_SHORT,
-                  //          gravity: ToastGravity.BOTTOM,
-                  //          backgroundColor: Colors.white,
-                  //          textColor: Colors.black,
-                  //          fontSize: 16.0,
-                  //        );
-                  //      }
-                  //    },
-                  //
-                  //     child: Container(
-                  //       height: 50.h,
-                  //       width: 200.w,
-                  //       decoration: BoxDecoration(
-                  //         color: CustomColor.primaryColor,
-                  //         borderRadius: BorderRadius.circular(5.r),
-                  //       ),
-                  //       child: Center(
-                  //           child: Text(
-                  //         returnStatus == 'NO_RETURN'
-                  //             ? 'Return'
-                  //             : returnStatus == 'PENDING'
-                  //                 ? 'Requested'
-                  //                 : 'Return',
-                  //         style: CustomFont().buttontext,
-                  //       )),
-                  //     ),
-                  //   ),
-                  // )
                 ],
               ),
             ),

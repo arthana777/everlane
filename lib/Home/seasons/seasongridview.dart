@@ -47,6 +47,7 @@ class _SeasongridviewState extends State<Seasongridview> {
   void initState() {
     // BlocProvider.of<ProductBloc>(context).add((Loadfiltercategories(1)));
     BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist());
+    seasons.clear();
     super.initState();
   }
 
