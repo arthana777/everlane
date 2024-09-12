@@ -178,17 +178,17 @@ class _DisasterRegistrationState extends State<DisasterRegistration> {
                 //   "${widget.userProfile?.username ?? 'N/A'}",
                 //   style: CustomFont().subtitleText,
                 // ),
-                AdrressCustomField(
-                  hinttext: widget.userProfile?.username?.isNotEmpty == true
-                      ? widget.userProfile?.username
-                      : 'Name',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name';
-                    }
-                    return null;
-                  },
-                ),
+                // AdrressCustomField(
+                //   hinttext: widget.userProfile?.username?.isNotEmpty == true
+                //       ? widget.userProfile?.username
+                //       : 'Name',
+                //   validator: (value) {
+                //     if (value == null || value.isEmpty) {
+                //       return 'Please enter your name';
+                //     }
+                //     return null;
+                //   },
+                // ),
                 SizedBox(height: 15.h,),
                 AdrressCustomField(hinttext: 'Place of Disaster',controller: nameController,
                   validator: (value) {

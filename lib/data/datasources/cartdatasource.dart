@@ -1,15 +1,17 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../sharedprefrence/sharedprefs_login.dart';
 import '../models/cartmodel.dart';
 import '../models/ordermodel.dart';
 import '../models/paymentresponsemodel.dart';
+import '../models/statusmodel.dart';
 
 class CartDatasource{
   final client = http.Client();
-
+  final Dio clientDio= Dio();
 
   Future<String?> getToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -54,44 +56,45 @@ class CartDatasource{
   }
 
 
-  Future<String> postCart(int cid,String size) async {
+  Future<Statusmodel> postCart(int cid,String size) async {
+     Statusmodel statusmodel = Statusmodel();
     print("piddddddd$cid");
     final String? stringValue = await getToken();
     if (stringValue == null || stringValue.isEmpty) {
-      return "Failed: Token not found or is empty";
+      // return "Failed: Token not found or is empty";
     }
     final SharedPrefeService sp = SharedPrefeService();
     try {
-      final response = await http.post(
-        Uri.parse('https://18.143.206.136/api/add-to-cart/'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Token $stringValue',
-        },
-        body: jsonEncode({
+
+      final response = await clientDio.post(
+        'https://18.143.206.136/api/add-to-cart/',
+        data: {
           'product_id': cid,
           'size': size,
-        }),
+        },
+        options: Options(
+          headers: {
+            'content-type': 'application/json',
+            'Authorization': 'Token $stringValue',
+          },
+        ),
+
       );
-      print(response.body);
-      if (response.statusCode == 201) {
-        final decodedResponse = jsonDecode(response.body);
-        print("ytytytyt${decodedResponse}");
-        if (decodedResponse['message'] ==
-            "Product added to wishlist successfully.") {
-          // await getToken(token);
-          return "success";
+
+      print(response.data);
+      if (response.statusCode == 200) {
+        statusmodel=Statusmodel.fromJson(response.data);
+        return statusmodel;
         }
         else {
-          return "Failed: ${decodedResponse['message']}";
+          return statusmodel;
         }
         // Login successful, proceed to next step
-      }
-    } catch (e) {
-      return "Failed: ${e.toString()}";
+      }catch (e) {
+      return statusmodel;
     }
-    return "true";
-  }
+    }
+
 
 
   Future<String> Removecart(int pid) async {
@@ -116,8 +119,8 @@ class CartDatasource{
       if (response.statusCode == 200) {
         final decodedResponse = jsonDecode(response.body);
         print("ytytytyt${decodedResponse}");
-        if (decodedResponse['message'] ==
-            "Wishlist item deleted successfully.") {
+        if (decodedResponse['status'] ==
+            "success") {
           return "success";
         }
         else {
@@ -342,6 +345,7 @@ class CartDatasource{
     if (stringValue == null || stringValue.isEmpty) {
       return "Failed: Token not found or is empty";
     }
+
     final SharedPrefeService sp = SharedPrefeService();
     try {
       final response = await http.post(
@@ -356,6 +360,7 @@ class CartDatasource{
         }),
       );
       // print(response.body);
+      print(response);
       if (response.statusCode == 200) {
         // Handle success
         print("Cart item updated successfully");
@@ -366,7 +371,7 @@ class CartDatasource{
     } catch (e) {
       return "Failed: ${e.toString()}";
     }
-    return "true";
+    return "success";
   }
 
 }

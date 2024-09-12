@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../bloc/cart/cart_bloc.dart';
+import '../bloc/product/product_bloc.dart';
 import '../bloc/whishlist/whishlist_bloc.dart';
 import '../bloc/whishlist/whishlist_event.dart';
 import '../bloc/whishlist/whishlist_state.dart';
@@ -118,48 +119,17 @@ class _CartScreenState extends State<CartScreen> {
                   setState(() {});
                 }
                 else if (state is RemoveCartSuccess) {
+                  print("remmmoooovvveee ${state.removedProductId}");
+                  context.read<CartBloc>().add(FetchCartData());
                   setState(() {
-                    carts.forEach((cart) {
-                      cart.items.removeWhere(
-                          (item) => item.productitem == state.removedProductId);
-                    });
+
+                    //
                     // carts.removeWhere((item) => item.product == state.removedProductId);
                   });
                 }
               },
             ),
-            BlocListener<WhishlistBloc, WishlistState>(
-              listener: (context, state) {
-                print(state);
-                if (state is addtoWishlistLoading) {
-                  setState(() {
-                    isLoading = true;
-                  });
-                } else if (state is addtoWishlistSuccess) {
-                  setState(() {
-                    isLoading = false;
-                  });
-                  print("adding to whislisttt");
 
-                  //BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist());
-                } else if (state is addtoWishlistFailure) {
-                  Navigator.pop(context);
-                } else if (state is WishlistSuccess) {
-                  // loading=false;
-                  whishlist = state.whishlists;
-                  for (var i = 0; i <= whishlist.length; i++) {
-                    wishlistProductIds.add(whishlist[i].product ?? 0);
-                  }
-
-                  setState(() {});
-                } else if (state is RemoveWishlistSuccess) {
-                  setState(() {
-                    whishlist.removeWhere(
-                        (item) => item.id == state.removedProductId);
-                  });
-                } else if (state is RemoveWishlistFailure) {}
-              },
-            ),
           ],
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
@@ -200,21 +170,28 @@ class _CartScreenState extends State<CartScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => ProductDetails(
-                                            productId: item.product?? 0,
-                                          )),
+                                        builder: (context) => ProductDetails(
+                                          productId: item.product?? 0,
+                                          isWishlisted: wishlistProductIds.contains(item.product?? 0),
+                                        ),
+                                      ),
+                                    ).then((isWishlisted) {
+                                      setState(() {
+                                        if (isWishlisted != null && isWishlisted) {
+                                          wishlistProductIds.add(item.product?? 0);
+                                        } else {
+                                          wishlistProductIds.remove(item.product?? 0);
+                                        }
+                                      });
+                                    });
+
+                                    context.read<ProductBloc>().add(
+                                      LoadDetails(item.product?? 0),
                                     );
                                   },
                                   child: CartItemCard(
                                     ontapremove: () {
                                       setState(() {});
-                                      BlocProvider.of<CartBloc>(context).add(
-                                        RemovefromCart(item.id),
-                                      );
-                                    },
-                                    movetowish: () {
-                                      BlocProvider.of<WhishlistBloc>(context)
-                                          .add(AddToWishlist(item.id ?? 0));
                                       BlocProvider.of<CartBloc>(context).add(
                                         RemovefromCart(item.id),
                                       );
@@ -227,7 +204,8 @@ class _CartScreenState extends State<CartScreen> {
                                     decreased: () {
                                       BlocProvider.of<CartBloc>(context).add(
                                           IncreaseCartItemQuantity(
-                                              item.id, 'increase'));
+                                              cartItemId :item.id,
+                                              increase:'increase'));
                                     },
                                     increased: () {
                                       if (item.quantity > 1) {

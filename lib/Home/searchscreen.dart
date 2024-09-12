@@ -14,12 +14,19 @@ import '../widgets/customappbar.dart';
 import '../widgets/customcolor.dart';
 import '../widgets/cutsofield_address.dart';
 
-class Searchscreen extends StatelessWidget {
+class Searchscreen extends StatefulWidget {
   Searchscreen({super.key});
+
+  @override
+  State<Searchscreen> createState() => _SearchscreenState();
+}
+
+class _SearchscreenState extends State<Searchscreen> {
   final TextEditingController searchController = TextEditingController();
+
   //List<Product> products = [];
   List<Product> keyword = [];
-
+  List<int> wishlistProductIds = [];
   List<WhislistProduct> whishlist = [];
 
   @override
@@ -78,19 +85,43 @@ class Searchscreen extends StatelessWidget {
                         itemBuilder: (BuildContext context, index) {
                           print("object${state.keyword[index].name}");
                           return InkWell(
-                              onTap: () {
+                              onTap: (){
+
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ProductDetails(
-                                        productId:
-                                        state.keyword[index].id ?? 0,
-                                      )),
-                                );
+                                    builder: (context) => ProductDetails(
+                                      productId: state.keyword[index].id ?? 0,
+                                      isWishlisted: wishlistProductIds.contains(state.keyword[index].id ?? 0,),
+                                    ),
+                                  ),
+                                ).then((isWishlisted) {
+                                  setState(() {
+                                    if (isWishlisted != null && isWishlisted) {
+                                      wishlistProductIds.add(state.keyword[index].id ?? 0,);
+                                    } else {
+                                      wishlistProductIds.remove(state.keyword[index].id ?? 0,);
+                                    }
+                                  });
+                                });
+
                                 context.read<ProductBloc>().add(
-                                  LoadDetails(state.keyword[0].id ?? 0),
+                                  LoadDetails(state.keyword[index].id ?? 0,),
                                 );
                               },
+                              // onTap: () {
+                              //   Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => ProductDetails(
+                              //           productId:
+                              //           state.keyword[index].id ?? 0,
+                              //         )),
+                              //   );
+                              //   context.read<ProductBloc>().add(
+                              //     LoadDetails(state.keyword[0].id ?? 0),
+                              //   );
+                              // },
                               child: ProductCard(
                                 title: state.keyword[index].name ?? "no name",
                                 subtitle: state.keyword[index].brand,

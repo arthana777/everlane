@@ -147,21 +147,22 @@ class _CartItemState extends State<CartItemCard> {
           ),
           const Divider(),
           Row(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              InkWell(
-                onTap: widget.movetowish,
-                child: Container(
-                  width: 180.w,
-                  padding: EdgeInsets.all(15),
-                  child: Center(child: Text("Add to wishlist")),
-                ),
-              ),
+              // InkWell(
+              //   onTap: widget.movetowish,
+              //   child: Container(
+              //     width: 180.w,
+              //     padding: EdgeInsets.all(15),
+              //     child: Center(child: Text("Add to wishlist")),
+              //   ),
+              // ),
               InkWell(
                 onTap: widget.ontapremove,
                 child: Container(
+                  height: 30.h,
                   width: 168.w,
-                  padding: const EdgeInsets.only(left: 20),
+                  padding:  EdgeInsets.only(left: 20.w,bottom: 10.h),
                   child: const Center(child: Text("Remove")),
                 ),
               )

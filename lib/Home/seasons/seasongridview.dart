@@ -22,6 +22,7 @@ import '../../data/models/cartmodel.dart';
 import '../../data/models/product_model.dart';
 import '../../domain/entities/product_entity.dart';
 import '../../productgrid/product_card.dart';
+import '../../widgets/cartcount.dart';
 import '../../widgets/customcircularindicator.dart';
 
 class Seasongridview extends StatefulWidget {
@@ -68,50 +69,7 @@ class _SeasongridviewState extends State<Seasongridview> {
                   },
                   child: Icon(Icons.arrow_back)),
               action: [
-                Stack(
-                  children: [
-                    Container(
-                      height: 100.h,
-                      width: 100.w,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen()));
-                        },
-                        icon: Icon(Icons.shopping_cart_outlined, size: 30.sp),
-                      ),
-                    ),
-                    BlocBuilder<CartBloc, CartState>(
-                      builder: (context, state) {
-                        int cartItemCount = 0;
-                        if (state is CartLoaded) {
-                          carts = state.carts;
-                          state.carts.forEach((cart) {
-                            cartItemCount=cart.items.length;
-                            print("Cart ID: ${cart.id}, Items: ${cart.items.length}");
-                          });
-                        }
-                        return Positioned(
-                          right: 35.w,
-                          top: 15.h,
-                          child: Container(
-                            height: 20.h,
-                            width: 20.w,
-                            decoration: BoxDecoration(
-                              color: CustomColor.primaryColor,
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            child: Center(
-                              child: Text(
-                                cartItemCount.toString(),
-                                style: GoogleFonts.poppins(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                CartCount()
               ],
             )),
         body: MultiBlocListener(
@@ -210,9 +168,23 @@ class _SeasongridviewState extends State<Seasongridview> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProductDetails(
-                                    productId: seasons[index].id ?? 0,
-                                  )),
+                            builder: (context) => ProductDetails(
+                              productId: seasons[index].id ?? 0,
+                              isWishlisted: wishlistProductIds.contains(seasons[index].id ?? 0),
+                            ),
+                          ),
+                        ).then((isWishlisted) {
+                          setState(() {
+                            if (isWishlisted != null && isWishlisted) {
+                              wishlistProductIds.add(seasons[index].id ?? 0);
+                            } else {
+                              wishlistProductIds.remove(seasons[index].id ?? 0);
+                            }
+                          });
+                        });
+
+                        context.read<ProductBloc>().add(
+                          LoadDetails(seasons[0].id??0),
                         );
                       },
                       child: ProductCard(

@@ -20,7 +20,7 @@ class DisasterList extends StatefulWidget {
 
 class _DisasterListState extends State<DisasterList> {
   List<Disaster>disaster=[];
-  bool isLoading = true;
+
   int? selectedIndex;
   @override
   void initState() {
@@ -51,12 +51,12 @@ class _DisasterListState extends State<DisasterList> {
               print(state);
               if (state is AddressLoading) {
                 setState(() {
-                  isLoading = true; // Show loading indicator
+                  // Show loading indicator
                 });
               }
               else if (state is DisasterLoaded) {
                 setState(() {
-                  isLoading = false;
+
                 });
                 disaster = state.disaster;
                 print(disaster);
@@ -66,6 +66,7 @@ class _DisasterListState extends State<DisasterList> {
                 print("adding to disaster");
               }
               else if (state is AddressError) {
+
                 // Dismiss loading indicator and show error message
                 // Navigator.pop(context);
                 // ScaffoldMessenger.of(context).showSnackBar(
@@ -78,8 +79,7 @@ class _DisasterListState extends State<DisasterList> {
         ],
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: isLoading
-              ? CustomCircularProgressIndicator():Column(
+          child: Column(
             children: [
               ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
