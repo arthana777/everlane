@@ -16,7 +16,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   CartBloc() : super(CartInitial()) {
     final CartDatasource cartDataSource=CartDatasource();
-    on<CartEvent>((event, emit) async {
+    on<FetchCartData>((event, emit) async {
       List<Cart> list=[];
       emit(CartLoading());
       print("mnbvcxx");
@@ -42,12 +42,12 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       emit(addtoCartLoading());
       try {
         final cartitems = await cartDataSource.postCart(event.productId,event.size);
-        print("object${cartitems}");
-        if(cartitems=="success"){
-          emit(addtoCartSuccess());
+        print("cartitemsss${cartitems.status}");
+        if(cartitems.status=="success"){
+          emit(addtoCartSuccess(message: cartitems.message??""));
         }
         else{
-          emit(addtoCartError(message: cartitems));
+          emit(addtoCartError(message: cartitems.message??""));
         }
       } catch (e) {
         emit(addtoCartError(message: e.toString()));
@@ -93,7 +93,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<IncreaseCartItemQuantity>((event, emit) async {
 
       try {
-        final cartitems = await cartDataSource.updateCartItemQuantity(event.cartItemId, event.increase);
+        final cartitems = await cartDataSource.updateCartItemQuantity(event.cartItemId??0, event.increase??'');
         print("object${cartitems}");
         if(cartitems=="success"){
           emit(incrementsuccess());
@@ -163,23 +163,23 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<ExecutePayment>((event, emit) async {
       emit(ExecutionLoading());
       try {
-        // Call the paymentExecute method and get a PaymentResponse? object
+
+        print('Executing payment with: ${event.paymentId}, ${event.payerId}, ${event.token}');
         final PaymentResponse? result = await cartDataSource.paymentExecute(
           event.paymentId ?? '',
           event.payerId ?? '',
           event.token ?? '',
         );
-
-        // Check if the result is not null and has a successful status
         if (result != null && result.status == "success") {
-          // Emit ExecutionLoaded with the result if successful
+          print('Payment successful: ${result.data.orderCode}');
+
           emit(ExecutionLoaded(result));
         } else {
           // Emit an error state if the payment execution failed
           emit(ExecutionError(message: result?.message ?? "Payment execution failed"));
         }
       } catch (e) {
-        // Handle any exceptions and emit an error state
+        print('Error during payment execution: $e');
         emit(ExecutionError(message: e.toString()));
       }
     });

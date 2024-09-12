@@ -244,12 +244,6 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
             listener: (context, state) {
               print(state);
               if (state is Pickuploading) {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) =>
-                      Center(child: CircularProgressIndicator()),
-                );
               } else if (state is Pickuploaded) {
                 print(state);
                 pickuplocations = state.pickuplocations;

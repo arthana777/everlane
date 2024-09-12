@@ -45,10 +45,11 @@ class addtoCartLoading extends CartState {
 }
 
 class addtoCartSuccess extends CartState {
+  final String message;
   @override
   // final List<Cart> carts; // Assuming you have a Cart model
   //
-  // addtoCartSuccess({required this.carts});
+  addtoCartSuccess({required this.message});
 
   @override
   List<Object?> get props => [];
@@ -85,6 +86,11 @@ class RemoveCartFailure extends CartState {
 }
 
 
+class incrementloading extends CartState {
+  @override
+  // TODO: implement props
+  List<Object?> get props => throw UnimplementedError();
+}
 class incrementsuccess extends CartState {
   @override
   // final List<Cart> carts; // Assuming you have a Cart model

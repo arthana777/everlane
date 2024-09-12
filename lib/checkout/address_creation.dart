@@ -232,16 +232,16 @@ class _AddressScreenState extends State<AddressScreen> {
                       return null;
                     },),
                   SizedBox(height: 20.h,),
-                  Text("Save as",style: CustomFont().titleText,),
-                  SizedBox(height: 10.h,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      CustomAdressSelection(text: 'Home',),
-                      CustomAdressSelection(text: 'Work',),
-                      CustomAdressSelection(text: 'Friend',),
-                    ],
-                  ),
+                  // Text("Save as",style: CustomFont().titleText,),
+                  // SizedBox(height: 10.h,),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //   children: [
+                  //     CustomAdressSelection(text: 'Home',),
+                  //     CustomAdressSelection(text: 'Work',),
+                  //     CustomAdressSelection(text: 'Friend',),
+                  //   ],
+                  // ),
                   SizedBox(height: 20.h,),
                   AdrressCustomField(hinttext: 'Recievers Adress',controller: addressController,inputType: TextInputType.text,
                     validator: (value) {

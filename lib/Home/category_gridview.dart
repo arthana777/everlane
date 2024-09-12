@@ -22,6 +22,7 @@ import '../data/models/product_model.dart';
 import '../data/models/whishlistmodel.dart';
 import '../domain/entities/category_entity.dart';
 import '../productgrid/product_card.dart';
+import '../widgets/cartcount.dart';
 import '../widgets/customcircularindicator.dart';
 import '../widgets/customcolor.dart';
 
@@ -65,50 +66,7 @@ class _CategoryGridviewState extends State<CategoryGridview> {
               },
               child: Icon(Icons.arrow_back)),
           action: [
-            Stack(
-              children: [
-                Container(
-                  height: 100.h,
-                  width: 100.w,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen()));
-                    },
-                    icon: Icon(Icons.shopping_cart_outlined, size: 30.sp),
-                  ),
-                ),
-                BlocBuilder<CartBloc, CartState>(
-                  builder: (context, state) {
-                    int cartItemCount = 0;
-                    if (state is CartLoaded) {
-                      carts = state.carts;
-                      state.carts.forEach((cart) {
-                        cartItemCount=cart.items.length;
-                        print("Cart ID: ${cart.id}, Items: ${cart.items.length}");
-                      },);
-                    }
-                    return Positioned(
-                      right: 35.w,
-                      top: 15.h,
-                      child: Container(
-                        height: 20.h,
-                        width: 20.w,
-                        decoration: BoxDecoration(
-                          color: CustomColor.primaryColor,
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        child: Center(
-                          child: Text(
-                            cartItemCount.toString(),
-                            style: GoogleFonts.poppins(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
+            CartCount(),
           ],
           text:  widget.subcategoryName,)),
         body: MultiBlocListener(
@@ -159,7 +117,7 @@ class _CategoryGridviewState extends State<CategoryGridview> {
 
                   BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist());
                 } else if (state is addtoWishlistFailure) {
-                  // Dismiss loading indicator and show error message
+
                  // Navigator.pop(context);
 
                   setState(() {
@@ -223,8 +181,21 @@ class _CategoryGridviewState extends State<CategoryGridview> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProductDetails(productId: filtercategories[index].id??0,)),
-                        );
+                            builder: (context) => ProductDetails(
+                              productId: filtercategories[index].id ?? 0,
+                              isWishlisted: wishlistProductIds.contains(filtercategories[index].id ?? 0),
+                            ),
+                          ),
+                        ).then((isWishlisted) {
+                          setState(() {
+                            if (isWishlisted != null && isWishlisted) {
+                              wishlistProductIds.add(filtercategories[index].id ?? 0);
+                            } else {
+                              wishlistProductIds.remove(filtercategories[index].id ?? 0);
+                            }
+                          });
+                        });
+
                         context.read<ProductBloc>().add(
                           LoadDetails(filtercategories[0].id??0),
                         );

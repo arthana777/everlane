@@ -11,12 +11,20 @@ import 'package:everlane/data/datasources/qst_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ResultPage extends StatelessWidget {
+import '../bloc/product/product_bloc.dart';
+
+class ResultPage extends StatefulWidget {
   const ResultPage({super.key});
 
   @override
+  State<ResultPage> createState() => _ResultPageState();
+}
+
+class _ResultPageState extends State<ResultPage> {
+  @override
   Widget build(BuildContext context) {
     List<Product> product = [];
+    List<int> wishlistProductIds = [];
     return Scaffold(
       backgroundColor: CustomColor.backgroundColor,
       appBar: AppBar(
@@ -53,11 +61,34 @@ class ResultPage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProductDetails(
-                                    productId: state.qstresult[index].id ?? 0,
-                                  )),
+                            builder: (context) => ProductDetails(
+                              productId: state.qstresult[index].id ?? 0,
+                              isWishlisted: wishlistProductIds.contains(state.qstresult[index].id ?? 0,),
+                            ),
+                          ),
+                        ).then((isWishlisted) {
+                          setState(() {
+                            if (isWishlisted != null && isWishlisted) {
+                              wishlistProductIds.add(state.qstresult[index].id ?? 0,);
+                            } else {
+                              wishlistProductIds.remove(state.qstresult[index].id ?? 0,);
+                            }
+                          });
+                        });
+
+                        context.read<ProductBloc>().add(
+                          LoadDetails(state.qstresult[index].id ?? 0,),
                         );
                       },
+                      // onTap: () {
+                      //   Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => ProductDetails(
+                      //               productId: state.qstresult[index].id ?? 0,
+                      //             )),
+                      //   );
+                      // },
                       child: Container(
                         height: 350.h,
                         width: 175.w,

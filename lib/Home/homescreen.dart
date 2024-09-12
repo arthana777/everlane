@@ -546,16 +546,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                       left: 20.w,
                                     ),
                                     child: InkWell(
-                                      onTap: () {
+                                      onTap: (){
+
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                ProductDetails(
-                                              productId:
-                                                  products[index].id ?? 0,
+                                            builder: (context) => ProductDetails(
+                                              productId: products[index].id?? 0,
+                                              isWishlisted: wishlistProductIds.contains(products[index].id?? 0,),
                                             ),
                                           ),
+                                        ).then((isWishlisted) {
+                                          setState(() {
+                                            if (isWishlisted != null && isWishlisted) {
+                                              wishlistProductIds.add(products[index].id?? 0,);
+                                            } else {
+                                              wishlistProductIds.remove(products[index].id?? 0,);
+                                            }
+                                          });
+                                        });
+
+                                        context.read<ProductBloc>().add(
+                                          LoadDetails(products[index].id?? 0,),
                                         );
                                       },
                                       child: ProductCard(
