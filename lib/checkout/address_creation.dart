@@ -257,14 +257,14 @@ class _AddressScreenState extends State<AddressScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the phone number';
                       } else if (value.length != 10) {
-                        return 'Phone number must be 8 digits';
+                        return 'Phone number must be 10 digits';
                       }
                       return null;
                     },
                       onchanged: (value){
                         setState(() {
                           if (value.length > 8) {
-                            _mobileErrorMessage = 'Phone number cannot be more than 8 digits';
+                            _mobileErrorMessage = 'Phone number cannot be more than 10 digits';
                           } else {
                             _mobileErrorMessage = '';
                           }
@@ -280,7 +280,6 @@ class _AddressScreenState extends State<AddressScreen> {
                       }
                       return null;
                     },),
-          
                 ],
               ),
             ),

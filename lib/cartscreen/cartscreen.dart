@@ -122,7 +122,6 @@ class _CartScreenState extends State<CartScreen> {
                   print("remmmoooovvveee ${state.removedProductId}");
                   context.read<CartBloc>().add(FetchCartData());
                   setState(() {
-
                     //
                     // carts.removeWhere((item) => item.product == state.removedProductId);
                   });

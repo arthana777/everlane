@@ -710,7 +710,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ),
             Padding(
               padding:  EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
-              child: Container(
+              child:selectedOrderType == "delivery"? Container(
               padding: EdgeInsets.all(10),
               height: 50.h,
               //width: 380.w,
@@ -729,7 +729,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                  icon:Icon(selectedPaymentMethod == "COD" ? Icons.check_circle : Icons.circle_outlined))
                 ],
               ),
-                  ),
+                  ):null,
             ),
                 Padding(
                   padding:  EdgeInsets.symmetric(horizontal: 10.w),
