@@ -324,8 +324,6 @@ class _OrderDetailsState extends State<OrderDetails> {
                                   return "Cancelled";
                               }
                             }(),
-
-
                             ontapremove: () {
                               switch (widget.orders?.items[index].orderitemstatus) {
                                 case "Pending":

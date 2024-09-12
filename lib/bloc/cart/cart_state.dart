@@ -161,7 +161,7 @@ class OrderLoading extends CartState {
 class OrderLoaded extends CartState {
 
   final List<Order> orders;
-  OrderLoaded(this.orders);
+  OrderLoaded({required this.orders});
 
   @override
   List<Object> get props => [orders];
@@ -170,7 +170,7 @@ class OrderLoaded extends CartState {
 class OrderError extends CartState {
   final String message;
 
-  OrderError(this.message);
+  OrderError({required this.message});
 
   @override
   List<Object> get props => [message];

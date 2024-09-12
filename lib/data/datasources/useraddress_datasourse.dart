@@ -230,39 +230,52 @@ class UseraddressDatasourse {
     }
   }
 
-  Future<dynamic> getmydonations() async {
-    final String? stringValue = await getToken();
-    if (stringValue == null || stringValue.isEmpty) {
-      return "Failed: Token not found or is empty";
-    }
-    print("https://18.143.206.136/api/user-donations/");
-    try {
-      final response = await client.get(
-        Uri.parse('https://18.143.206.136/api/user-donations/'),
-        headers: {
-          'content-type': 'application/json',
-          'Authorization': 'Token $stringValue',
-        },
-      );
-      if (response.statusCode == 200) {
-        print("Successful response: ${response.body}");
-        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+ Future<List<Donation>> getMyDonations() async {
+  final String? token = await getToken();
 
+  if (token == null || token.isEmpty) {
+    throw Exception("Token not found or is empty.");
+  }
+
+  final Uri url = Uri.parse('https://18.143.206.136/api/user-donations/');
+  print("Fetching donations from: $url");
+
+  try {
+    final response = await client.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Token $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print("Successful response: ${response.body}");
+
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+
+      // Check if 'data' exists and is a List
+      if (responseBody.containsKey('data') && responseBody['data'] is List) {
         final List<dynamic> dataList = responseBody['data'];
 
-        final List<Donation> mydonations =
+        final List<Donation> myDonations =
             dataList.map((json) => Donation.fromJson(json)).toList();
-        print(mydonations.length);
-        return mydonations;
+
+        print("Number of donations: ${myDonations.length}");
+        return myDonations;
       } else {
-        print("Failed with status code: ${response.statusCode}");
-        throw Exception("Failed to load userdata ${response.statusCode}");
+        throw Exception("Invalid response: 'data' field is missing or not a list.");
       }
-    } catch (e) {
-      print("Exception: $e");
-      throw Exception("$e");
+    } else {
+      print("Failed with status code: ${response.statusCode}");
+      throw Exception("Failed to load donations. Status code: ${response.statusCode}");
     }
+  } catch (e) {
+    print("Exception occurred: $e");
+    throw Exception("Error fetching donations: $e");
   }
+}
+
 
   Future<dynamic> getmyregistrations() async {
     final String? stringValue = await getToken();
@@ -291,7 +304,7 @@ class UseraddressDatasourse {
         print("Failed with status code: ${response.statusCode}");
         throw Exception("Failed to load userdata ${response.statusCode}");
       }
-    } catch (e) {
+    } catch (e) { 
       print("Exception: $e");
       throw Exception("$e");
     }

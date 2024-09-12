@@ -80,7 +80,7 @@ class Profile extends StatelessWidget {
                   return Center(child: Text(state.message));
                 } else {
                   return const Center(
-                    child: Text('Please log in to view your profile.'),
+                    child: Text(''),
                   );
                 }
               },

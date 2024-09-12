@@ -1,4 +1,6 @@
 
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -129,16 +131,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       try {
         final List<Order> result = await cartDataSource.getOrders();
         list=result;
-        print("lmnopqrst${list.length}");
+        print("order list${list.length}");
         if(list.isNotEmpty){
-          emit(OrderLoaded(result));
-        }
-        else{
-          emit(OrderLoaded([]));
+          emit(OrderLoaded(orders: result));
+        } else{
+          emit(OrderError(message: e.toString()));
         }
       } catch (e) {
         print("@@@@@@@@@@@@@@@@@@");
-        emit(OrderError(e.toString()));
+        emit(OrderError(message: e.toString()));
       }
     });
 
