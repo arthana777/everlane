@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import '../bloc/product/product_bloc.dart';
 import '../bloc/whishlist/whishlist_bloc.dart';
 import '../bloc/whishlist/whishlist_event.dart';
 import '../bloc/whishlist/whishlist_state.dart';
@@ -44,7 +45,9 @@ class _WhishlistState extends State<Whishlist> {
                   final navigationProvider =
                       Provider.of<NavigationProvider>(context, listen: false);
                   navigationProvider.updateScreenIndex(0);
-                  Navigator.pop(context);
+                  Navigator.pop(
+                    context,
+                  );
                 },
                 child: Icon(Icons.arrow_back),
               ),
@@ -67,7 +70,7 @@ class _WhishlistState extends State<Whishlist> {
                       whishlist.map((item) => item.product ?? 0).toList();
                 });
               } else if (state is WishlistFailure) {
-                Navigator.pop(context);
+                // Navigator.pop(context);
               } else if (state is RemoveWishlistSuccess) {
                 // setState(() {
                 //   whishlist.removeWhere((item) => item.product == state.removedProductId);
@@ -86,9 +89,9 @@ class _WhishlistState extends State<Whishlist> {
                 );
                 print("Item removed, updated wishlist: $whishlist");
               } else if (state is RemoveWishlistFailure) {
-                // setState(() {
-                //   loading = false;
-                // });
+                setState(() {
+                  loading = false;
+                });
               }
             }),
           ],
@@ -115,17 +118,48 @@ class _WhishlistState extends State<Whishlist> {
                                 itemBuilder: (context, index) => Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: InkWell(
+                                    // onTap: (){
+                                    //   Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) => ProductDetails(
+                                    //           productId: whishlist[index].product ?? 0,
+                                    //         )),
+                                    //   );
+                                    // },
                                     onTap: () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                ProductDetails(
-                                                  productId: whishlist[index]
-                                                          .product ??
-                                                      0,
-                                                )),
-                                      );
+                                          builder: (context) => ProductDetails(
+                                            productId:
+                                                whishlist[index].product ?? 0,
+                                            isWishlisted:
+                                                wishlistProductIds.contains(
+                                              whishlist[index].product ?? 0,
+                                            ),
+                                          ),
+                                        ),
+                                      ).then((isWishlisted) {
+                                        setState(() {
+                                          if (isWishlisted != null &&
+                                              isWishlisted) {
+                                            wishlistProductIds.add(
+                                              whishlist[index].product ?? 0,
+                                            );
+                                          } else {
+                                            wishlistProductIds.remove(
+                                              whishlist[index].product ?? 0,
+                                            );
+                                          }
+                                        });
+                                      });
+
+                                      context.read<ProductBloc>().add(
+                                            LoadDetails(
+                                              whishlist[index].product ?? 0,
+                                            ),
+                                          );
                                     },
                                     child: WhishlistItem(
                                         removeonTap: () {

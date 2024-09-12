@@ -44,30 +44,7 @@ class OrderSuccessScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 80.h),
-              InkWell(
-                onTap: _launchURL,
-                child: Container(
-                  height: 50.h,
-                  width: 300.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.r),
-                    border: Border.all(
-                      color: CustomColor.primaryColor,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Download Invoice',
-                      style: GoogleFonts.poppins(
-                          textStyle: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w500)),
-                    ),
-                  ),
-                ),
-              ),
+
               SizedBox(height: 20.h),
               InkWell(
                 onTap: () {

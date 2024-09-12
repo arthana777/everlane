@@ -42,14 +42,14 @@ class PlaceOrder extends CartEvent {
 }
 
 class IncreaseCartItemQuantity extends CartEvent {
-  final int cartItemId;
-  final String increase;
+  final int? cartItemId;
+  final String? increase;
 
-  IncreaseCartItemQuantity(this.cartItemId, this.increase);
+  IncreaseCartItemQuantity(  { this.cartItemId, this.increase,});
 
   @override
   // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [cartItemId, increase];
 }
 
 class DecreaseCartItemQuantity extends CartEvent {
@@ -75,7 +75,7 @@ class ExecutePayment extends CartEvent {
   final String? token;
 
   ExecutePayment(this.paymentId, this.payerId, this.token, );
-  List<Object?> get props => [];
+  List<Object?> get props => [paymentId, payerId, token];
 }
 
 

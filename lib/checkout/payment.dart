@@ -269,12 +269,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
         elevation: 0,
         backgroundColor: CustomColor.primaryColor,
         onPressed: () {
+          print("Button pressed");
+          print("selectedOrderType: $selectedOrderType");
+          print("selectedPaymentMethod: $selectedPaymentMethod");
+          print("selectedLocation: $selectedLocation");
+          print("selectedAddress: $selectedAddress");
           if (selectedPaymentMethod.isNotEmpty) {
-            if (selectedOrderType == "donate" && widget.pickupLocation == null) {
+            if (selectedOrderType == "donate" && selectedLocation == null) {
+              print("widget.pickupLocation${selectedLocation}");
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Please select a pickup location')),
               );
             } else if (selectedOrderType == "delivery" && selectedAddress == null) {
+              print("selectedAddress${selectedAddress}");
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Please select a delivery address')),
               );
@@ -287,7 +294,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   deliveryAddressId: selectedAddress?.id ?? 0,
                   orderType: selectedOrderType??"",
                   paymentMethod: selectedPaymentMethod,
-
                 ));
                 print("llllllllllll${widget.address?.id ?? 0}");
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -303,8 +309,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   deliveryAddressId: selectedAddress?.id ?? 0,
                   orderType: selectedOrderType??'',
                   paymentMethod: selectedPaymentMethod,
-                  pickupid: widget.pickupLocation?.id??0,
-                  disasterid: widget.disaster?.id??0,
+                  pickupid: selectedLocation?.id??0,
+                  //pickupid: widget.pickupLocation?.id??0,
+                  disasterid: selectedDisaster?.id??0
+                  //disasterid: widget.disaster?.id??0,
                 ));
               }
             } else {
@@ -530,7 +538,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       Text("Pickup Location",style: CustomFont().subtitleText,):SizedBox(),
 
                       TextButton(
-
                         onPressed: ()async{
                           print("hsdklmnklcm");
                           BlocProvider.of<AddressBloc>(context).add(FetchUserAddresses());
@@ -631,6 +638,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               onChanged: (PickupLocation? newValue) {
                                 setState(() {
                                   selectedLocation = newValue!;
+                                //  widget.pickupLocation = newValue;
                                 });
                               },
                             ),

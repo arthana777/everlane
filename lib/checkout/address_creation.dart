@@ -53,40 +53,38 @@ class _AddressScreenState extends State<AddressScreen> {
         elevation: 0,
         backgroundColor: CustomColor.primaryColor,
         onPressed: () {
-    if (_formKey.currentState?.validate() ?? false) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-          context.read<AddressBloc>().add(CreateAddress(
-            mobile: mobileController.text,
-            pincode: pinCodeController.text,
-            locality: localityController.text,
-            address: addressController.text,
-            city: cityController.text,
-            state: stateController.text,
-            landmark: landmarkController.text,
-            isDefault: true,
-            isActive: true,
-            isDeleted: false,
-          ));
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddressList(),
-            ),
-          );
-    });
-    }
-
-    else {
-      // Show toast if form is not valid
-      Fluttertoast.showToast(
-        msg: "Please fill out all fields.",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.white,
-        textColor: Colors.black,
-        fontSize: 16.0,
-      );
-    }
+          if (_formKey.currentState?.validate() ?? false) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.read<AddressBloc>().add(CreateAddress(
+                    mobile: mobileController.text,
+                    pincode: pinCodeController.text,
+                    locality: localityController.text,
+                    address: addressController.text,
+                    city: cityController.text,
+                    state: stateController.text,
+                    landmark: landmarkController.text,
+                    isDefault: true,
+                    isActive: true,
+                    isDeleted: false,
+                  ));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddressList(),
+                ),
+              );
+            });
+          } else {
+            // Show toast if form is not valid
+            Fluttertoast.showToast(
+              msg: "Please fill out all fields.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.white,
+              textColor: Colors.black,
+              fontSize: 16.0,
+            );
+          }
           if (_formKey.currentState?.validate() ?? false) {
             // Form is valid, proceed with action
 
@@ -136,65 +134,66 @@ class _AddressScreenState extends State<AddressScreen> {
           color: Colors.white,
         ),
       ),
-      appBar: PreferredSize(preferredSize: Size.fromHeight(50.h), child: CustomAppBar(
-        text: "Create your Address",
-        leading: InkWell(
-            onTap: (){
-              final navigationProvider = Provider.of<NavigationProvider>(context, listen: false);
-              navigationProvider.updateScreenIndex(0);
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back)),
-      )),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50.h),
+          child: CustomAppBar(
+            text: "Create your Address",
+            leading: InkWell(
+                onTap: () {
+                  final navigationProvider =
+                      Provider.of<NavigationProvider>(context, listen: false);
+                  navigationProvider.updateScreenIndex(0);
+                  Navigator.pop(context);
+                },
+                child: Icon(Icons.arrow_back)),
+          )),
       body: MultiBlocListener(
         listeners: [
           BlocListener<AddressBloc, AddressState>(
-          listener: (context, state) {
-            print(state);
-            if (state is AddressLoading) {
+            listener: (context, state) {
+              print(state);
+              if (state is AddressLoading) {
+              } else if (state is AddressCreationSuccess) {
+                setState(() {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Adress created successfully!')),
+                  );
+                });
 
-            } else if (state is AddressCreationSuccess) {
-              setState(() {
+                //final useraddress = state.userAddresses;
+                print("adding to addresslist");
+              } else if (state is AddressError) {
+                // Dismiss loading indicator and show error message
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text('Adress created successfully!')),
-                );
-              });
-
-              //final useraddress = state.userAddresses;
-              print("adding to addresslist");
-            } else if (state is AddressError) {
-              // Dismiss loading indicator and show error message
-              Navigator.pop(context);
-
-            }
-
-          },
-        ),
+              }
+            },
+          ),
         ],
         child: SingleChildScrollView(
           child: Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 15.w,vertical: 10.h),
+            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
             child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-          
-                  AdrressCustomField(hinttext: 'House no/Flat no',
-                  inputType: TextInputType.text,
-                  controller: houseNoController,
+                  AdrressCustomField(
+                    hinttext: 'House no/Flat no',
+                    inputType: TextInputType.text, 
+                    controller: houseNoController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the locality';
                       }
                       return null;
                     },
-          
                   ),
-                  SizedBox(height: 15.h,),
-                  AdrressCustomField(hinttext: 'Pin Code',
+                  SizedBox(
+                    height: 15.h,
+                  ),
+                  AdrressCustomField(
+                    hinttext: 'Pin Code',
                     inputType: TextInputType.number,
                     controller: pinCodeController,
                     validator: (value) {
@@ -206,8 +205,13 @@ class _AddressScreenState extends State<AddressScreen> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 15.h,),
-                  AdrressCustomField(hinttext: 'City',controller: cityController,inputType: TextInputType.text,
+                  SizedBox(
+                    height: 15.h,
+                  ),
+                  AdrressCustomField(
+                    hinttext: 'City',
+                    controller: cityController,
+                    inputType: TextInputType.text,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the city';
@@ -215,35 +219,54 @@ class _AddressScreenState extends State<AddressScreen> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 15.h,),
-                  AdrressCustomField(hinttext: 'State',controller: stateController,inputType: TextInputType.text,
+                  SizedBox(
+                    height: 15.h,
+                  ),
+                  AdrressCustomField(
+                    hinttext: 'State',
+                    controller: stateController,
+                    inputType: TextInputType.text,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the state';
                       }
                       return null;
-                    },),
-                  SizedBox(height: 15.h,),
-                  AdrressCustomField(hinttext: 'Landmark',controller: landmarkController,inputType: TextInputType.text,
+                    },
+                  ),
+                  SizedBox(
+                    height: 15.h,
+                  ),
+                  AdrressCustomField(
+                    hinttext: 'Landmark',
+                    controller: landmarkController,
+                    inputType: TextInputType.text,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the landmark';
                       }
                       return null;
-                    },),
-                  SizedBox(height: 20.h,),
-                  Text("Save as",style: CustomFont().titleText,),
-                  SizedBox(height: 10.h,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      CustomAdressSelection(text: 'Home',),
-                      CustomAdressSelection(text: 'Work',),
-                      CustomAdressSelection(text: 'Friend',),
-                    ],
+                    },
                   ),
-                  SizedBox(height: 20.h,),
-                  AdrressCustomField(hinttext: 'Recievers Adress',controller: addressController,inputType: TextInputType.text,
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  // Text("Save as",style: CustomFont().titleText,),
+                  // SizedBox(height: 10.h,),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //   children: [
+                  //     CustomAdressSelection(text: 'Home',),
+                  //     CustomAdressSelection(text: 'Work',),
+                  //     CustomAdressSelection(text: 'Friend',),
+                  //   ],
+                  // ),
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  AdrressCustomField(
+                    hinttext: 'Recievers Adress',
+                    controller: addressController,
+                    inputType: TextInputType.text,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the receiver\'s address';
@@ -251,46 +274,53 @@ class _AddressScreenState extends State<AddressScreen> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 15.h,),
-                  AdrressCustomField(hinttext: 'Recievers Phone number',controller: mobileController,inputType: TextInputType.phone,
+                  SizedBox(
+                    height: 15.h,
+                  ),
+                  AdrressCustomField(
+                    hinttext: 'Recievers Phone number',
+                    controller: mobileController,
+                    inputType: TextInputType.phone,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the phone number';
                       } else if (value.length != 10) {
-                        return 'Phone number must be 8 digits';
+                        return 'Phone number must be 10 digits';
                       }
                       return null;
                     },
-                      onchanged: (value){
-                        setState(() {
-                          if (value.length > 8) {
-                            _mobileErrorMessage = 'Phone number cannot be more than 8 digits';
-                          } else {
-                            _mobileErrorMessage = '';
-                          }
-                        });
-                        //String telNo = value==null?("+91" + value) :null
-                      },
-                    ),
-                  SizedBox(height: 15.h,),
-                  AdrressCustomField(hinttext: 'locality',controller: localityController,inputType: TextInputType.text,
+                    onchanged: (value) {
+                      setState(() {
+                        if (value.length > 8) {
+                          _mobileErrorMessage =
+                              'Phone number cannot be more than 10 digits';
+                        } else {
+                          _mobileErrorMessage = '';
+                        }
+                      });
+                      //String telNo = value==null?("+91" + value) :null
+                    },
+                  ),
+                  SizedBox(
+                    height: 15.h,
+                  ),
+                  AdrressCustomField(
+                    hinttext: 'locality',
+                    controller: localityController,
+                    inputType: TextInputType.text,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the locality';
                       }
                       return null;
-                    },),
-          
+                    },
+                  ),
                 ],
               ),
             ),
           ),
         ),
       ),
-
-
-
-
     );
   }
 }

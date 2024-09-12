@@ -28,8 +28,7 @@ class WebviewScreen extends StatelessWidget {
             // Handle web resource error if needed.
           },
           onNavigationRequest: (NavigationRequest request) {
-            final uri = Uri.parse(request.url);
-
+              final uri = Uri.parse(request.url);
               final queryParameters = uri.queryParameters;
               final paymentId = queryParameters['paymentId'];
               final payerId = queryParameters['PayerID'];

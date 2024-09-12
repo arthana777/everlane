@@ -12,6 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+//import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../bloc/address/address_bloc.dart';
@@ -26,40 +27,59 @@ import '../data/models/detailproduct.dart';
 import '../data/models/product_model.dart';
 import '../data/models/whishlistmodel.dart';
 import '../domain/entities/product_entity.dart';
+import '../widgets/cartcount.dart';
 import '../widgets/customcolor.dart';
 
 class ProductDetails extends StatefulWidget {
   final int productId;
-  ProductDetails({Key? key, required this.productId}) : super(key: key);
+  final bool isWishlisted;
+  ProductDetails({Key? key, required this.productId,  required this.isWishlisted}) : super(key: key);
 
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
-  int cartItemCount = 0;
+  bool _isWishlisted = false;
+  int cartItemCount=0;
   List<int> wishlistProductIds = [];
   List<WhislistProduct> whishlist = [];
   DetailProduct? productdetail;
   List<Cart> carts = [];
   int? isclicked;
   bool isLoading = false;
+  bool buttonloading=false;
   bool isAddedToCart = false;
   bool isItemOutOfStock = false;
   bool isInWishlist(int? productId) {
     return wishlistProductIds.contains(productId);
+  }
+  void toggleWishlist() {
+    setState(() {
+      _isWishlisted = !_isWishlisted;
+      if (_isWishlisted) {
+        // Add to wishlist logic
+        BlocProvider.of<WhishlistBloc>(context).add(AddToWishlist(widget.productId));
+      } else {
+        // Remove from wishlist logic
+        BlocProvider.of<WhishlistBloc>(context).add(Removefromwishlist(widget.productId));
+      }
+    });
   }
 
   //bool isInWishlist=wishlistProductIds.contains(productde?.id));
   @override
   void initState() {
     print("dcmhbjkj ${widget.productId}");
-  BlocProvider.of<ProductBloc>(context).add(LoadDetails(widget.productId));
-  BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist());
+    BlocProvider.of<ProductBloc>(context).add(LoadDetails(widget.productId));
+    BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist());
+    _isWishlisted = widget.isWishlisted!;
     super.initState();
   }
 
   void tappingfun(int index) {
+    print("is Clicked button$isclicked");
+    print("is Clicked button$index");
     final item = productdetail?.items[index];
 
     if (item != null && item.stock > 0) {
@@ -71,6 +91,8 @@ class _ProductDetailsState extends State<ProductDetails> {
 
     setState(() {});
   }
+
+
 
   void _addToCart(int index) {
     if (isclicked == null) {
@@ -91,7 +113,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       final cartState = BlocProvider.of<CartBloc>(context).state;
       if (cartState is CartLoaded) {
         isProductInCart = cartState.carts.any((item) =>
-            item.id == productdetail?.id &&
+        item.id == productdetail?.id &&
             item.items[index].size == productdetail?.items[isclicked!].size);
       }
 
@@ -112,14 +134,15 @@ class _ProductDetailsState extends State<ProductDetails> {
             size: productdetail?.items[index].size ?? '',
           ),
         );
-        Fluttertoast.showToast(
-          msg: "Product added to cart successfully!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+        // Fluttertoast.showToast(
+        //   msg: "Product added to cart !",
+        //   toastLength: Toast.LENGTH_SHORT,
+        //   gravity: ToastGravity.BOTTOM,
+        //   //toastDuration: Duration(seconds: 2),
+        //   backgroundColor: Colors.green,
+        //   textColor: Colors.white,
+        //   fontSize: 16.0,
+        // );
       }
 
       setState(() {
@@ -127,258 +150,268 @@ class _ProductDetailsState extends State<ProductDetails> {
       });
     }
   }
-
+ // int cartItemCount = 0;
   @override
   Widget build(BuildContext context) {
     // final productdetails = widget.;
-    return Scaffold(
-        backgroundColor: Colors.white,
-        floatingActionButton: FloatingActionButton.extended(
-          elevation: 0,
-          backgroundColor: CustomColor.primaryColor,
-          onPressed: isclicked != null ? () => _addToCart(isclicked!) : null,
-          label: Container(
-            height: 30.h,
-            width: 150.w,
-            decoration: BoxDecoration(
-              color: CustomColor.primaryColor,
-            ),
-            child: Center(
-              child: Text(
-                "Add to cart",
-                style: CustomFont().buttontext,
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ProductBloc, ProductState>(
+          listener: (context, state) {
+            print(state);
+            if (state is DetailsLoaded) {
+              productdetail = state.productdetail;
+              print(productdetail);
+              //tappingfun(0);
+              setState(() {});
+              print(productdetail);
+            } else {
+              Center(
+                child: Text("Unknown state"),
+              );
+            }
+          },
+        ),
+        BlocListener<WhishlistBloc, WishlistState>(
+          listener: (context, state) {
+            print(state);
+            if (state is addtoWishlistLoading) {
+              setState(() {});
+            } else if (state is addtoWishlistSuccess) {
+              print("adding to whislisttt");
+              setState(() {
+
+                wishlistProductIds.add(productdetail?.id ?? 0);
+              });
+              //Navigator.pop(context);
+
+              //BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist());
+            } else if (state is addtoWishlistFailure) {
+              //Navigator.pop(context);
+            } else if (state is WishlistSuccess) {
+              // loading=false;
+              whishlist = state.whishlists;
+              wishlistProductIds.clear();
+              for (var i = 0; i <= whishlist.length; i++) {
+                // wishlistProductIds.add(whishlist[i].product??0);
+              }
+              setState(() {});
+              print(whishlist.length);
+              print(whishlist[0]);
+              print("oooooooooooooooo");
+            } else if (state is RemoveWishlistSuccess) {
+              setState(() {
+                whishlist.removeWhere(
+                        (item) => item.id == state.removedProductId);
+              });
+            } else if (state is RemoveWishlistFailure) {
+
+            }
+          },
+        ),
+        BlocListener<CartBloc,CartState>(listener: (context, state) {
+          print(state);
+          if (state is CartLoaded) {
+            cartItemCount = state.carts.length;
+          } else if (state is addtoCartSuccess) {
+setState(() {
+  buttonloading=false;
+});
+            print("adding to cart");
+            isAddedToCart=true;
+            Fluttertoast.showToast(
+              msg: "${state.message}",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+            BlocProvider.of<CartBloc>(context).add(FetchCartData());
+            // Navigator.pop(context);
+            setState(() {
+              isLoading = false;
+            });
+          } else if (state is addtoCartError) {
+            //Navigator.pop(context);
+            setState(() {
+              buttonloading=false;
+            });
+          }
+        }),
+
+        // BlocListener<CartBloc, CartState>(listener: (context, state) {
+        //   print(state);
+        //   if (state is incrementloading) {
+        //     isLoading = true;
+        //     CircularProgressIndicator();
+        //   } else if (state is incrementsuccess) {
+        //     print("adding to cart");
+        //     // Navigator.pop(context);
+        //     setState(() {
+        //       isLoading = false;
+        //     });
+        //   } else if (state is incrementerror) {
+        //     //Navigator.pop(context);
+        //     setState(() {
+        //       isLoading = false;
+        //     });
+        //   }
+        // }),
+      ],
+      child: Scaffold(
+            backgroundColor: Colors.white,
+            floatingActionButton: FloatingActionButton.extended(
+              elevation: 0,
+              backgroundColor: CustomColor.primaryColor,
+              onPressed:
+              (){
+                if(isclicked != null ){
+                  buttonloading=true;
+                  setState(() {
+
+                  });
+                  _addToCart(isclicked!);
+
+                }
+                else{
+                  Fluttertoast.showToast(
+                    msg: "Please select a size before adding to cart!",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                }
+              },
+              // isclicked != null ?
+              //
+              //     () => _addToCart(isclicked!) : null,
+
+              label: Container(
+                height: 30.h,
+                width: 150.w,
+                decoration: BoxDecoration(
+                  color: CustomColor.primaryColor,
+                ),
+                child: buttonloading
+                    ? Center(
+                  child: LoadingAnimationWidget.prograssiveDots(
+                    color: Colors.white,
+                    size: 50.w,
+                  ),
+                )
+                    : Center(
+                  child: Text(
+                    "Add to cart",
+                    style: CustomFont().buttontext,
+                  ),
+                ),
+              ),
+              icon: IconButton(
+                color: Colors.white,
+                onPressed: () {},
+                icon: Icon(
+                  Icons.shopping_cart,
+                  size: 20.sp,
+                ),
               ),
             ),
-          ),
-          icon: IconButton(
-            color: Colors.white,
-            onPressed: () {},
-            icon: Icon(
-              Icons.shopping_cart,
-              size: 20.sp,
-            ),
-          ),
-        ),
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(50.h),
-          child: CustomAppBar(
-            text: productdetail?.name ?? '',
-            leading: InkWell(
-              onTap: () {
-                final navigationProvider =
-                    Provider.of<NavigationProvider>(context, listen: false);
-                navigationProvider.updateScreenIndex(0);
-                Navigator.pop(context);
-              },
-              child: Icon(Icons.arrow_back),
-            ),
-            action: [
-              Stack(
-                children: [
-                  Container(
-                    height: 100.h,
-                    width: 100.w,
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CartScreen()));
-                      },
-                      icon: Icon(Icons.shopping_cart_outlined, size: 30.sp),
-                    ),
-                  ),
-                  BlocBuilder<CartBloc, CartState>(
-                    builder: (context, state) {
-                      int cartItemCount = 0;
-                      if (state is CartLoaded) {
-                        carts = state.carts;
-                        state.carts.forEach((cart) {
-                          cartItemCount = cart.items.length;
-                          print(
-                              "Cart ID: ${cart.id}, Items: ${cart.items.length}");
-                        });
-                      }
-                      return Positioned(
-                        right: 35.w,
-                        top: 8.h,
-                        child: Container(
-                          height: 20.h,
-                          width: 20.w,
-                          decoration: BoxDecoration(
-                            color: CustomColor.primaryColor,
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                          child: Center(
-                            child: Text(
-                              cartItemCount.toString(),
-                              style: GoogleFonts.poppins(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(50.h),
+              child: CustomAppBar(
+                text: productdetail?.name ?? '',
+                leading: InkWell(
+                  onTap: () {
+                    final navigationProvider =
+                        Provider.of<NavigationProvider>(context, listen: false);
+                    navigationProvider.updateScreenIndex(0);
+                    widget.isWishlisted? BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist()):null;
+                    Navigator.pop(context, _isWishlisted);
+
+                  },
+                  child: Icon(Icons.arrow_back),
+                ),
+                action: [
+                  CartCount()
                 ],
               ),
-            ],
-          ),
-        ),
-        body: MultiBlocListener(
-            listeners: [
-              BlocListener<ProductBloc, ProductState>(
-                listener: (context, state) {
-                  print(state);
-                  if (state is DetailsLoaded) {
-                    productdetail = state.productdetail;
-                    print(productdetail);
-                    //tappingfun(0);
-                    setState(() {});
-                    print(productdetail);
-                  } else {
-                    Center(
-                      child: Text("Unknown state"),
-                    );
-                  }
-                },
-              ),
-              BlocListener<WhishlistBloc, WishlistState>(
-                listener: (context, state) {
-                  print(state);
-                  if (state is addtoWishlistLoading) {
-                    setState(() {});
-                  } else if (state is addtoWishlistSuccess) {
-                    print("adding to whislisttt");
-                    setState(() {
-                      wishlistProductIds.add(productdetail?.id ?? 0);
-                    });
-                    //Navigator.pop(context);
-
-                    //BlocProvider.of<WhishlistBloc>(context).add(RetrieveWhishlist());
-                  } else if (state is addtoWishlistFailure) {
-                    Navigator.pop(context);
-                  } else if (state is WishlistSuccess) {
-                    // loading=false;
-                    whishlist = state.whishlists;
-                    wishlistProductIds.clear();
-                    for (var i = 0; i <= whishlist.length; i++) {
-                      // wishlistProductIds.add(whishlist[i].product??0);
-                    }
-                    setState(() {});
-                    print(whishlist.length);
-                    print(whishlist[0]);
-                    print("oooooooooooooooo");
-                  } else if (state is RemoveWishlistSuccess) {
-                    setState(() {
-                      whishlist.removeWhere(
-                          (item) => item.id == state.removedProductId);
-                    });
-                  } else if (state is RemoveWishlistFailure) {}
-                },
-              ),
-              BlocListener<CartBloc, CartState>(listener: (context, state) {
-                print(state);
-                if (state is addtoCartLoading) {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) =>
-                        Center(child: CircularProgressIndicator()),
-                  );
-                } else if (state is CartLoaded) {
-                  cartItemCount = state.carts.length;
-                } else if (state is addtoCartSuccess) {
-                  print("adding to cart");
-                  // Navigator.pop(context);
-                  setState(() {});
-                } else if (state is addtoCartError) {
-                  //Navigator.pop(context);
-                }
-              }),
-            ],
-            child: Padding(
+            ),
+            body: Padding(
               padding: const EdgeInsets.all(15.0),
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
-                child: isLoading
-                    ? Center(
-                        child: LoadingAnimationWidget.prograssiveDots(
-                          color: Colors.purple,
-                          size: 50.w,
-                        ),
-                      )
-                    : Column(
+                child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Stack(
-                            children: [
-                              Container(
-                                height: 500.h,
-                                width: 600.w,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(30.r),
-                                    topLeft: Radius.circular(30.r),
-                                  ),
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                        productdetail?.image ?? ""),
-                                    fit: BoxFit.cover,
-                                  ),
+                          Stack(children: [
+                            Container(
+                              height: 500.h,
+                              width: 600.w,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(30.r),
+                                  topLeft: Radius.circular(30.r),
+                                ),
+                                image: DecorationImage(
+                                  image:
+                                      NetworkImage(productdetail?.image ?? ""),
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                              Positioned(
-                                top: 20.h,
-                                right: 20.w,
-                                child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      if (wishlistProductIds
-                                          .contains(productdetail?.id)) {
-                                        print("remove${productdetail?.id}");
-                                        final wishlistItem =
-                                            whishlist.firstWhere((item) =>
-                                                item.product ==
-                                                productdetail?.id);
-                                        BlocProvider.of<WhishlistBloc>(context)
-                                            .add(
-                                          Removefromwishlist(
-                                              wishlistItem.id ?? 0),
-                                        );
-                                        wishlistProductIds
-                                            .remove(productdetail?.id ?? 0);
-                                      } else {
-                                        print("added${productdetail?.id}");
-                                        BlocProvider.of<WhishlistBloc>(context)
-                                            .add(AddToWishlist(
-                                                productdetail?.id ?? 0));
-                                        wishlistProductIds
-                                            .add(productdetail?.id ?? 0);
-                                        print(productdetail?.id ?? 0);
-                                      }
-                                    });
-                                  },
+                            ),
+                            Positioned(
+                              top: 20.h,
+                              right: 20.w,
+                              child: InkWell(
+                                  onTap:
+                                    toggleWishlist,
+                                    // setState(() {
+                                    //   if (wishlistProductIds
+                                    //       .contains(productdetail?.id)) {
+                                    //     print("remove${productdetail?.id}");
+                                    //     final wishlistItem =
+                                    //         whishlist.firstWhere((item) =>
+                                    //             item.product ==
+                                    //             productdetail?.id);
+                                    //     BlocProvider.of<WhishlistBloc>(context)
+                                    //         .add(
+                                    //       Removefromwishlist(
+                                    //           wishlistItem.id ?? 0),
+                                    //     );
+                                    //     wishlistProductIds
+                                    //         .remove(productdetail?.id ?? 0);
+                                    //   } else {
+                                    //     print("added${productdetail?.id}");
+                                    //     BlocProvider.of<WhishlistBloc>(context)
+                                    //         .add(AddToWishlist(
+                                    //             productdetail?.id ?? 0));
+                                    //     wishlistProductIds
+                                    //         .add(productdetail?.id ?? 0);
+                                    //     print(productdetail?.id ?? 0);
+                                    //   }
+                                    // });
+
                                   child: Container(
-                                    height: 30.h,
-                                    width: 30.w,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white70,
-                                        borderRadius:
-                                            BorderRadius.circular(20.r)),
-                                    child: Icon(
-                                      isInWishlist(productdetail?.id)
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      size: 25.sp,
-                                      color: isInWishlist(productdetail?.id)
-                                          ? Colors.red
-                                          : Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                                      height: 30.h,
+                                      width: 30.w,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white70,
+                                          borderRadius:
+                                              BorderRadius.circular(20.r)),
+                                      child: Icon(
+                                       // isInWishlist(productdetail?.id)
+                                        _isWishlisted  ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        size: 25.sp,
+                                        color:
+                                        //isInWishlist(productdetail?.id)
+                                        _isWishlisted? Colors.red
+                                            : Colors.grey,
+                                      ))),
+                            ),
+                          ]),
                           Padding(
                             padding: const EdgeInsets.only(
                               top: 20,
@@ -452,7 +485,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                               print("sizessss${item}");
                                               print(
                                                   productdetail?.items.length);
-                                              return Padding(
+                                              return  Stack(
+                                                  children: [
+                                                Padding(
                                                 padding:
                                                     const EdgeInsets.all(5.0),
                                                 child: InkWell(
@@ -464,39 +499,50 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                           });
                                                           tappingfun(index);
                                                         },
-                                                  child: Container(
-                                                    height: 20.h,
-                                                    width: 70.w,
-                                                    decoration: BoxDecoration(
-                                                        color: isclicked ==
-                                                                index
-                                                            ? Color(0xFF973d93)
-                                                            : item.isOutOfStock
-                                                                ? Colors.white10
-                                                                : Colors
-                                                                    .black12,
-                                                        //border: item.isOutOfStock?Border.all(color: Colors.white):Border.all(color: CustomColor.primaryColor),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10)),
-                                                    child: Center(
-                                                        child: Text(
-                                                            item?.size ?? "s",
-                                                            style: item
-                                                                    .isOutOfStock
-                                                                ? GoogleFonts
-                                                                    .questrial(
-                                                                        textStyle:
-                                                                            TextStyle(
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    fontSize:
-                                                                        12.sp,
-                                                                  ))
-                                                                : CustomFont()
-                                                                    .subtitleText)),
-                                                  ),
+                                                  child:
+                                                      Container(
+                                                        height: 35.h,
+                                                        width: 70.w,
+                                                        decoration: BoxDecoration(
+                                                            color: isclicked ==
+                                                                    index
+                                                                ? Color(0xFF973d93)
+                                                                : item.isOutOfStock
+                                                                    ? Colors.white10
+                                                                    : Colors
+                                                                        .black12,
+                                                            //border: item.isOutOfStock?Border.all(color: Colors.white):Border.all(color: CustomColor.primaryColor),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(10),
+                                                          border: item.isOutOfStock?Border.all(color: Colors.red):null,
+                                                        ),
+                                                        child: Center(
+                                                            child: Text(
+                                                                item?.size ?? "s",
+                                                                style: item
+                                                                        .isOutOfStock
+                                                                    ? GoogleFonts
+                                                                        .questrial(
+                                                                            textStyle:
+                                                                                TextStyle(
+                                                                        color: Colors
+                                                                            .grey,
+                                                                        fontSize:
+                                                                            12.sp,
+                                                                      ))
+                                                                    : CustomFont()
+                                                                        .subtitleText)),
+                                                      ),
+
                                                 ),
+                                              ),
+                                              item.isOutOfStock? Positioned(
+                                                  left: 22.w,
+                                                  top: 5.h,
+                                                  child: Icon(Icons.close,size: 30.sp,color: Colors.red.withOpacity(0.5),)
+                                              ):SizedBox(),
+                                              ],
                                               );
                                             }),
                                       ),
@@ -521,6 +567,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ],
                       ),
               ),
-            )));
+            )),
+    );
   }
 }
