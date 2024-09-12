@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -19,7 +18,7 @@ class _MainScreenState extends State<BtmNavigation> {
   final List<Widget> _screens = [
     const HomeScreen(),
     Profile(),
-     CartScreen(),
+    CartScreen(),
   ];
 
   void _onTabTapped(int index) {
@@ -31,51 +30,62 @@ class _MainScreenState extends State<BtmNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F7),
+      backgroundColor: Colors.white,
       body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        iconSize: 26.0.sp,
-        backgroundColor: const Color(0xFFF7F7F7),
-        currentIndex: _currentIndex,
-        onTap: _onTabTapped,
-        items: [
-          BottomNavigationBarItem(
-            backgroundColor: const Color(0xFFF7F7F7),
-            icon: Icon(
-              shadows: const [
-                Shadow(
-                    blurRadius: 2, color: Colors.grey, offset: Offset(0.6, 0.5))
-              ],
-              _currentIndex == 0 ? Icons.home : Icons.home_outlined,
-              color: CustomColor.primaryColor,
+      bottomNavigationBar: Container(
+        child: BottomNavigationBar(
+          iconSize: 26.0.sp,
+          backgroundColor: Colors.white,
+          currentIndex: _currentIndex,
+          onTap: _onTabTapped,
+          items: [
+            BottomNavigationBarItem(
+              backgroundColor: const Color(0xFFF7F7F7),
+              icon: Icon(
+                
+                shadows: const [
+                  Shadow(
+                      blurRadius: 2,
+                      color: Colors.grey,
+                      offset: Offset(0.6, 0.5))
+                ],
+                _currentIndex == 0 ? Icons.home : Icons.home_outlined,
+                color: CustomColor.primaryColor,
+              ),
+              label: '',
             ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              shadows: const [
-                Shadow(
-                    blurRadius: 2, color: Colors.grey, offset: Offset(0.6, 0.8))
-              ],
-              _currentIndex == 1 ? Icons.person : Icons.person_outline_outlined,
-              color: CustomColor.primaryColor,
+            BottomNavigationBarItem(
+              icon: Icon(
+                shadows: const [
+                  Shadow(
+                      blurRadius: 2,
+                      color: Colors.grey,
+                      offset: Offset(0.6, 0.8))
+                ],
+                _currentIndex == 1
+                    ? Icons.person
+                    : Icons.person_outline_outlined,
+                color: CustomColor.primaryColor,
+              ),
+              label: '',
             ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              shadows: const [
-                Shadow(
-                    blurRadius: 2, color: Colors.grey, offset: Offset(0.6, 0.8))
-              ],
-              _currentIndex == 2
-                  ? Icons.shopping_cart
-                  : Icons.shopping_cart_outlined,
-              color: CustomColor.primaryColor,
+            BottomNavigationBarItem(
+              icon: Icon(
+                shadows: const [
+                  Shadow(
+                      blurRadius: 2,
+                      color: Colors.grey,
+                      offset: Offset(0.6, 0.8))
+                ],
+                _currentIndex == 2
+                    ? Icons.shopping_cart
+                    : Icons.shopping_cart_outlined,
+                color: CustomColor.primaryColor,
+              ),
+              label: '',
             ),
-            label: '',
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

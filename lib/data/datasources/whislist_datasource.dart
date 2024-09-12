@@ -98,7 +98,7 @@ class WhishlistDatasource {
   }
 
   Future<String> RemoveWishlist(int pid) async {
-    print("piddddddd$pid");
+    print("remove$pid");
     final String? stringValue = await getToken();
     if (stringValue == null || stringValue.isEmpty) {
       return "Failed: Token not found or is empty";

@@ -2,6 +2,7 @@ import 'package:everlane/checkout/payment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../bloc/cart/cart_bloc.dart';
@@ -52,7 +53,7 @@ class _CartScreenState extends State<CartScreen> {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        backgroundColor: Color(0xFFEFEFEF),
+        backgroundColor: Colors.white,
         floatingActionButton: FloatingActionButton.extended(
           elevation: 0,
           backgroundColor: carts.any((cart) => cart.items.isNotEmpty)
@@ -66,14 +67,14 @@ class _CartScreenState extends State<CartScreen> {
                   );
                 }
               : null,
-               label: Container(
-               height: 30.h,
-               width: 150.w,
-                decoration: BoxDecoration(
+          label: Container(
+            height: 30.h,
+            width: 150.w,
+            decoration: BoxDecoration(
                 //color:  carts.any((cart) => cart.items.isNotEmpty)?CustomColor.primaryColor:Color(0xFF973d93).withOpacity(0.5),
-                   ),
-                    child: Center(
-                    child: Text("Checkout", style: CustomFont().buttontext),
+                ),
+            child: Center(
+              child: Text("Checkout", style: CustomFont().buttontext),
             ),
           ),
           icon: Icon(
@@ -87,7 +88,7 @@ class _CartScreenState extends State<CartScreen> {
           child: CustomAppBar(
             text: 'My Cart',
             leading: IconButton(
-                onPressed: () { 
+                onPressed: () {
                   Navigator.push(
                       context,
                       PageTransition(
@@ -153,9 +154,34 @@ class _CartScreenState extends State<CartScreen> {
                               padding: EdgeInsets.symmetric(
                                   vertical: 100.h, horizontal: 110.w),
                               child: Center(
-                                child: Text(
-                                  "YOUR CART IS EMPTY",
-                                  style: CustomFont().bodyText,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 40),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 190.w,
+                                        height: 190.h,
+                                        child: Image.network(
+                                          "https://i.pinimg.com/564x/92/8b/b3/928bb331a32654ba76a4fc84386f3851.jpg",
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Text("Your cart is empty!",
+                                          style: CustomFont().titleText),
+                                      SizedBox(
+                                        height: 11.h,
+                                      ),
+                                      Text(
+                                          textAlign: TextAlign.center,
+                                          "Looks like you haven't added anything to your cart yet.",
+                                          style: GoogleFonts.poppins(
+                                              color: Colors.grey,
+                                              fontSize: 13.sp))
+                                    ],
+                                  ),
                                 ),
                               ),
                             );
@@ -165,7 +191,7 @@ class _CartScreenState extends State<CartScreen> {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: InkWell(
-                                  onTap: (){
+                                  onTap: () {
                                     print("erkdkufhcbj ${item.id}");
                                     Navigator.push(
                                       context,

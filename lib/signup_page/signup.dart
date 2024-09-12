@@ -317,6 +317,8 @@ class _SiginupState extends State<Siginup> {
                           controller: passController,
                           obscureText: _obscurePassword,
                           decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 17.0.h, horizontal: 10.0.w),
                             hintStyle: CustomFont().hintText,
                             border: OutlineInputBorder(
                               borderSide: BorderSide.none,
@@ -324,14 +326,13 @@ class _SiginupState extends State<Siginup> {
                             ),
                             fillColor: const Color(0xFFFFFFFF),
                             filled: true,
-                            contentPadding:
-                                const EdgeInsets.only(left: 10, top: 15).r,
                             hintText: 'Password',
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _obscurePassword
                                     ? Icons.visibility
                                     : Icons.visibility_off,
+                                size: 20.sp,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -350,6 +351,8 @@ class _SiginupState extends State<Siginup> {
                           controller: confirmpassController,
                           obscureText: _obscureConfirmPassword,
                           decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 17.0.h, horizontal: 10.0.w),
                             hintStyle: CustomFont().hintText,
                             border: OutlineInputBorder(
                               borderSide: BorderSide.none,
@@ -357,13 +360,14 @@ class _SiginupState extends State<Siginup> {
                             ),
                             fillColor: Colors.white,
                             filled: true,
-                            contentPadding:
-                                const EdgeInsets.only(left: 10, top: 10).r,
                             hintText: 'Confirm Password',
                             suffixIcon: IconButton(
-                              icon: Icon(_obscureConfirmPassword
-                                  ? Icons.visibility
-                                  : Icons.visibility_off),
+                              icon: Icon(
+                                _obscureConfirmPassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                size: 20.sp,
+                              ),
                               onPressed: () {
                                 setState(() {
                                   _obscureConfirmPassword =

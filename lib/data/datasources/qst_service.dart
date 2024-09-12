@@ -35,7 +35,7 @@ class QstService {
       if (response.statusCode == 200) {
         return response.data['message'] ?? "Data updated successfully!";
       } else {
-        return "Failed to update";
+        return "";
       }
     } catch (e) {
       print("Error: $e");
@@ -68,7 +68,7 @@ class QstService {
         List<dynamic> dataList = response.data['data'];
         List<Qstresult> results =
             dataList.map((data) => Qstresult.fromJson(data)).toList();
-        print("Parsed Data: $results");
+        print("Parsed Data:");
         return results;
       } catch (e) {
         print("Error during parsing: $e");

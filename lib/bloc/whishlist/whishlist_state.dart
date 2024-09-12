@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-
 import '../../data/models/whishlistmodel.dart';
 
 abstract class WishlistState extends Equatable {
@@ -17,7 +16,7 @@ class addtoWishlistLoading extends WishlistState {}
 class addtoWishlistSuccess extends WishlistState {
   // late final List whishlists;
   final int addedProductId;
-  addtoWishlistSuccess( this.addedProductId);
+  addtoWishlistSuccess(this.addedProductId);
 }
 
 class addtoWishlistFailure extends WishlistState {
@@ -27,14 +26,13 @@ class addtoWishlistFailure extends WishlistState {
   List<Object> get props => [];
 }
 
-
 class WishlistInitial extends WishlistState {}
 
 class WishlistLoading extends WishlistState {}
 
 class WishlistSuccess extends WishlistState {
-   final List <WhislistProduct>whishlists;
-  WishlistSuccess( this.whishlists);
+  final List<WhislistProduct> whishlists;
+  WishlistSuccess(this.whishlists);
 }
 
 class WishlistFailure extends WishlistState {

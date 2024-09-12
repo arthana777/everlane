@@ -46,9 +46,8 @@ class _OrderDetailsState extends State<OrderDetails> {
   final TextEditingController returnreason = TextEditingController();
   final TextEditingController quantity = TextEditingController();
   List<Item> items = [];
-void _showModalSheet(BuildContext context)async {
-
-   // List<UserAddress>useradress=[];
+  void _showModalSheet(BuildContext context) async {
+    // List<UserAddress>useradress=[];
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -207,12 +206,11 @@ void _showModalSheet(BuildContext context)async {
           );
         },
       ),
-    ).whenComplete(() {
-      setState(() {
-
-
-      });
-    },);
+    ).whenComplete(
+      () {
+        setState(() {});
+      },
+    );
   }
 
   @override
@@ -270,20 +268,18 @@ void _showModalSheet(BuildContext context)async {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Already Requested')),
                 );
-              }
-              else if (state is CancelorderLoaded) {
+              } else if (state is CancelorderLoaded) {
                 setState(() {
-
                   items.removeWhere((item) => item.id == state.orderid);
-
                 });
               }
-
             },
           ),
         ],
         child: Padding(
-          padding:  EdgeInsets.symmetric(horizontal: 5.w,),
+          padding: EdgeInsets.symmetric(
+            horizontal: 10 .w,
+          ),
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Form(
@@ -292,11 +288,10 @@ void _showModalSheet(BuildContext context)async {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
                       itemCount: widget.orders?.items.length,
-                      itemBuilder: (context,index){
-
+                      itemBuilder: (context, index) {
                         final item = widget.orders?.items[index];
                         print("orderstatus ${item?.orderitemstatus}");
                         return Padding(
@@ -329,8 +324,6 @@ void _showModalSheet(BuildContext context)async {
                                   return "Cancelled";
                               }
                             }(),
-
-
                             ontapremove: () {
                               switch (widget.orders?.items[index].orderitemstatus) {
                                 case "Pending":
@@ -364,10 +357,13 @@ void _showModalSheet(BuildContext context)async {
                                           SizedBox(height: 10),
                                           Text(
                                             "Do you want to cancel this item?",
-                                            style: TextStyle(fontSize: 16, color: Colors.black54),
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.black54),
                                           ),
                                           SizedBox(height: 20),
-                                          Divider(height: 1, color: Colors.grey),
+                                          Divider(
+                                              height: 1, color: Colors.grey),
                                           Row(
                                             children: [
                                               Expanded(
@@ -377,8 +373,10 @@ void _showModalSheet(BuildContext context)async {
                                                   },
                                                   child: Container(
                                                     decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.only(
-                                                        bottomLeft: Radius.circular(10),
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                        bottomLeft:
+                                                            Radius.circular(10),
                                                       ),
                                                       color: Colors.white,
                                                     ),
@@ -386,7 +384,9 @@ void _showModalSheet(BuildContext context)async {
                                                     alignment: Alignment.center,
                                                     child: Text(
                                                       "No",
-                                                      style: TextStyle(fontSize: 18, color: Colors.black),
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          color: Colors.black),
                                                     ),
                                                   ),
                                                 ),
@@ -394,23 +394,32 @@ void _showModalSheet(BuildContext context)async {
                                               Expanded(
                                                 child: InkWell(
                                                   onTap: () {
-                                                    BlocProvider.of<CartBloc>(context).add(
-                                                      CancelOrderevent(item?.id ?? 0),
+                                                    BlocProvider.of<CartBloc>(
+                                                            context)
+                                                        .add(
+                                                      CancelOrderevent(
+                                                          item?.id ?? 0),
                                                     );
-                                                    Navigator.of(context).pop(); // Close the dialog after the event
+                                                    Navigator.of(context)
+                                                        .pop(); // Close the dialog after the event
                                                   },
                                                   child: Container(
                                                     decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.only(
-                                                        bottomRight: Radius.circular(10),
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                        bottomRight:
+                                                            Radius.circular(10),
                                                       ),
-                                                      color: CustomColor.primaryColor,
+                                                      color: CustomColor
+                                                          .primaryColor,
                                                     ),
                                                     padding: EdgeInsets.all(15),
                                                     alignment: Alignment.center,
                                                     child: Text(
                                                       "Yes",
-                                                      style: TextStyle(fontSize: 18, color: Colors.white),
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          color: Colors.white),
                                                     ),
                                                   ),
                                                 ),

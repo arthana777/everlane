@@ -54,10 +54,8 @@ class _CustomTextfieldState extends State<CustomTextfield> {
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
         prefix: widget.prefix,
-        contentPadding:  EdgeInsets.only(
-          left: 10.w,
-          top: 10.h,
-        ),
+        contentPadding:
+            EdgeInsets.symmetric(vertical: 17.0.h, horizontal: 10.0.w),
         border: OutlineInputBorder(
           borderSide: BorderSide.none,
           borderRadius: BorderRadius.circular(8.r),
